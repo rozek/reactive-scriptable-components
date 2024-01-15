@@ -2,4 +2,12 @@
 
 light-weight reactive scriptable web components
 
-(documentation will foloow)
+(documentation will follow)
+
+
+
+
+
+## License ##
+
+[MIT License](LICENSE.md)
