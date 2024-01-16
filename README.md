@@ -51,7 +51,7 @@ This approach allows to write simple web applications within minutes - the autho
 - **Event Handlers as Function Calls**<br>(t.b.w)
 - **Error Indicators**<br>(t.b.w)
 
-## Dependencies ##
+## Inlined Dependencies ##
 
 "reactive-scriptable-components" are based on the following (brilliant!) libraries and packages:
 
@@ -59,7 +59,11 @@ This approach allows to write simple web applications within minutes - the autho
 * [PREACT](https://github.com/preactjs/preact) - from which its efficient and light-weight DOM diffing is used, and
 * [Hyperactiv](https://github.com/elbywan/hyperactiv) - a light-weight reactive library which even handles circular dependencies
 
-While it may be advisable to know how to use HTM, there is no immediate need to learn any of the above to write a RSC application.
+All these dependencies have been bundled into the "reactive-scriptable-components" for faster loading and a predictable user experience.
+
+> Nota bene: while it may be advisable to know how to use HTM, there is no immediate need to learn any of the above to write a RSC application.
+
+The final distributables were built using the marvellous [microbundle](https://github.com/developit/microbundle).
 
 ## Usage ##
 
@@ -75,12 +79,10 @@ This trick applies to all kinds of Web Components, not just those presented here
 
 ### Without any Build Environment ###
 
-If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, just append the following lines to the `<head/>` section (after all RSC behaviour scripts, if you need any):
+If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, just append the following line to the `<head/>` section (after all RSC behaviour scripts, if you need any):
 
 ```html
-<script type="module">
-  import 'https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.esm.js'
-</script>
+<script type="module" src="https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"></script>
 ```
 
 That's all...
