@@ -37,12 +37,29 @@ What makes it interesting is how the logic works:
 
 This approach allows to write simple web applications within minutes - the author uses it for his computer science lectures at [Stuttgart University of Applied Sciences](https://www.hft-stuttgart.com/) in order to demonstrate various concepts and algorithms or give students the possibility to explore and practice. You probably won't use "reactive-scriptable-components" to implement the next office package, but simple tools can be written with very little effort and in a way that may easily be understood even by inexperienced or casual programmers.
 
+## Features ##
 
-(documentation will follow)
+(t.b.w)
 
+## Dependencies ##
 
+(t.b.w)
 
+## Usage ##
 
+(t.b.w)
+
+## API Reference ##
+
+(t.b.w)
+
+## Examples ##
+
+(t.b.w)
+
+## Behaviours ##
+
+(t.b.w)
 
 ## License ##
 
