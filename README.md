@@ -1,4 +1,4 @@
-# reactive-scriptable-components #
+# reactive-scriptable-components (RSC) #
 
 light-weight reactive scriptable web components
 
@@ -43,13 +43,13 @@ This approach allows to write simple web applications within minutes - the autho
 
 ## Dependencies ##
 
-"reactive-scriptable-components" are based on the following libraries and packages:
+"reactive-scriptable-components" are based on the following (brilliant!) libraries and packages:
 
 * [HTM (Hyperscript Tagged Markup)](https://github.com/developit/htm) - for easy HTML markup using JavaScript template strings,
 * [PREACT](https://github.com/preactjs/preact) - although only its efficient and light-weight DOM diffing is used here, and
 * [Hyperactiv](https://github.com/elbywan/hyperactiv) - a light-weight reactive library which even handles circular dependencies
 
-All of the above tools are brilliant by themselves - but, when combined, they even make frameworks like "reactive-scriptable-components" possible.
+While it may be advisable to know how to use HTM, there is no immediate need to learn any of the above to write a RSC application.
 
 ## Usage ##
 
