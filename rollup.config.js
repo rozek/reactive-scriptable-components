@@ -9,7 +9,13 @@ export default {
     {
       file:     './dist/reactive-scriptable-components.js',
       format:    'umd', // builds for both Node.js and Browser
-      name:      'JIL', // required for UMD modules
+      name:      'RSC', // required for UMD modules
+      globals: {
+      	'javascript-interface-library':'JIL',
+      	'htm':       'htm',
+      	'htm/preact':'preact',
+      	'hyperactiv':'hyperactiv'
+      },
       noConflict:true,
       sourcemap: true,
       plugins: [terser({ format:{ comments:false, safari10:true } })],
