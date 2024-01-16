@@ -24,8 +24,7 @@ import {
   expectInstanceOf,
 } from 'javascript-interface-library'
 
-import { html }              from 'htm/preact'
-import { render, Component } from 'preact'
+import { render, html, Component } from 'htm/preact'
 
 import hyperactiv from 'hyperactiv'
 const { observe, computed, dispose } = hyperactiv
