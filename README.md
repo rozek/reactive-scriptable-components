@@ -43,7 +43,7 @@ This approach allows to write simple web applications within minutes - the autho
 
 ## Dependencies ##
 
-"reactive-scriptable-components" is based on the following libraries and packages:
+"reactive-scriptable-components" are based on the following libraries and packages:
 
 * [HTM (Hyperscript Tagged Markup)](https://github.com/developit/htm) - for easy HTML markup using JavaScript template strings,
 * [PREACT](https://github.com/preactjs/preact) - for efficient and light-weight DOM diffing and
