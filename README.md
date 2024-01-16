@@ -22,7 +22,7 @@ The idea behind this framework is to allow for the rapid development of small re
     })
 
     reactively(() => observed.Fahrenheit = observed.Celsius * 9/5 + 32)
-    reactively(() => observed.Celisus = 5/9 * (observed.Fahrenheit-32))
+    reactively(() => observed.Celsius = 5/9 * (observed.Fahrenheit-32))
    </script>
   </rsc-applet>
 ```
