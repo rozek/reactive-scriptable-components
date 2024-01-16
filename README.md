@@ -13,7 +13,7 @@ The idea behind this framework is to allow for the rapid development of small re
 
     <rsc-label>Celsius:</rsc-label>
     <rsc-number-input $value="Applet.observed.Fahrenheit"></rsc-number-input>
-   </>
+   </rsc-table>
 
    <script type="rsc-script">
     const observed = Object.assign(this.observed,{
