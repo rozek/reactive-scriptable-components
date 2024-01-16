@@ -39,37 +39,14 @@ This approach allows to write simple web applications within minutes - the autho
 
 ## Features ##
 
-### Script Attributes ###
-
-(t.b.w)
-
-### Script Elements ###
-
-(t.b.w)
-
-### Delegated Scripts ###
-
-(t.b.w)
-
-### Behaviour Scripts ###
-
-(t.b.w)
-
-### Observed and Unobserved Variables ###
-
-(t.b.w)
-
-### Reactive Functions ###
-
-(t.b.w)
-
-### Reactive Attributes ###
-
-(t.b.w)
-
-### Error Indicators ###
-
-(t.b.w)
+- **Script Attributes**<br>(t.b.w)
+- **Script Elements**<br>(t.b.w)
+- **Delegated Scripts**<br>(t.b.w)
+- **Behaviour Scripts**<br>(t.b.w)
+- **Observed and Unobserved Variables**<br>(t.b.w)
+- **Reactive Functions**<br>(t.b.w)
+- **Reactive Attributes**<br>(t.b.w)
+- **Error Indicators**<br>(t.b.w)
 
 ## Dependencies ##
 
