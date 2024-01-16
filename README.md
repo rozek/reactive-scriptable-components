@@ -63,6 +63,30 @@ While it may be advisable to know how to use HTM, there is no immediate need to 
 
 ## Usage ##
 
+In order to avoid initial flashing of "custom Elements" (aka "Web Components") you should add the following lines at the beginning of the `<head/>` section in your HTML file:
+
+```html
+<style>
+  :not(:defined) { visibility:hidden }
+</style>
+```
+
+This trick applies to all kinds of Web Components, not just those presented here.
+
+### Without Build Environment ###
+
+If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, just append the following lines to the `<head/>` section (after all RSC behaviour scripts, if you need any):
+
+```html
+<script type="module">
+  import 'https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.esm.js'
+</script>
+```
+
+That's all...
+
+### With a Build Environment ###
+
 (t.b.w)
 
 ## API Reference ##
