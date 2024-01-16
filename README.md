@@ -49,7 +49,7 @@ This approach allows to write simple web applications within minutes - the autho
 * [PREACT](https://github.com/preactjs/preact) - for efficient and light-weight DOM diffing and
 * [Hyperactiv](https://github.com/elbywan/hyperactiv) - a light-weight reactive library which evene handles circular dependencies
 
-All of the above dependencies are brilliant - and, together, they made "reactive-scriptable-components" possible.
+All of the above tools are brilliant by themselves - but, when combined, they even make frameworks like "reactive-scriptable-components" possible.
 
 ## Usage ##
 
