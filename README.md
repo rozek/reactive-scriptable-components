@@ -55,7 +55,7 @@ This approach allows to write simple web applications within minutes - the autho
 "reactive-scriptable-components" are based on the following (brilliant!) libraries and packages:
 
 * [HTM (Hyperscript Tagged Markup)](https://github.com/developit/htm) - for easy HTML markup using JavaScript template strings,
-* [PREACT](https://github.com/preactjs/preact) - although only its efficient and light-weight DOM diffing is used here, and
+* [PREACT](https://github.com/preactjs/preact) - from which its efficient and light-weight DOM diffing is used, and
 * [Hyperactiv](https://github.com/elbywan/hyperactiv) - a light-weight reactive library which even handles circular dependencies
 
 While it may be advisable to know how to use HTM, there is no immediate need to learn any of the above to write a RSC application.
