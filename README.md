@@ -2,7 +2,7 @@
 
 light-weight reactive scriptable web components
 
-The idea behind this framework is to allow for the rapid development of small reactive web applications. To give you an idea of what these web apps could look like, consider the following example which implements a simple calculator which converts temperatures between °Celsius and °Fahrenheit:
+The idea behind this framework is to allow for the rapid development of small reactive web applications. To give you an idea of what these web apps could look like, consider the following example (which implements a simple calculator which converts temperatures between °Celsius and °Fahrenheit):
 
 ```html
   <rsc-applet>
