@@ -39,6 +39,8 @@ This approach allows to write simple web applications within minutes - the autho
 
 ## Features ##
 
+"reactive-scriptable-components" offer the following fundamental features:
+
 - **Script Attributes**<br>(t.b.w)
 - **Script Elements**<br>(t.b.w)
 - **Delegated Scripts**<br>(t.b.w)
