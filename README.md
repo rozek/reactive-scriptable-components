@@ -46,8 +46,8 @@ This approach allows to write simple web applications within minutes - the autho
 "reactive-scriptable-components" are based on the following libraries and packages:
 
 * [HTM (Hyperscript Tagged Markup)](https://github.com/developit/htm) - for easy HTML markup using JavaScript template strings,
-* [PREACT](https://github.com/preactjs/preact) - for efficient and light-weight DOM diffing and
-* [Hyperactiv](https://github.com/elbywan/hyperactiv) - a light-weight reactive library which evene handles circular dependencies
+* [PREACT](https://github.com/preactjs/preact) - although only its efficient and light-weight DOM diffing is used here, and
+* [Hyperactiv](https://github.com/elbywan/hyperactiv) - a light-weight reactive library which even handles circular dependencies
 
 All of the above tools are brilliant by themselves - but, when combined, they even make frameworks like "reactive-scriptable-components" possible.
 
