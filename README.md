@@ -27,9 +27,9 @@ The idea behind this framework is to allow for the rapid development of small re
   </rsc-applet>
 ```
 
-It basically consists of two number input controls, a bit of visual "decoration" and some "business logic"
+It basically consists of two number input controls, a bit of visual "decoration" and some "business logic".
 
-What makes this example intersting is how the logic works:
+What makes this example interesting is how the logic works:
 
 * `$value` attributes make the number input controls "reactive", i.e., user input changes the specified variable and variable changes will be reflected in the UI - and, yes, the circularity of the dependencies shown above causes no problem
 * every "reactive scriptable component" (a standard [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)) may contain its own `observed` and `unobserved` (state) variables - in this trivial example, only the applet itself provides some "state", whereas the input controls do not
