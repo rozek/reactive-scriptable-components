@@ -48,6 +48,7 @@ This approach allows to write simple web applications within minutes - the autho
 - **Observed and Unobserved Variables**<br>(t.b.w)
 - **Reactive Functions**<br>(t.b.w)
 - **Reactive Attributes**<br>(t.b.w)
+- **Event Handlers as Function Calls**<br>(t.b.w)
 - **Error Indicators**<br>(t.b.w)
 
 ## Dependencies ##
