@@ -103,6 +103,66 @@ That's all...
 
 (t.b.w)
 
+## Script Templates ##
+
+The following code templates may be quite practical when writing custom behaviours - you don't _have_ to use them, but they may save you some typing.
+
+(t.b.w)
+
+### Attribute Mapping ###
+
+Internally, RSC works with arbitrary JavaScript values as their state, but initially, you may want to configure your visuals using element attributes (which are always strings). You may use the following code to map attributes to state variables
+
+```javascript
+  onAttributeChange((Name, newValue) => {
+    if (Name === 'xxx') {
+      this.observed.XXX = newValue
+    }
+  })
+```
+
+if you only need to map a single attribute, or
+
+```javascript
+  onAttributeChange((Name, newValue) => {
+    switch (Name) {
+      case 'xxx': this.observed.XXX = newValue; break
+      case 'yyy': this.observed.YYY = newValue; break
+    }
+  })
+```
+
+if you have more of them.
+
+Please, keep in mind, that you may have to _parse_ given attributes before they can be assigned to state variables. Typical "parsers" include:
+
+```javascript
+  parseNumber(newValue)
+  parseInt(newValue,10)
+  JSON.parse(newValue)
+```
+
+Don't forget, that parsing may fail - you may want to handle parser errors explicitly, but RSC will catch exceptions in `onAttributeChange` and present an error indicator in such a case.
+
+### Custom Rendering ###
+
+In almost any case, you may want to render your new visual in a custom way: use
+
+```javascript
+  toRender(() => html`...`
+```
+
+for simple one-liners without additional rendering logic, or
+
+```javascript
+  toRender(() => {
+    ... // add your logic here
+    return html`...`
+  })
+```
+
+for anything else
+
 ## License ##
 
 [MIT License](LICENSE.md)
