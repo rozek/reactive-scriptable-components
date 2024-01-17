@@ -107,11 +107,9 @@ That's all...
 
 The following code templates may be quite practical when writing custom behaviours - you don't _have_ to use them, but they may save you some typing.
 
-(t.b.w)
-
 ### Initialization ###
 
-Explicitly setting the initial state (and using accessors for any state changes, as shown below) makes code that uses this state leaner. You may use
+Explicitly setting the initial state (and using accessors for any further state changes, as shown below) makes code that uses this state leaner. You may use
 
 ```javascript
   this.unobserved.XXX = ...
