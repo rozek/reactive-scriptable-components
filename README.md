@@ -157,8 +157,9 @@ Internally, RSC works with arbitrary JavaScript values as their state, but initi
   onAttributeChange((Name, newValue) => {
     if (Name === 'xxx') {
       this.observed.XXX = newValue
+      return true
     }
-  })
+  }) // not returning "true" triggers automatic mapping
 ```
 
 if you only need to map a single attribute, or
@@ -169,7 +170,9 @@ if you only need to map a single attribute, or
       case 'xxx': this.observed.XXX = newValue; break
       case 'yyy': this.observed.YYY = newValue; break
       ... // add as many mappings as you need
+      default: return false // triggers automatic mapping
     }
+    return true
   })
 ```
 
@@ -191,7 +194,7 @@ Don't forget, that parsing may fail - you may want to handle parser errors expli
 > 
 > or `onAttributeChange` will never be invoked.
 
-> Nota bene: if  internal names and attribute names of all variables are the same (except for capitalisation) and you also do not have to parse any of the attributes (e.g., because all variables are of type `string` anyway), then there is no need for an explicit `onAttributeChange` handler: RSC will map such attributes automatically.
+> Nota bene: if internal names and attribute names of all variables are the same (except for capitalisation) and you also do not have to parse any of the attributes (e.g., because all variables are of type `string` anyway), then there is no need for an explicit `onAttributeChange` handler: RSC will map such attributes automatically.
 
 ### Custom Rendering ###
 
@@ -239,7 +242,9 @@ Just for the sake of convenience, here is the complete template for a behaviour 
       case 'xxx': this.observed.XXX = newValue; break
       case 'yyy': this.observed.YYY = newValue; break
       ... // add as many mappings as you need
+      default: return false // triggers automatic mapping
     }
+    return true
   })
 
   toRender(() => {
