@@ -165,7 +165,7 @@ if you only need to map a single attribute, or
   })
 ```
 
-if you have more of them.
+if you want to map more of them.
 
 Please, keep in mind, that you may have to _parse_ given attributes before they can be assigned to state variables. Typical "parsers" include:
 
