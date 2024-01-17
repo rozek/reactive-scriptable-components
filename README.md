@@ -175,7 +175,7 @@ Please, keep in mind, that you may have to _parse_ given attributes before they 
   JSON.parse(newValue)
 ```
 
-Don't forget, that parsing may fail - you may want to handle parser errors explicitly, but RSC will catch exceptions in `onAttributeChange` and present an error indicator in such a case.
+Don't forget, that parsing may fail - you may want to handle parser errors explicitly, but RSC will catch exceptions in `onAttributeChange` and present an error indicator for any unhandled error.
 
 ### Custom Rendering ###
 
