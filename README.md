@@ -250,7 +250,7 @@ Just for the sake of convenience, here is the complete template for a behaviour 
 If you want to create a script element for a specific visual, simply
 
 * remove `for-behaviour="..."` (or replace it by `for="..."` for a delegated script) and
-* remove `observed-attributes="..."`
+* remove `observed-attributes="..."`(because only behaviours can observe element attributes)
 
 That's it!
 
