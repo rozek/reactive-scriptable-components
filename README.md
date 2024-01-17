@@ -111,7 +111,22 @@ The following code templates may be quite practical when writing custom behaviou
 
 ### Initialization ###
 
+Explicitly setting the initial state (and using accessors for any state changes, as shown below) makes code that uses this state leaner. You may use
 
+```javascript
+  this.unobserved.XXX = ...
+```
+
+if you have a single state variable only, or
+
+```javascript
+  Object.assign(my.unobserved,{
+    XXX:...,
+    YYY:...,
+  })
+```
+
+if you have more of them.
 
 ### State Access ###
 
