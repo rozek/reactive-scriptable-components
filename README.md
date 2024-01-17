@@ -208,6 +208,48 @@ for simple one-liners without additional rendering logic, or
 
 for anything else.
 
+### Complete (Behaviour) Script Template ###
+
+Just for the sake of convenience, here is the complete tempalte for a behaviour script
+
+```html
+<script type="rsc-script" for-behaviour="..."
+  observed-attributes="xxx, yyy, ...">
+  Object.assign(this.unobserved,{
+    XXX:...,
+    YYY:...,
+    ... // add as many variables as you need
+  })
+
+  const my = this       // "my" is relevant in the following getters and setters
+  Object.assign(my.observed,{
+    get XXX () { return my.unobserved.XXX },
+    set XXX (newValue) {
+      ... // add your validation logic here
+      my.unobserved.XXX = newValue
+    },
+    ... // add as many accessors as you need
+  })
+
+  onAttributeChange((Name, newValue) => {
+    switch (Name) {
+      case 'xxx': this.observed.XXX = newValue; break
+      case 'yyy': this.observed.YYY = newValue; break
+      ... // add as many mappings as you need
+    }
+  })
+
+  toRender(() => {
+    const { XXX,YYY,... } = this.observed
+
+    ... // add your logic here
+    return html`...`
+  })
+</script>
+```
+
+If you want to create a script element for a specific visual, simply remove `for-behaviour="..."` - or replace it by `for="..."` for a delegated script.
+
 ## Build Instructions ##
 
 You may easily build this package yourself.
