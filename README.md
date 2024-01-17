@@ -213,8 +213,7 @@ for anything else.
 Just for the sake of convenience, here is the complete template for a behaviour script
 
 ```html
-<script type="rsc-script" for-behaviour="..."
-  observed-attributes="xxx, yyy, ...">
+<script type="rsc-script" for-behaviour="..." observed-attributes="xxx, yyy, ...">
   Object.assign(this.unobserved,{
     XXX:...,
     YYY:...,
