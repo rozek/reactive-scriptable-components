@@ -1,21 +1,21 @@
 {
   "name": "reactive-scriptable-components",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "light-weight reactive scriptable web components",
   "type": "module",
-  "source":"src/reactive-scriptable-components.ts",
+  "source": "src/reactive-scriptable-components.ts",
   "exports": {
-    "types":  "./dist/reactive-scriptable-components.d.ts",
-    "require":"./dist/reactive-scriptable-components.cjs",
-    "default":"./dist/reactive-scriptable-components.modern.js"
+    "types": "./dist/reactive-scriptable-components.d.ts",
+    "require": "./dist/reactive-scriptable-components.cjs",
+    "default": "./dist/reactive-scriptable-components.modern.js"
   },
-  "main":    "./dist/reactive-scriptable-components.cjs",
-  "module":  "./dist/reactive-scriptable-components.esm.js",
-  "svelte":  "./dist/reactive-scriptable-components.esm.js",
-  "umd:main":"./dist/reactive-scriptable-components.umd.js",
-  "types":   "./dist/reactive-scriptable-components.d.ts",
+  "main": "./dist/reactive-scriptable-components.cjs",
+  "module": "./dist/reactive-scriptable-components.esm.js",
+  "svelte": "./dist/reactive-scriptable-components.esm.js",
+  "umd:main": "./dist/reactive-scriptable-components.umd.js",
+  "types": "./dist/reactive-scriptable-components.d.ts",
   "scripts": {
-    "build":  "rimraf dist && microbundle --globals JIL=javascript-interface-library && rm -r dist/src",
+    "build": "rimraf dist && microbundle --globals JIL=javascript-interface-library && rm -r dist/src",
     "agadoo": "agadoo",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
