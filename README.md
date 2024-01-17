@@ -37,6 +37,8 @@ What makes it interesting is how the logic works:
 
 This approach allows to write simple web applications within minutes - the author uses it for his computer science lectures at [Stuttgart University of Applied Sciences](https://www.hft-stuttgart.com/) in order to demonstrate various concepts and algorithms or give students the possibility to practice what they learned. You probably won't use "reactive-scriptable-components" to implement the next office package, but simple tools can be written with very little effort and in a way that may easily be understood even by inexperienced or casual programmers.
 
+**NPM users**: please consider the [Github README](https://github.com/rozek/reactive-scriptable-components) for the latest description of this package (as updating the docs would otherwise always require a new NPM package version)
+
 > **Warning**: this framework is currently under active development - consider it as pre-alpha software: anything may change, some changes _may_ even break existing applications (although I don't expect such changes)
 
 > Just a small note: if you like this module and plan to use it, consider "starring" this repository (you will find the "Star" button on the top right of this page), so that I know which of my repositories to take most care of.
