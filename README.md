@@ -125,6 +125,7 @@ if you have a single state variable only, or
   Object.assign(this.unobserved,{
     XXX:...,
     YYY:...,
+    ... // add as many variables as you need
   })
 ```
 
@@ -165,6 +166,7 @@ if you only need to map a single attribute, or
     switch (Name) {
       case 'xxx': this.observed.XXX = newValue; break
       case 'yyy': this.observed.YYY = newValue; break
+      ... // add as many mappings as you need
     }
   })
 ```
