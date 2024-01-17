@@ -357,7 +357,7 @@ namespace RSC {
     const AttributeSet = Object.create(null)
     if (observedAttributes != null) {
       observedAttributes.forEach(
-        (Name) => AttributeSet[Name.toLowerCase()] = Name
+        (internalName) => AttributeSet[normalizedAttributeName(internalName)] = internalName
       )
       observedAttributes = observedAttributes.map((Name) => Name.toLowerCase())
     }
@@ -466,6 +466,21 @@ namespace RSC {
         registerBehaviourFromElement(Element)
       }
     })
+  }
+
+/**** normalizedAttributeName ****/
+
+  function normalizedAttributeName (originalName:string):string {
+    return (
+      originalName[0].toLowerCase() +
+      originalName.slice(1).replace(/[A-Z]+/g,function (Match) {
+        return (
+          Match.length === 1
+          ? '-' + Match.toLowerCase()
+          : Match.slice(0,-1).toLowerCase() + '-' + Match.slice(-1).toLowerCase()
+        )
+      })
+    )
   }
 
 //registerAllBehavioursFoundInHead()           // not yet, only after RSC_Visual
@@ -1173,37 +1188,43 @@ console.error(Signal)
     Visual:RSC_Visual, normalizedName:RSC_Name, newValue:string|undefined
   ):void {
     let AttributeChangeHandler = AttributeChangeHandlerForVisual.get(Visual)
-    if (AttributeChangeHandler == null) {
-      const BehaviourName = BehaviourNameOfVisual(Visual)
-      if (BehaviourName == null) { return }
-
-      const Behaviour = InfoForBehaviour(BehaviourName)
-      if (Behaviour == null) { return }
-
-      const AttributeSet = Behaviour.AttributeSet
-      if (normalizedName in AttributeSet) {
-        const originalName = AttributeSet[normalizedName]
-        try {
-          Visual.observed[originalName] = newValue
-        } catch (Signal) {
-          setErrorOfVisual(Visual,{
-            Title:'Attribute Change Failure',
-            Message:(
-              'could not update observed property "' +
-              quoted(originalName) + '" upon a change of attribute "' +
-              quoted(normalizedName) + '"'
-            )
-          })
-        }
-      }
-    } else {
+    if (AttributeChangeHandler != null) {
       try {
-        AttributeChangeHandler.call(Visual, normalizedName, newValue)
+        const AttributeWasProcessed = AttributeChangeHandler.call(
+          Visual, normalizedName, newValue
+        )
+        if (AttributeWasProcessed == true) { return }
       } catch (Signal) {
         setErrorOfVisual(Visual,{
           Title:'Attribute Change Handler Failure',
           Message:'Running the configured attribute change handler failed\n\n' +
                   'Reason: ' + Signal
+        })
+        return
+      }
+    }
+
+  /**** perform automatic attribute mapping ****/
+
+    const BehaviourName = BehaviourNameOfVisual(Visual)
+    if (BehaviourName == null) { return }
+
+    const Behaviour = InfoForBehaviour(BehaviourName)
+    if (Behaviour == null) { return }
+
+    const AttributeSet = Behaviour.AttributeSet
+    if (normalizedName in AttributeSet) {
+      const originalName = AttributeSet[normalizedName]
+      try {
+        Visual.observed[originalName] = newValue
+      } catch (Signal) {
+        setErrorOfVisual(Visual,{
+          Title:'Attribute Change Failure',
+          Message:(
+            'could not update observed property "' +
+            quoted(originalName) + '" upon a change of attribute "' +
+            quoted(normalizedName) + '"'
+          )
         })
       }
     }
@@ -1247,6 +1268,11 @@ console.error(Signal)
             reactiveAttributesForVisual.set(Visual,HandlerList = [])
           }
 
+          const Handler = computed(() => {
+            Visual.observed[originalName] = ValueOfReactiveVariable(Base, PathList)
+          })
+          HandlerList.push(Handler)
+
           if (reactiveName.startsWith('$$')) {
             const Handler = computed(() => {
               setValueOfReactiveVariable(
@@ -1255,11 +1281,6 @@ console.error(Signal)
             })
             HandlerList.push(Handler)
           }
-
-          const Handler = computed(() => {
-            Visual.observed[originalName] = ValueOfReactiveVariable(Base, PathList)
-          })
-          HandlerList.push(Handler)
         }
       }
     })
@@ -1342,14 +1363,24 @@ console.error(Signal)
   function setValueOfReactiveVariable (
     Base:RSC_Visual, PathList:string[], Value:any
   ):void {
-    let Variable:Indexable = Base as Indexable
+    let Variable:Indexable = Base.observed
       for (let i = 0, l = PathList.length-1; i < l; i++) {
         if (Variable == null) throwError(
           'InvalidAccess:cannot access variable bound to reactive attribute'
         )
         Variable = Variable[PathList[i]]
       }
-    Variable[PathList[-1]] = Value
+
+    Variable[PathList[PathList.length-1]] = Value
+
+    if (PathList.length> 1) { // explicitly trigger change of outermost variable
+      const observed = Base.observed
+      if (Array.isArray(PathList[0])) {
+        observed[PathList[0]] = [...observed[PathList[0]]]
+      } else {
+        observed[PathList[0]] = {...observed[PathList[0]]}
+      }
+    }
   }
 
 /**** unregisterAllReactiveAttributesOfVisual ****/
