@@ -182,7 +182,9 @@ Please, keep in mind, that you may have to _parse_ given attributes before they 
 Don't forget, that parsing may fail - you may want to handle parser errors explicitly, but RSC will catch exceptions in `onAttributeChange` and present an error indicator for any unhandled error.
 
 > Important: don't forget to add all relevant attribute names to the `observed-attributes` attribute of your behaviour script element
+> 
 > `<script type="rsc-script" for-behaviour="..." observed-attributes="...">`
+> 
 > or `onAttributeChange` will never be invoked.
 
 ### Custom Rendering ###
