@@ -79,7 +79,7 @@ This trick applies to all kinds of Web Components, not just those presented here
 
 ### In a "No-Build Environment" (e.g., directly in the Browser) ###
 
-If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, just append the following line to the `<head/>` section (after all RSC behaviour scripts, if you need any):
+If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, just append the following line to the `<head/>` section (after/below all RSC behaviour scripts, if you have any):
 
 ```html
 <script type="module" src="https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"></script>
