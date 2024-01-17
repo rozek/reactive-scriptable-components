@@ -109,6 +109,26 @@ The following code templates may be quite practical when writing custom behaviou
 
 (t.b.w)
 
+### Initialization ###
+
+
+
+### State Access ###
+
+It is always a good idea to protect a visual's state against faulty values. You may use the following template to define your own custom accessors:
+
+```javascript
+  const my = this       // "my" is relevant in the following getters and setters
+  Object.assign(my.observed,{
+    get XXX () { return my.unobserved.XXX },
+    set XXX (newValue) {
+      ... // add your validation logic here
+      my.unobserved.XXX = newValue
+    },
+    ... // add as many accessors as you need
+  })
+```
+
 ### Attribute Mapping ###
 
 Internally, RSC works with arbitrary JavaScript values as their state, but initially, you may want to configure your visuals using element attributes (which are always strings). You may use the following code to map attributes to state variables
