@@ -185,7 +185,7 @@ Don't forget, that parsing may fail - you may want to handle parser errors expli
 
 > **Important**: don't forget to add all relevant attribute names to the `observed-attributes` attribute of your behaviour script element
 > 
-> &nbsp; `<script type="rsc-script" for-behaviour="..." observed-attributes="...">`
+> &nbsp; `<script type="rsc-script" for-behaviour="..." observed-attributes="xxx, yyy, ...">`
 > 
 > or `onAttributeChange` will never be invoked.
 
