@@ -67,13 +67,13 @@ This approach allows to write simple web applications within minutes - the autho
 
 All these dependencies have been bundled into the "reactive-scriptable-components" for faster loading and a predictable user experience.
 
-> Nota bene: while it may be advisable to know how to use HTM, there is no immediate need to learn any of the above to write a RSC application.
+> Nota bene: while it may be advisable to [know how to use HTM](https://github.com/developit/htm?tab=readme-ov-file#syntax-like-jsx-but-also-lit), there is no immediate need to learn any of the above to write a RSC application.
 
 The final distributables were built using the marvellous [microbundle](https://github.com/developit/microbundle).
 
 ## Usage ##
 
-In order to avoid initial flashing of "custom Elements" (aka "Web Components") you should add the following lines at the beginning of the `<head/>` section in your HTML file:
+In order to avoid initial flashing of "custom Elements" (aka "Web Components") you should always add the following lines at the beginning of the `<head/>` section in your HTML file:
 
 ```html
 <style>
