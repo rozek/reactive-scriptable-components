@@ -182,7 +182,7 @@ Don't forget, that parsing may fail - you may want to handle parser errors expli
 In almost any case, you may want to render your new visual in a custom way: use
 
 ```javascript
-  toRender(() => html`...`
+  toRender(() => html`...`)
 ```
 
 for simple one-liners without additional rendering logic, or
