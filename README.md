@@ -77,7 +77,7 @@ In order to avoid initial flashing of "custom Elements" (aka "Web Components") y
 
 This trick applies to all kinds of Web Components, not just those presented here.
 
-### Without any Build Environment ###
+### In a "No-Build Environment" (e.g., directly in the Browser) ###
 
 If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, just append the following line to the `<head/>` section (after all RSC behaviour scripts, if you need any):
 
@@ -87,7 +87,7 @@ If you don't use any kind of build tool but create your web application directly
 
 That's all...
 
-### With a Build Environment ###
+### Using a Module Bundler ###
 
 (t.b.w)
 
