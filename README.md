@@ -191,6 +191,8 @@ Don't forget, that parsing may fail - you may want to handle parser errors expli
 > 
 > or `onAttributeChange` will never be invoked.
 
+> Nota bene: if  internal names and attribute names of all variables are the same (except for capitalisation) and you also do not have to parse any of the attributes (e.g., because all variables are of type `string` anyway), then there is no need for an explicit `onAttributeChange` handler: RSC will map such attributes automatically.
+
 ### Custom Rendering ###
 
 In almost any case, you may want to render your new visual in a custom way: use
