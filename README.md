@@ -181,7 +181,7 @@ if you want to map more of them.
 Please, keep in mind, that you may have to _parse_ given attributes before they can be assigned to state variables. Typical "parsers" include:
 
 ```javascript
-  parseNumber(newValue)
+  parseFloat(newValue)
   parseInt(newValue,10)
   JSON.parse(newValue)
 ```
