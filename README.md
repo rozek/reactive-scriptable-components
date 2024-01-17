@@ -210,7 +210,7 @@ for anything else.
 
 ### Complete (Behaviour) Script Template ###
 
-Just for the sake of convenience, here is the complete tempalte for a behaviour script
+Just for the sake of convenience, here is the complete template for a behaviour script
 
 ```html
 <script type="rsc-script" for-behaviour="..."
