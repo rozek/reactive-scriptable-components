@@ -118,7 +118,7 @@ Explicitly setting the initial state (and using accessors for any further state 
 if you have a single state variable only, or
 
 ```javascript
-  Object.assign(my.unobserved,{
+  Object.assign(this.unobserved,{
     XXX:...,
     YYY:...,
   })
