@@ -53,6 +53,7 @@ namespace RSC {
   export type Text     = string                                          // dto.
   export type URL      = string                                          // dto.
 
+  export type RSC_UUID = string                                          // dto.
   export type RSC_Name = string                                          // dto.
 
 /**** throwReadOnlyError ****/
@@ -204,6 +205,23 @@ namespace RSC {
 
   export function acceptableURL (Value:any, Default:URL):URL {
     return (ValueIsURL(Value) ? Value : Default)
+  }
+
+/**** newUUID ****/
+
+  export function newUUID ():RSC_UUID {
+    let Id = '', IdPart
+    IdPart = Math.round(Math.random()*0xffffffff).toString(16)
+      Id += IdPart + '00000000'.slice(IdPart.length) + '-'
+      IdPart = Math.round(Math.random()*0xffff).toString(16)
+      Id += IdPart + '0000'.slice(IdPart.length) + '-4'
+      IdPart = Math.round(Math.random()*0xfff).toString(16)
+      Id += IdPart + '000'.slice(IdPart.length) + '-'
+      IdPart = Math.round(Math.random()*0x3fff+0x8000).toString(16)
+      Id += IdPart + '-'
+      IdPart = Math.round(Math.random()*0xffffffffffff).toString(16)
+      Id += IdPart + '000000000000'.slice(IdPart.length)
+    return Id.toLowerCase()
   }
 
 //------------------------------------------------------------------------------
@@ -846,7 +864,7 @@ namespace RSC {
     try {
       applyExecutable(Visual,Executable)
     } catch (Signal) {
-console.error(Signal)
+console.error('behaviour script execution failure',Signal)
       setErrorOfVisual(Visual,{
         Title:'Execution Failure',
         Message:'Script of behaviour ' + quoted(BehaviourName) + ' could not ' +
@@ -865,7 +883,7 @@ console.error(Signal)
       try {
         Executable = compiledScript(Script)
       } catch (Signal) {
-console.error(Signal)
+console.error('element script compilation failure',Signal)
         setErrorOfVisual(Visual,{
           Title:'Compilation Failure',
           Message:'Visual script could not be compiled.\n\nReason:\n' + Signal
@@ -875,7 +893,7 @@ console.error(Signal)
       try {
         applyExecutable(Visual,Executable as Function)
       } catch (Signal) {
-console.error(Signal)
+console.error('element script execution failure',Signal)
         setErrorOfVisual(Visual,{
           Title:'Execution Failure',
           Message:'Visual script could not be executed.\n\nReason:\n' + Signal
@@ -887,6 +905,7 @@ console.error(Signal)
     const ScriptDelegationInfo = delegatedScriptInfoForVisual(Visual)
     if (ScriptDelegationInfo != null) {
       if (ScriptDelegationInfo.Error != null) {
+console.error('element script compilation failure',ScriptDelegationInfo.Error)
         setErrorOfVisual(Visual,ScriptDelegationInfo.Error)
         return
       }
@@ -894,7 +913,7 @@ console.error(Signal)
       try {
         applyExecutable(Visual,ScriptDelegationInfo.Executable)
       } catch (Signal) {
-console.error(Signal)
+console.error('element script execution failure',Signal)
         setErrorOfVisual(Visual,{
           Title:'Execution Failure',
           Message:'delegated visual script with selector ' +
@@ -1195,6 +1214,7 @@ console.error(Signal)
         )
         if (AttributeWasProcessed == true) { return }
       } catch (Signal) {
+console.error('attribute change handler failure',Signal)
         setErrorOfVisual(Visual,{
           Title:'Attribute Change Handler Failure',
           Message:'Running the configured attribute change handler failed\n\n' +
@@ -1218,6 +1238,7 @@ console.error(Signal)
       try {
         Visual.observed[originalName] = newValue
       } catch (Signal) {
+console.error('attribute change failure',Signal)
         setErrorOfVisual(Visual,{
           Title:'Attribute Change Failure',
           Message:(
@@ -1531,6 +1552,7 @@ console.error(Signal)
         try {
           AttachmentHandler.call(this)
         } catch (Signal) {
+console.error('attachment handler failure',Signal)
           setErrorOfVisual(this,{
             Title:'Attachment Handler Failure',
             Message:'Running the configured attachment handler failed\n\n' +
@@ -1553,6 +1575,7 @@ console.error(Signal)
         try {
           DetachmentHandler.call(this)
         } catch (Signal) {
+console.error('detachment handler failure',Signal)
           setErrorOfVisual(this,{
             Title:'Detachment Handler Failure',
             Message:'Running the configured detachment handler failed\n\n' +
@@ -1625,6 +1648,7 @@ console.error(Signal)
             try {
               Rendering = Renderer.call(this)
             } catch (Signal) {
+console.error('rendering failure',Signal)
               setErrorOfVisual(this,{
                 Title:'Rendering Failure',
                 Message:'Running the configured renderer failed, reason: ' + Signal
