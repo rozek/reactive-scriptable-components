@@ -45,6 +45,8 @@ const { observe, computed, dispose } = hyperactiv
   type indexableEvent       = Event       & Indexable
 
 namespace RSC {
+  export const assign = JIL.ObjectMergedWith
+
 //------------------------------------------------------------------------------
 //--                             Type Definitions                             --
 //------------------------------------------------------------------------------
@@ -1148,28 +1150,28 @@ console.error('element script execution failure',Signal)
   const reactiveFunctionsForVisual:WeakMap<RSC_Visual,Function[]>  = new WeakMap()
   const reactiveAttributesForVisual:WeakMap<RSC_Visual,Function[]> = new WeakMap()
 
-/**** ObservableOfVisual ****/
+/**** ObservablesOfVisual ****/
 
-  const ObservableForVisual:WeakMap<RSC_Visual,Indexable> = new WeakMap()
+  const ObservablesForVisual:WeakMap<RSC_Visual,Indexable> = new WeakMap()
 
-  function ObservableOfVisual (Visual:RSC_Visual):Indexable {
-    let Observable = ObservableForVisual.get(Visual)
-    if (Observable == null) {
-      ObservableForVisual.set(Visual, Observable = observe({},{ deep:false }))
+  function ObservablesOfVisual (Visual:RSC_Visual):Indexable {
+    let Observables = ObservablesForVisual.get(Visual)
+    if (Observables == null) {
+      ObservablesForVisual.set(Visual, Observables = observe({},{ deep:false }))
     }
-    return Observable as Indexable
+    return Observables as Indexable
   }
 
-/**** UnobservedOfVisual ****/
+/**** InternalsOfVisual ****/
 
-  const UnobservedForVisual:WeakMap<RSC_Visual,Indexable> = new WeakMap()
+  const InternalsForVisual:WeakMap<RSC_Visual,Indexable> = new WeakMap()
 
-  function UnobservedOfVisual (Visual:RSC_Visual):Indexable {
-    let Unobserved = UnobservedForVisual.get(Visual)
-    if (Unobserved == null) {
-      UnobservedForVisual.set(Visual, Unobserved = {})
+  function InternalsOfVisual (Visual:RSC_Visual):Indexable {
+    let Internals = InternalsForVisual.get(Visual)
+    if (Internals == null) {
+      InternalsForVisual.set(Visual, Internals = {})
     }
-    return Unobserved as Indexable
+    return Internals as Indexable
   }
 
 /**** startReactiveRenderingOfVisual ****/
@@ -1394,7 +1396,7 @@ console.error('attribute change failure',Signal)
 
     Variable[PathList[PathList.length-1]] = Value
 
-    if (PathList.length> 1) { // explicitly trigger change of outermost variable
+    if (PathList.length > 1) {// explicitly trigger change of outermost variable
       const observed = Base.observed
       if (Array.isArray(PathList[0])) {
         observed[PathList[0]] = [...observed[PathList[0]]]
@@ -1597,12 +1599,12 @@ console.error('detachment handler failure',Signal)
 
   /**** observed ****/
 
-    public get observed ():Indexable  { return ObservableOfVisual(this) }
+    public get observed ():Indexable  { return ObservablesOfVisual(this) }
     public set observed (_:Indexable) { throwReadOnlyError('observable') }
 
   /**** unobserved ****/
 
-    public get unobserved ():Indexable  { return UnobservedOfVisual(this) }
+    public get unobserved ():Indexable  { return InternalsOfVisual(this) }
     public set unobserved (_:Indexable) { throwReadOnlyError('unobserved') }
 
   /**** onAttributeChange (originalName, newValue) ****/
