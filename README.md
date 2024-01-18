@@ -9,10 +9,10 @@ The idea behind this framework is to allow for the rapid development of small re
    <rsc-title>Temperature Converter</rsc-title>
    <rsc-table columns="2">
     <rsc-label>Celsius:</rsc-label>
-    <rsc-number-input $value="Applet.observed.Celsius"></rsc-number-input>
+    <rsc-number-input $$value="Applet.observed.Celsius"></rsc-number-input>
 
     <rsc-label>Celsius:</rsc-label>
-    <rsc-number-input $value="Applet.observed.Fahrenheit"></rsc-number-input>
+    <rsc-number-input $$value="Applet.observed.Fahrenheit"></rsc-number-input>
    </rsc-table>
 
    <script type="rsc-script">
@@ -31,7 +31,7 @@ The example basically consists of two number input controls, a bit of visual "de
 
 What makes it interesting is how the logic works:
 
-* `$value` attributes make the number input controls "reactive", i.e., user input changes the specified variable and variable changes will be reflected in the UI - and, yes, the circularity of the dependencies shown above causes no problem
+* `$$value` attributes make the number input controls "reactive", i.e., user input changes the specified variable and variable changes will be reflected in the UI - and, yes, the circularity of the dependencies shown above causes no problem
 * every "reactive scriptable component" (which is a standard [web component](https://developer.mozilla.org/en-US/docs/Web/API/Web_components)) may contain its own `observed` and `unobserved` (state) variables - in this trivial example, only the applet itself provides some "state", whereas the input controls do not
 * whenever an `observed` variable is changed, all functions using that variable may be `reactively` recalculated - in this example, changes of the `Celsius` variable will recompute the `Fahrenheit` variable and vice-versa - and the `$value` reactivity will automatically update the number input fields.
 
