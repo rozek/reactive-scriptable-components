@@ -65,7 +65,7 @@ This approach allows to write simple web applications within minutes - the autho
 * [PREACT](https://github.com/preactjs/preact) - from which its efficient and light-weight DOM diffing is used, and
 * [Hyperactiv](https://github.com/elbywan/hyperactiv) - a light-weight reactive library which even handles circular dependencies
 
-All these dependencies have been bundled into the "reactive-scriptable-components" for faster loading and a predictable user experience.
+All these dependencies have been bundled into a single module for faster loading and a predictable user experience.
 
 > Nota bene: while it may be advisable to [know how to use HTM](https://github.com/developit/htm?tab=readme-ov-file#syntax-like-jsx-but-also-lit), there is no immediate need to learn any of the above to write a RSC application.
 
@@ -181,7 +181,7 @@ if you want to map more of them.
 Please, keep in mind, that you may have to _parse_ given attributes before they can be assigned to state variables. Typical "parsers" include:
 
 ```javascript
-  parseNumber(newValue)
+  parseFloat(newValue)
   parseInt(newValue,10)
   JSON.parse(newValue)
 ```
