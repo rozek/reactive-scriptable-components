@@ -13,7 +13,7 @@ The idea behind this framework is to allow for the rapid development of small re
     <rsc-label>Celsius:</rsc-label>
     <rsc-number-input $$value="Applet.observed.Celsius"></rsc-number-input>
 
-    <rsc-label>Celsius:</rsc-label>
+    <rsc-label>Fahrenheit:</rsc-label>
     <rsc-number-input $$value="Applet.observed.Fahrenheit"></rsc-number-input>
    </rsc-table>
 
