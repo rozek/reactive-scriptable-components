@@ -12,10 +12,10 @@ The idea behind this framework is to allow for the rapid development of small re
   <rsc-applet>
    <rsc-title>Temperature Converter</rsc-title>
    <rsc-tabular columns="2">
-    <rsc-label>Celsius:</rsc-label>
+    <rsc-label>°Celsius:</rsc-label>
     <rsc-native-number-input $$value="Applet:observed.Celsius"></rsc-native-number-input>
 
-    <rsc-label>Fahrenheit:</rsc-label>
+    <rsc-label>°Fahrenheit:</rsc-label>
     <rsc-native-number-input $$value="Applet:observed.Fahrenheit"></rsc-native-number-input>
    </rsc-tabular>
 
