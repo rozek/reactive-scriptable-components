@@ -47,6 +47,12 @@ const { observe, computed, dispose } = hyperactiv
 namespace RSC {
   export const assign = JIL.ObjectMergedWith
 
+/**** isRunning ****/
+
+  let RSC_isRunning:boolean = false
+
+  export function isRunning () { return RSC_isRunning }
+
 //------------------------------------------------------------------------------
 //--                             Type Definitions                             --
 //------------------------------------------------------------------------------
@@ -418,6 +424,7 @@ namespace RSC {
           return
         }
 
+console.log('registering behaviour',Name)
         BehaviourRegistry[normalizedName] = {
           Name, AttributeSet, Source, Executable
         }
@@ -464,7 +471,7 @@ namespace RSC {
     )
 
     forbidVisualsWithinBehaviour(
-      Name, ScriptElement.getAttribute('fobidden-contents') || ''
+      Name, ScriptElement.getAttribute('forbidden-contents') || ''
     )
   }
 
@@ -1527,41 +1534,7 @@ console.error('attribute change failure',Signal)
   /**** connectedCallback - elements are added from the outside in ****/
 
     public connectedCallback () {
-      validateContainerOfVisual(this)    // throws if inacceptable for container
-
-      if (VisualWasInitialized(this)) {
-        unregisterAllReactiveAttributesOfVisual(this)
-        registerAllReactiveAttributesOfVisual(this)
-      } else {
-        registerAllBehavioursFoundInVisual(this)
-        registerAllDelegatedScriptsFoundInVisual(this)
-
-        validateContentsOfVisual(this)
-
-        applyBehaviourScriptOfVisual(this)
-        applyElementScriptOfVisual(this)
-
-        updateAllAttributesOfVisual(this)    // setters should be defined by now
-        registerAllReactiveAttributesOfVisual(this)
-
-        markVisualAsInitialized(this)             // outer visuals are now known
-      }
-
-      startReactiveRenderingOfVisual(this)                   // also renders now
-
-      let AttachmentHandler = AttachmentHandlerForVisual.get(this)
-      if (AttachmentHandler != null) {
-        try {
-          AttachmentHandler.call(this)
-        } catch (Signal) {
-console.error('attachment handler failure',Signal)
-          setErrorOfVisual(this,{
-            Title:'Attachment Handler Failure',
-            Message:'Running the configured attachment handler failed\n\n' +
-                    'Reason: ' + Signal
-          })
-        }
-      }
+      if (RSC_isRunning) { startVisual(this) }
     }
 
   /**** disconnectedCallback - elements are removed from the outside in ****/
@@ -1685,5 +1658,69 @@ console.error('rendering failure',Signal)
 
   customElements.define('rsc-visual', RSC_Visual)
 
+/**** startAllAppletsInDocument ****/
+
+  function startAllAppletsInDocument ():void {
+    document.body.querySelectorAll('rsc-applet,[behaviour="applet"]').forEach(
+      (DOMElement) => {
+        if (ValueIsVisual(DOMElement)) { startVisual(DOMElement as RSC_Visual) }
+      }
+    )
+  }
+
+/**** startAllVisualsIn ****/
+
+  function startAllVisualsIn (DOMElement:Element):void {
+    Array.from(DOMElement.children).forEach((innerElement) => {
+      if (ValueIsVisual(innerElement)) { startVisual(innerElement as RSC_Visual) }
+      startAllVisualsIn(innerElement)
+    })
+  }
+
+/**** startVisual ****/
+
+  function startVisual (Visual:RSC_Visual):void {
+    validateContainerOfVisual(Visual)    // throws if inacceptable for container
+
+    if (VisualWasInitialized(Visual)) {
+      unregisterAllReactiveAttributesOfVisual(Visual)
+      registerAllReactiveAttributesOfVisual(Visual)
+    } else {
+//    registerAllBehavioursFoundInVisual(Visual)
+      registerAllDelegatedScriptsFoundInVisual(Visual)
+
+      validateContentsOfVisual(Visual)
+
+      applyBehaviourScriptOfVisual(Visual)
+      applyElementScriptOfVisual(Visual)
+
+      updateAllAttributesOfVisual(Visual)    // setters should be defined by now
+      registerAllReactiveAttributesOfVisual(Visual)
+
+      markVisualAsInitialized(Visual)             // outer visuals are now known
+    }
+
+    startReactiveRenderingOfVisual(Visual)                   // also renders now
+
+    let AttachmentHandler = AttachmentHandlerForVisual.get(Visual)
+    if (AttachmentHandler != null) {
+      try {
+        AttachmentHandler.call(Visual)
+      } catch (Signal) {
+console.error('attachment handler failure',Signal)
+        setErrorOfVisual(Visual,{
+          Title:'Attachment Handler Failure',
+          Message:'Running the configured attachment handler failed\n\n' +
+                  'Reason: ' + Signal
+        })
+      }
+    }
+
+    startAllVisualsIn(Visual)
+  }
+
   registerAllBehavioursFoundInHead()
+
+  RSC_isRunning = true
+  startAllAppletsInDocument()
 }
