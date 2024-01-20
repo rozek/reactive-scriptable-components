@@ -9,13 +9,13 @@ The idea behind this framework is to allow for the rapid development of small re
 ```html
   <rsc-applet>
    <rsc-title>Temperature Converter</rsc-title>
-   <rsc-table columns="2">
+   <rsc-tabular columns="2">
     <rsc-label>Celsius:</rsc-label>
-    <rsc-number-input $$value="Applet.observed.Celsius"></rsc-number-input>
+    <rsc-native-number-input $$value="Applet:observed.Celsius"></rsc-native-number-input>
 
     <rsc-label>Fahrenheit:</rsc-label>
-    <rsc-number-input $$value="Applet.observed.Fahrenheit"></rsc-number-input>
-   </rsc-table>
+    <rsc-native-number-input $$value="Applet:observed.Fahrenheit"></rsc-native-number-input>
+   </rsc-tabular>
 
    <script type="rsc-script">
     const observed = Object.assign(this.observed,{
