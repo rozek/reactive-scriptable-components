@@ -1727,10 +1727,16 @@ console.error('attachment handler failure',Signal)
 
 
 
-  registerAllBehavioursFoundInHead()
+/**** start-up in a well-defined way ****/
 
-  RSC_isRunning = true
-  startAllAppletsInDocument()
+  document.addEventListener("readystatechange", (Event) => {
+    if (document.readyState === 'complete') {
+      registerAllBehavioursFoundInHead()
+
+      RSC_isRunning = true
+      startAllAppletsInDocument()
+    }
+  })
 }
 
 export const {
