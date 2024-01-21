@@ -1,3 +1,5 @@
+import { registerBehaviour } from 'RSC'
+
   registerBehaviour('centered',
     function (
       RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
