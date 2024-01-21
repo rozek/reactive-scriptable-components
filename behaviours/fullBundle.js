@@ -701,7 +701,8 @@ console.log('isChecked',isChecked)
       <style>
         :host { display:inline-block }
       </style>
-      <meter value=${Value} min=${Minimum} low=${lowerBound} opt=${Optimum}
+      <meter value=${isNaN(Value) ? '' : Value}
+        min=${Minimum} low=${lowerBound} opt=${Optimum}
         high=${upperBound} max=${Maximum}
       />
     `
@@ -761,7 +762,7 @@ console.log('isChecked',isChecked)
       <style>
         :host { display:inline-block }
       </style>
-      <progress value=${Value} max=${Maximum} />
+      <progress value=${isNaN(Value) ? '' : Value} max=${Maximum} />
     `
   })
 
@@ -893,7 +894,8 @@ console.log('isChecked',isChecked)
         :host { display:inline-block }
       </style>
       <input type="range" list=${UUID} disabled=${! this.observed.enabled}
-        value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
+        value=${isNaN(Value) ? '' : Value}
+        min=${Minimum} max=${Maximum} step=${Stepping}
         onInput=${onInput} onBlur=${this.render.bind(this)}
       />
       ${DataList}
@@ -1317,7 +1319,8 @@ console.log('isChecked',isChecked)
         :host { display:inline-block }
       </style>
       <input type="text" list=${UUID} disabled=${! this.observed.enabled}
-        value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
+        value=${isNaN(Value) ? '' : Value}
+        min=${Minimum} max=${Maximum} step=${Stepping}
         pattern=${Pattern} placeholder=${Placeholder} readonly=${readonly}
         onInput=${onInput} onBlur=${this.render.bind(this)}
       />
