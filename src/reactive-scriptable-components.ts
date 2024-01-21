@@ -18,7 +18,7 @@ import {
   ValueIsListSatisfying,
   ValueIsURL,
   ValidatorForClassifier, acceptNil, rejectNil,
-  expectTextline, expectedTextline,
+  expectText, expectTextline, expectedTextline,
   expectFunction,
   allowListSatisfying,
   expectInstanceOf,
@@ -370,15 +370,21 @@ namespace RSC {
 
 /**** registerBehaviour ****/
 
-  function registerBehaviour (
+  export function registerBehaviour (
     Name:RSC_Name, SourceOrExecutable:Text|Function,
     observedAttributes:RSC_Name[] = []
   ):void {
-    let normalizedName = Name.toLowerCase()
+    expectName('behaviour name',Name)
+
+    if (! ValueIsFunction(SourceOrExecutable)) {
+      expectText('behaviour script',SourceOrExecutable)
+    }
 
     allowListSatisfying(
       'list of observed element attributes', observedAttributes, ValueIsName
     )
+
+    let normalizedName = Name.toLowerCase()
 
     const AttributeSet = Object.create(null)
     if (observedAttributes != null) {
