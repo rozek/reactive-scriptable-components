@@ -1732,3 +1732,17 @@ console.error('attachment handler failure',Signal)
   RSC_isRunning = true
   startAllAppletsInDocument()
 }
+
+export const {
+  assign, isRunning,
+  throwReadOnlyError,
+  ValueIsDOMElement, allowDOMElement, allowedDOMElement, expectDOMElement, expectedDOMElement,
+  ValueIsVisual, allowVisual, allowedVisual, expectVisual, expectedVisual,
+  ValueIsName, allowName, allowedName, expectName, expectedName,
+  ValueIsErrorInfo, allowErrorInfo, allowedErrorInfo, expectErrorInfo, expectedErrorInfo,
+  newUUID,
+  outerVisualOf,VisualContaining, outermostVisualOf,
+  closestVisualWithBehaviour, closestVisualMatching,
+  innerVisualsOf,
+  registerBehaviour
+} = RSC
