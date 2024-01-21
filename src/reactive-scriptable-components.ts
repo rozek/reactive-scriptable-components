@@ -1719,6 +1719,8 @@ console.error('attachment handler failure',Signal)
     startAllVisualsIn(Visual)
   }
 
+
+
   registerAllBehavioursFoundInHead()
 
   RSC_isRunning = true
