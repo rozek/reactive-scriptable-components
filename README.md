@@ -136,37 +136,41 @@ you may even do without explicitly loading the RSC module as the the bundles alr
 
 (t.b.w)
 
-## Usage ##
+## Applet Creation ##
 
 (t.b.w)
 
 ### Component Usage ###
 
-(t.b.w)
+(t.b.w) (lifecycle handling, nesting, containment validation)
 
 ### Element Scripts ###
 
-(t.b.w)
+(t.b.w) (script as function bodies, script attributes, script elements, delegated scripts)
 
 ### Behaviour Scripts ###
 
-(t.b.w)
+(t.b.w) (behaviour registry, behaviour definition, behaviour and element scripts together)
 
 ### Observed and Unobserved Variables ###
 
-(t.b.w)
+(t.b.w) (accessors, scope)
 
 ### Reactive Functions ###
 
-(t.b.w)
+(t.b.w) (reactively, initial invocation, variable tracking, see hyperactiv)
 
 ### Reactive Attributes ###
 
-(t.b.w)
+(t.b.w) (access path, unidirectional/bidirectional binding)
+
+### Rendering ###
+
+(t.b.w) (see htm, DOM diffing by preact, initial rendering, automatic vs. manual re-rendering)
 
 ### RSC Events ###
 
-(t.b.w)
+(t.b.w) (event handler registration on/once/off, selectors, event triggering, arguments, results, bubbling)
 
 ### Error Indicators ###
 
