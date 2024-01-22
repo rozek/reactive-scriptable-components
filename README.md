@@ -148,6 +148,28 @@ you may even do without explicitly loading the RSC module as the the bundles alr
 
 (t.b.w) (script as function bodies, script attributes, script elements, delegated scripts)
 
+```javascript
+function (
+  RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+  toRender, html, on,once,off,trigger, reactively
+) {
+// this is where scripts are inserted
+}
+```
+
+- **`RSC`**<br>contains a reference to RSC itself - thus, if you want to use any of its exported functions, you don't have to import the module yourself
+- **`JIL`**<br>since RSC uses the [javascript-interface-library](https://github.com/rozek/javascript-interface-library) internally anyway, you may use this reference to that library in order to avoid having to import it in your scripts yourself
+- **`onAttributeChange`**<br>`onAttributeChange((normalizedName,newValue) => ...)` can be used to install a function (with the given signature) that will be called whenever an attribute of an RSC element was changed. Only one callback function can be installed, later invocations of `onAttributeChange` overwrite formerly registered callbacks
+- **`onAttachment`**<br>
+- **`onDetachment`**<br>
+- **`toRender`**<br>
+- **`html`**<br>
+- **`on`**<br>
+- **`once`**<br>
+- **`off`**<br>
+- **`trigger`**<br>
+- **`reactively`**<br>
+
 ### Behaviour Scripts ###
 
 (t.b.w) (behaviour registry, behaviour definition, behaviour and element scripts together)
