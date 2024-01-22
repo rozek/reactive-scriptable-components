@@ -114,7 +114,7 @@ Most modern browsers support import maps and web components - except Safari brow
  <script src="https://rozek.github.io/reactive-scriptable-components/polyfills/webcomponents-bundle.js"></script>
 ```
 
-### In a "No-Build Environment" (e.g., directly in the Browser) ###
+### Using RSC in a "No-Build Environment" (e.g., directly in the Browser) ###
 
 If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, just append the following line to the `<head/>` section (after/below all RSC behaviour scripts, if you have any):
 
@@ -124,7 +124,7 @@ If you don't use any kind of build tool but create your web application directly
 
 That's all...
 
-### Using a Module Bundler ###
+### Using RSC with a Module Bundler ###
 
 (t.b.w)
 
