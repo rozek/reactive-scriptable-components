@@ -185,7 +185,7 @@ function (
 - **`on`**<br>`on(events, selectors, data, (Event) => ...)` can be used to install a handler for the given (comma-separated) list of `events`, sent from (RSC or DOM) elements identified by any of the (optionally) given (comma-separated) selectors ...
 - **`once`**<br>
 - **`off`**<br>
-- **`trigger`**<br>
+- **`trigger`**<br><br>&nbsp;<br>
 - **`reactively`**<br>`reactively(() => ...)`
 
 ### Behaviour Scripts ###
