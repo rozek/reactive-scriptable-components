@@ -430,7 +430,6 @@ namespace RSC {
           return
         }
 
-console.log('registering behaviour',Name)
         BehaviourRegistry[normalizedName] = {
           Name, AttributeSet, Source, Executable
         }
@@ -735,8 +734,8 @@ console.log('registering behaviour',Name)
 
   function compiledScript (Script:Text):Function {
     return new Function(
-      'RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,' +
-      'html, on,once,off,trigger, reactively',
+      'my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment, ' +
+      'toRender, html, on,once,off,trigger, reactively',
       Script || ''
     )                                                                // may fail!
   }
@@ -848,8 +847,8 @@ console.log('registering behaviour',Name)
   /**** run "Executable" in the context of "Visual" ****/
 
     Executable.apply(Visual, [
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      Visual,Visual, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ])
   }
 
