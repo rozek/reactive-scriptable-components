@@ -92,6 +92,28 @@ In order to avoid initial flashing of "custom Elements" (aka "Web Components") y
 
 This trick applies to all kinds of Web Components, not just those presented here.
 
+Additionally, it's useful to provide an "import map" that allows scripts to import modules by name rather than by URL:
+
+```html
+ <script type="importmap">
+ {
+  "imports": {
+    "reactive-scriptable-library": "https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js",
+    "RSC":                         "https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"
+  }
+ }
+ </script>
+```
+
+Most modern browsers support import maps and web components - except Safari browsers < 16.4 or (any browsers on) devices with iOS < 16.4. If you need to support these, you should add the following lines and load "polyfills" that fill these gaps:
+
+```html
+ <!-- Import Map Polyfill from https://github.com/guybedford/es-module-shims -->
+ <script src="https://rozek.github.io/reactive-scriptable-components/polyfills/es-module-shims.js"></script>
+ <!-- Web Components Polyfill from https://github.com/webcomponents/webcomponentsjs -->
+ <script src="https://rozek.github.io/reactive-scriptable-components/polyfills/webcomponents-bundle.js"></script>
+```
+
 ### In a "No-Build Environment" (e.g., directly in the Browser) ###
 
 If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, just append the following line to the `<head/>` section (after/below all RSC behaviour scripts, if you have any):
