@@ -80,7 +80,7 @@ All these dependencies have been bundled into a single module for faster loading
 
 The final distributables were built using the marvellous [microbundle](https://github.com/developit/microbundle).
 
-## Usage ##
+## Installation ##
 
 In order to avoid initial flashing of "custom Elements" (aka "Web Components") you should always add the following lines at the beginning of the `<head/>` section in your HTML file:
 
@@ -136,7 +136,43 @@ you may even do without explicitly loading the RSC module as the the bundles alr
 
 (t.b.w)
 
-## API Reference ##
+## Usage ##
+
+(t.b.w)
+
+### Component Usage ###
+
+(t.b.w)
+
+### Element Scripts ###
+
+(t.b.w)
+
+### Behaviour Scripts ###
+
+(t.b.w)
+
+### Observed and Unobserved Variables ###
+
+(t.b.w)
+
+### Reactive Functions ###
+
+(t.b.w)
+
+### Reactive Attributes ###
+
+(t.b.w)
+
+### RSC Events ###
+
+(t.b.w)
+
+### Error Indicators ###
+
+(t.b.w)
+
+## Pre-defined Behaviours ##
 
 (t.b.w)
 
@@ -144,7 +180,7 @@ you may even do without explicitly loading the RSC module as the the bundles alr
 
 (t.b.w)
 
-## Behaviours ##
+## API Reference ##
 
 (t.b.w)
 
