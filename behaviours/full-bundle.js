@@ -37,9 +37,8 @@ import { registerBehaviour } from 'RSC'
 //--                              rsc-horizontal                              --
 //------------------------------------------------------------------------------
 
-  this.unobserved.Alignment = 'start'
+  my.unobserved.Alignment = 'start'
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Alignment () { return my.unobserved.Alignment },
     set Alignment (newValue) {
@@ -52,13 +51,13 @@ import { registerBehaviour } from 'RSC'
 
   onAttributeChange((Name, newValue) => {
     if (Name === 'align') {
-      this.observed.Alignment = newValue
+      my.observed.Alignment = newValue
       return true
     }
   })
 
   toRender(() => {
-    const Alignment = this.observed.Alignment
+    const Alignment = my.observed.Alignment
 
     return html`
       <style>
@@ -90,9 +89,8 @@ import { registerBehaviour } from 'RSC'
 //--                               rsc-vertical                               --
 //------------------------------------------------------------------------------
 
-  this.unobserved.Alignment = 'start'
+  my.unobserved.Alignment = 'start'
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Alignment () { return my.unobserved.Alignment },
     set Alignment (newValue) {
@@ -105,13 +103,13 @@ import { registerBehaviour } from 'RSC'
 
   onAttributeChange((Name, newValue) => {
     if (Name === 'align') {
-      this.observed.Alignment = newValue
+      my.observed.Alignment = newValue
       return true
     }
   })
 
   toRender(() => {
-    let Alignment = this.observed.Alignment
+    let Alignment = my.observed.Alignment
     switch (Alignment) {
       case 'top':    Alignment = 'start'; break // TODO: not always correct
       case 'bottom': Alignment = 'end';   break // TODO: not always correct
@@ -147,13 +145,12 @@ import { registerBehaviour } from 'RSC'
 //--                               rsc-tabular                                --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Columns:2,
     ColumnStyles:[],
     verticalAlignment:'top',
   })
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Columns () { return my.unobserved.Columns },
     set Columns (newValue) {
@@ -178,9 +175,9 @@ import { registerBehaviour } from 'RSC'
 
   onAttributeChange((Name, newValue) => {
     switch (Name) {
-      case 'columns':       this.observed.Columns = parseInt(newValue,10);     break
-      case 'column-styles': this.observed.ColumnStyles = JSON.parse(newValue); break
-      case 'valign':        this.observed.verticalAlignment = newValue;        break
+      case 'columns':       my.observed.Columns = parseInt(newValue,10);     break
+      case 'column-styles': my.observed.ColumnStyles = JSON.parse(newValue); break
+      case 'valign':        my.observed.verticalAlignment = newValue;        break
       default: return false
     }
     return true
@@ -189,9 +186,9 @@ import { registerBehaviour } from 'RSC'
   toRender(() => {
     const {
       Columns:ColumnLimit, ColumnStyles, verticalAlignment
-    } = this.observed
+    } = my.observed
 
-    const innerElements = Array.from(this.children)
+    const innerElements = Array.from(my.children)
 
     const Rows = []; let SlotCount = 0, ColumnCount
     if (innerElements.length > 0) {
@@ -274,10 +271,9 @@ import { registerBehaviour } from 'RSC'
 //--                                 rsc-gap                                  --
 //------------------------------------------------------------------------------
 
-  this.unobserved.Width  = 1
-  this.unobserved.Height = 1
+  my.unobserved.Width  = 1
+  my.unobserved.Height = 1
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Width () { return my.unobserved.Width },
     set Width (newValue) {
@@ -294,15 +290,15 @@ import { registerBehaviour } from 'RSC'
 
   onAttributeChange((Name, newValue) => {
     switch (Name) {
-      case 'width':  this.observed.Width  = parseInt(newValue,10); break
-      case 'height': this.observed.Height = parseInt(newValue,10); break
+      case 'width':  my.observed.Width  = parseInt(newValue,10); break
+      case 'height': my.observed.Height = parseInt(newValue,10); break
       default: return false
     }
     return true
   })
 
   toRender(() => html`
-    <div style="width:${this.observed.Width}px; height:${this.observed.Height}px"/>
+    <div style="width:${my.observed.Width}px; height:${my.observed.Height}px"/>
   `)
 
 
@@ -319,9 +315,8 @@ import { registerBehaviour } from 'RSC'
 //--                               rsc-htmlview                               --
 //------------------------------------------------------------------------------
 
-  this.unobserved.Value = ''
+  my.unobserved.Value = ''
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -355,9 +350,8 @@ import { registerBehaviour } from 'RSC'
 //--                               rsc-textview                               --
 //------------------------------------------------------------------------------
 
-  this.unobserved.Value = ''
+  my.unobserved.Value = ''
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -395,13 +389,12 @@ import { registerBehaviour } from 'RSC'
     'right center','left bottom','center bottom','right bottom'
   ]
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:         '',
     ImageScaling:  'contain',
     ImageAlignment:'center center',
   })
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -423,7 +416,7 @@ import { registerBehaviour } from 'RSC'
   })
 
   toRender(() => {
-    const { Value,ImageScaling,ImageAlignment } = this.observed
+    const { Value,ImageScaling,ImageAlignment } = my.observed
 
     return html`
       <style>
@@ -450,12 +443,11 @@ import { registerBehaviour } from 'RSC'
 //--                            rsc-native-button                             --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     enabled:true,
   })
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get enabled () { return my.unobserved.enabled },
     set enabled (newValue) {
@@ -466,7 +458,7 @@ import { registerBehaviour } from 'RSC'
 
   onAttributeChange((Name, newValue) => {
     if (Name === 'enabled') {
-      this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+      my.observed.enabled = (newValue === 'enabled') || (newValue === '')
       return true
     }
     return false // triggers automatic mapping
@@ -477,8 +469,8 @@ import { registerBehaviour } from 'RSC'
       <style>
         :host { display:inline-block }
       </style>
-      <button disabled=${! this.observed.enabled}>
-        ${this.observed.Value}
+      <button disabled=${! my.observed.enabled}>
+        ${my.observed.Value}
         <slot/>
       </button>
     `
@@ -498,12 +490,11 @@ import { registerBehaviour } from 'RSC'
 //--                           rsc-native-checkbox                            --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:null,    // false, true or null/undefined
     enabled:true,
   })
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -521,23 +512,23 @@ import { registerBehaviour } from 'RSC'
   onAttributeChange((Name, newValue) => {
     if (Name === 'value') {
       switch (newValue) {
-        case 'true':  this.observed.Value = true;      break
-        case 'false': this.observed.Value = false;     break
-        default:      this.observed.Value = undefined; break
+        case 'true':  my.observed.Value = true;      break
+        case 'false': my.observed.Value = false;     break
+        default:      my.observed.Value = undefined; break
       }
       return true
     }
 
     if (Name === 'enabled') {
-      this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+      my.observed.enabled = (newValue === 'enabled') || (newValue === '')
       return true
     }
     return false // triggers automatic mapping
   })
 
   toRender(() => {
-    const isChecked       = (this.observed.Value == true)
-    const isIndeterminate = (this.observed.Value == null)
+    const isChecked       = (my.observed.Value == true)
+    const isIndeterminate = (my.observed.Value == null)
 
     function onInput (Event) {
       my.observed.Value = Event.target.checked
@@ -547,7 +538,7 @@ import { registerBehaviour } from 'RSC'
       <style>
         :host { display:inline-block }
       </style>
-      <input type="checkbox" disabled=${! this.observed.enabled}
+      <input type="checkbox" disabled=${! my.observed.enabled}
         checked=${isChecked} indeterminate=${isIndeterminate}
         onInput=${onInput}
       />
@@ -568,13 +559,12 @@ import { registerBehaviour } from 'RSC'
 //--                          rsc-native-radiobutton                          --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:undefined, // may be of any type
     Match:undefined, // dto.
     enabled:true,
   })
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value ()         { return my.unobserved.Value },
     set Value (newValue) { my.unobserved.Value = newValue },
@@ -591,7 +581,7 @@ import { registerBehaviour } from 'RSC'
 
   onAttributeChange((Name, newValue) => {
     if (Name === 'enabled') {
-      this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+      my.observed.enabled = (newValue === 'enabled') || (newValue === '')
       return true
     }
     return false // triggers automatic mapping
@@ -605,13 +595,12 @@ import { registerBehaviour } from 'RSC'
     }
 
     const isChecked = (my.observed.Value === my.observed.Match)
-console.log('isChecked',isChecked)
 
     return html`
       <style>
         :host { display:inline-block }
       </style>
-      <input type="radio" disabled=${! this.observed.enabled}
+      <input type="radio" disabled=${! my.observed.enabled}
         checked=${isChecked}
         onInput=${onInput}
       />
@@ -633,14 +622,13 @@ console.log('isChecked',isChecked)
 //--                             rsc-native-gauge                             --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{ // all values are numbers or undefined
+  RSC.assign(my.unobserved,{ // all values are numbers or undefined
     Value:undefined,
     Minimum:undefined, lowerBound:undefined,
     Optimum:undefined,
     Maximum:undefined, upperBound:undefined,
   }) // these are configured(!) values - they may be nonsense (e.g. min. > max.)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -685,12 +673,12 @@ console.log('isChecked',isChecked)
     }
 
     switch (Name) {
-      case 'value':       this.observed.Value      = parsed(newValue); break
-      case 'minimum':     this.observed.Minimum    = parsed(newValue); break
-      case 'lower-bound': this.observed.lowerBound = parsed(newValue); break
-      case 'optimum':     this.observed.Optimum    = parsed(newValue); break
-      case 'upper-bound': this.observed.upperBound = parsed(newValue); break
-      case 'maximum':     this.observed.Maximum    = parsed(newValue); break
+      case 'value':       my.observed.Value      = parsed(newValue); break
+      case 'minimum':     my.observed.Minimum    = parsed(newValue); break
+      case 'lower-bound': my.observed.lowerBound = parsed(newValue); break
+      case 'optimum':     my.observed.Optimum    = parsed(newValue); break
+      case 'upper-bound': my.observed.upperBound = parsed(newValue); break
+      case 'maximum':     my.observed.Maximum    = parsed(newValue); break
       default: return false // triggers automatic mapping
     }
     return true
@@ -724,12 +712,11 @@ console.log('isChecked',isChecked)
 //--                          rsc-native-progressbar                          --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{ // all values are numbers or undefined
+  RSC.assign(my.unobserved,{ // all values are numbers or undefined
     Value:undefined,
     Maximum:undefined,
   })
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -750,8 +737,8 @@ console.log('isChecked',isChecked)
     }
 
     switch (Name) {
-      case 'value':   this.observed.Value   = parsed(newValue); break
-      case 'maximum': this.observed.Maximum = parsed(newValue); break
+      case 'value':   my.observed.Value   = parsed(newValue); break
+      case 'maximum': my.observed.Maximum = parsed(newValue); break
       default: return false // triggers automatic mapping
     }
     return true
@@ -787,7 +774,7 @@ console.log('isChecked',isChecked)
     return HashmarkPattern.test(Value)
   }
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:undefined,
     Minimum:undefined, Maximum:undefined,
     Stepping:'any', Hashmarks:[],
@@ -795,7 +782,6 @@ console.log('isChecked',isChecked)
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. min. > max.)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -842,21 +828,21 @@ console.log('isChecked',isChecked)
     }
 
     switch (Name) {
-      case 'value':   this.observed.Value   = parsed(newValue); break
-      case 'minimum': this.observed.Minimum = parsed(newValue); break
-      case 'maximum': this.observed.Maximum = parsed(newValue); break
+      case 'value':   my.observed.Value   = parsed(newValue); break
+      case 'minimum': my.observed.Minimum = parsed(newValue); break
+      case 'maximum': my.observed.Maximum = parsed(newValue); break
       case 'stepping':
-        this.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
+        my.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
         break
       case 'hashmarks':
-        this.observed.Hashmarks = (
+        my.observed.Hashmarks = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -865,15 +851,15 @@ console.log('isChecked',isChecked)
 
   toRender(() => {
     let { Value, Minimum,Maximum, Stepping, Hashmarks } = my.observed
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Hashmarks.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -895,10 +881,10 @@ console.log('isChecked',isChecked)
       <style>
         :host { display:inline-block }
       </style>
-      <input type="range" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="range" list=${UUID} disabled=${! my.observed.enabled}
         value=${isNaN(Value) ? '' : Value}
         min=${Minimum} max=${Maximum} step=${Stepping}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -919,7 +905,7 @@ console.log('isChecked',isChecked)
 //--                        rsc-native-textline-input                         --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
@@ -928,7 +914,6 @@ console.log('isChecked',isChecked)
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -991,20 +976,20 @@ console.log('isChecked',isChecked)
     }
 
     switch (Name) {
-      case 'min-length': this.observed.minLength = parsed(newValue); break
-      case 'max-length': this.observed.maxLength = parsed(newValue); break
+      case 'min-length': my.observed.minLength = parsed(newValue); break
+      case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.trim().split(/[\r]?\n/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -1018,10 +1003,10 @@ console.log('isChecked',isChecked)
       Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     SpellChecking = (
@@ -1030,7 +1015,7 @@ console.log('isChecked',isChecked)
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -1047,11 +1032,11 @@ console.log('isChecked',isChecked)
       <style>
         :host { display:inline-block }
       </style>
-      <input type="text" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="text" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         spellcheck=${SpellChecking} readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -1074,7 +1059,7 @@ console.log('isChecked',isChecked)
 //--                        rsc-native-password-input                         --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
@@ -1082,7 +1067,6 @@ console.log('isChecked',isChecked)
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -1133,13 +1117,13 @@ console.log('isChecked',isChecked)
     }
 
     switch (Name) {
-      case 'min-length': this.observed.minLength = parsed(newValue); break
-      case 'max-length': this.observed.maxLength = parsed(newValue); break
+      case 'min-length': my.observed.minLength = parsed(newValue); break
+      case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -1150,10 +1134,10 @@ console.log('isChecked',isChecked)
   toRender(() => {
     let { Value, minLength,maxLength, Pattern, Placeholder, readonly } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     function onInput (Event) {
@@ -1165,10 +1149,10 @@ console.log('isChecked',isChecked)
       <style>
         :host { display:inline-block }
       </style>
-      <input type="password" disabled=${! this.observed.enabled}
+      <input type="password" disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder} readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
     `
   })
@@ -1190,7 +1174,7 @@ console.log('isChecked',isChecked)
 //--                        rsc-native-number-input                         --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:undefined,
     Minimum:undefined, Maximum:undefined, Stepping:'any',
     Pattern:undefined, Placeholder:undefined, readonly:false,
@@ -1199,7 +1183,6 @@ console.log('isChecked',isChecked)
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. min. > max.)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -1264,17 +1247,17 @@ console.log('isChecked',isChecked)
     }
 
     switch (Name) {
-      case 'value':   this.observed.Value   = parsed(newValue); break
-      case 'minimum': this.observed.Minimum = parsed(newValue); break
-      case 'maximum': this.observed.Maximum = parsed(newValue); break
+      case 'value':   my.observed.Value   = parsed(newValue); break
+      case 'minimum': my.observed.Minimum = parsed(newValue); break
+      case 'maximum': my.observed.Maximum = parsed(newValue); break
       case 'stepping':
-        this.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
+        my.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
         break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)|(?:\s+)/)
               .map((Value) => parseFloat(Value))
@@ -1282,7 +1265,7 @@ console.log('isChecked',isChecked)
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -1295,15 +1278,15 @@ console.log('isChecked',isChecked)
       Value, Minimum,Maximum,Stepping, Pattern, Placeholder, readonly, Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -1320,11 +1303,11 @@ console.log('isChecked',isChecked)
       <style>
         :host { display:inline-block }
       </style>
-      <input type="text" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="text" list=${UUID} disabled=${! my.observed.enabled}
         value=${isNaN(Value) ? '' : Value}
         min=${Minimum} max=${Maximum} step=${Stepping}
         pattern=${Pattern} placeholder=${Placeholder} readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -1347,7 +1330,7 @@ console.log('isChecked',isChecked)
 //--                       rsc-native-phonenumber-input                       --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
@@ -1356,7 +1339,6 @@ console.log('isChecked',isChecked)
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -1413,20 +1395,20 @@ console.log('isChecked',isChecked)
     }
 
     switch (Name) {
-      case 'min-length': this.observed.minLength = parsed(newValue); break
-      case 'max-length': this.observed.maxLength = parsed(newValue); break
+      case 'min-length': my.observed.minLength = parsed(newValue); break
+      case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -1440,15 +1422,15 @@ console.log('isChecked',isChecked)
       Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -1465,11 +1447,11 @@ console.log('isChecked',isChecked)
       <style>
         :host { display:inline-block }
       </style>
-      <input type="tel" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="tel" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -1492,7 +1474,7 @@ console.log('isChecked',isChecked)
 //--                      rsc-native-emailaddress-input                       --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:[], multiple:false,                      // "Value" is always an array
     minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
@@ -1501,7 +1483,6 @@ console.log('isChecked',isChecked)
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value.slice() },
     set Value (newValue) {
@@ -1565,25 +1546,25 @@ console.log('isChecked',isChecked)
 
     switch (Name) {
       case 'value':
-        this.observed.Value = (newValue || '').trim().split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)/)
+        my.observed.Value = (newValue || '').trim().split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)/)
         break
       case 'multiple':
-        this.observed.multiple = (newValue === 'multiple') || (newValue === '')
+        my.observed.multiple = (newValue === 'multiple') || (newValue === '')
         break
-      case 'min-length': this.observed.minLength = parsed(newValue); break
-      case 'max-length': this.observed.maxLength = parsed(newValue); break
+      case 'min-length': my.observed.minLength = parsed(newValue); break
+      case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.trim().split(/[\r]?\n/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -1596,17 +1577,16 @@ console.log('isChecked',isChecked)
       Value, multiple, minLength,maxLength, Pattern, Placeholder, readonly,
       Suggestions
     } = my.observed
-console.log('retrieving "Value"')
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue || []
+    if (document.activeElement === me) {
+      Value = my.renderedValue || []
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -1623,11 +1603,11 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <input type="email" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="email" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value.join(',')} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -1650,7 +1630,7 @@ console.log('retrieving "Value"')
 //--                           rsc-native-url-input                           --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
@@ -1659,7 +1639,6 @@ console.log('retrieving "Value"')
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -1716,20 +1695,20 @@ console.log('retrieving "Value"')
     }
 
     switch (Name) {
-      case 'min-length': this.observed.minLength = parsed(newValue); break
-      case 'max-length': this.observed.maxLength = parsed(newValue); break
+      case 'min-length': my.observed.minLength = parsed(newValue); break
+      case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)|(?:\s+)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -1743,15 +1722,15 @@ console.log('retrieving "Value"')
       Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -1768,11 +1747,11 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <input type="url" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="url" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -1802,7 +1781,7 @@ console.log('retrieving "Value"')
     return JIL.ValueIsStringMatching(Value,TimeRegExp)
   }
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     Minimum:0, Maximum:undefined, Stepping:1,
     Placeholder:undefined, readonly:false,
@@ -1811,7 +1790,6 @@ console.log('retrieving "Value"')
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. min. > max.)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -1871,20 +1849,20 @@ console.log('retrieving "Value"')
 
     switch (Name) {
       case 'stepping':
-        this.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
+        my.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
         break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)|(?:\s+)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -1898,15 +1876,15 @@ console.log('retrieving "Value"')
       Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -1923,10 +1901,10 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <input type="time" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="time" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
         pattern=${TimePattern} placeholder=${Placeholder} readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -1956,7 +1934,7 @@ console.log('retrieving "Value"')
     return JIL.ValueIsStringMatching(Value,DateTimeRegExp)
   }
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     Minimum:0, Maximum:undefined, Stepping:1,
     Placeholder:undefined, readonly:false,
@@ -1965,7 +1943,6 @@ console.log('retrieving "Value"')
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. min. > max.)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -2025,20 +2002,20 @@ console.log('retrieving "Value"')
 
     switch (Name) {
       case 'stepping':
-        this.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
+        my.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
         break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)|(?:\s+)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -2052,15 +2029,15 @@ console.log('retrieving "Value"')
       Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -2077,10 +2054,10 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <input type="datetime-local" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="datetime-local" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
         pattern=${DateTimePattern} placeholder=${Placeholder} readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -2110,7 +2087,7 @@ console.log('retrieving "Value"')
     return JIL.ValueIsStringMatching(Value,DateRegExp)
   }
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     Minimum:0, Maximum:undefined, Stepping:1,
     Placeholder:undefined, readonly:false,
@@ -2119,7 +2096,6 @@ console.log('retrieving "Value"')
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. min. > max.)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -2179,20 +2155,20 @@ console.log('retrieving "Value"')
 
     switch (Name) {
       case 'stepping':
-        this.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
+        my.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
         break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)|(?:\s+)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -2206,15 +2182,15 @@ console.log('retrieving "Value"')
       Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -2231,10 +2207,10 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <input type="date" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="date" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
         pattern=${DatePattern} placeholder=${Placeholder} readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -2264,7 +2240,7 @@ console.log('retrieving "Value"')
     return JIL.ValueIsStringMatching(Value,WeekRegExp)
   }
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     Minimum:0, Maximum:undefined, Stepping:1,
     Placeholder:undefined, readonly:false,
@@ -2273,7 +2249,6 @@ console.log('retrieving "Value"')
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. min. > max.)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -2333,20 +2308,20 @@ console.log('retrieving "Value"')
 
     switch (Name) {
       case 'stepping':
-        this.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
+        my.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
         break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)|(?:\s+)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -2360,15 +2335,15 @@ console.log('retrieving "Value"')
       Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -2385,10 +2360,10 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <input type="week" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="week" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
         pattern=${WeekPattern} placeholder=${Placeholder} readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -2418,7 +2393,7 @@ console.log('retrieving "Value"')
     return JIL.ValueIsStringMatching(Value,MonthRegExp)
   }
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     Minimum:0, Maximum:undefined, Stepping:1,
     Placeholder:undefined, readonly:false,
@@ -2427,7 +2402,6 @@ console.log('retrieving "Value"')
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. min. > max.)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -2487,20 +2461,20 @@ console.log('retrieving "Value"')
 
     switch (Name) {
       case 'stepping':
-        this.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
+        my.observed.Stepping = (newValue === 'any' ? 'any' : parsed(newValue))
         break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)|(?:\s+)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -2514,15 +2488,15 @@ console.log('retrieving "Value"')
       Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -2539,10 +2513,10 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <input type="month" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="month" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
         pattern=${MonthPattern} placeholder=${Placeholder} readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -2565,7 +2539,7 @@ console.log('retrieving "Value"')
 //--                         rsc-native-search-input                          --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
@@ -2574,7 +2548,6 @@ console.log('retrieving "Value"')
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -2637,20 +2610,20 @@ console.log('retrieving "Value"')
     }
 
     switch (Name) {
-      case 'min-length': this.observed.minLength = parsed(newValue); break
-      case 'max-length': this.observed.maxLength = parsed(newValue); break
+      case 'min-length': my.observed.minLength = parsed(newValue); break
+      case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -2664,10 +2637,10 @@ console.log('retrieving "Value"')
       Suggestions
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     SpellChecking = (
@@ -2676,7 +2649,7 @@ console.log('retrieving "Value"')
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -2693,11 +2666,11 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <input type="search" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="search" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         spellcheck=${SpellChecking} readonly=${readonly}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -2721,14 +2694,13 @@ console.log('retrieving "Value"')
 //--                          rsc-native-color-input                          --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     Suggestions:[],
     enabled:true,
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -2752,14 +2724,14 @@ console.log('retrieving "Value"')
   onAttributeChange((Name, newValue) => {
     switch (Name) {
       case 'suggestions':
-        this.observed.Suggestions = (
+        my.observed.Suggestions = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -2770,15 +2742,15 @@ console.log('retrieving "Value"')
   toRender(() => {
     let { Value, Suggestions } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     let DataList, UUID
     if (Suggestions.length > 0) {
-      UUID = this.unobserved.UUID
+      UUID = my.unobserved.UUID
       if (UUID == null) { UUID = RSC.newUUID() }
 
       DataList = html`<datalist id=${UUID}>
@@ -2795,9 +2767,9 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <input type="color" list=${UUID} disabled=${! this.observed.enabled}
+      <input type="color" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       />
       ${DataList}
     `
@@ -2817,13 +2789,12 @@ console.log('retrieving "Value"')
 //--                           rsc-native-dropdown                            --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:[],      // internally, "Value" is always a list, even if (! multiple)
     multiple:false, Options:[],
     enabled:true,
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () {
       const { Value,multiple,Options } = my.unobserved
@@ -2866,17 +2837,17 @@ console.log('retrieving "Value"')
 
     switch (Name) {
       case 'multiple':
-        this.observed.multiple = (newValue === 'multiple') || (newValue === '')
+        my.observed.multiple = (newValue === 'multiple') || (newValue === '')
         break
       case 'options':
-        this.observed.Options = (
+        my.observed.Options = (
           JIL.ValueIsNonEmptyString(newValue)
           ? newValue.split(/(?:[ \t]*[\r]?\n[ \t]*)|(?:\s*,\s*)/)
           : []
         )
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -2885,12 +2856,12 @@ console.log('retrieving "Value"')
 
 
   toRender(() => {
-    let Value = my.unobserved.Value                   // this is always an array
+    let Value = my.unobserved.Value  // "my.unobserved.Value" is always an array
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     const ValueSet = Object.create(null)
@@ -2915,8 +2886,8 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <select disabled=${! this.observed.enabled}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+      <select disabled=${! my.observed.enabled}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       >
         ${OptionList.map(({ Label,Value }) => {
           return html`<option value=${Value} selected=${Value in ValueSet}>${Label}</option>`
@@ -2939,7 +2910,7 @@ console.log('retrieving "Value"')
 //--                          rsc-native-text-input                           --
 //------------------------------------------------------------------------------
 
-  RSC.assign(this.unobserved,{
+  RSC.assign(my.unobserved,{
     Value:'',
     minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
@@ -2948,7 +2919,6 @@ console.log('retrieving "Value"')
     UUID:undefined // is used internally - do not touch!
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-  const my = this       // "my" is relevant in the following getters and setters
   RSC.assign(my.observed,{
     get Value () { return my.unobserved.Value },
     set Value (newValue) {
@@ -3011,19 +2981,19 @@ console.log('retrieving "Value"')
     }
 
     switch (Name) {
-      case 'min-length': this.observed.minLength = parsed(newValue); break
-      case 'max-length': this.observed.maxLength = parsed(newValue); break
+      case 'min-length': my.observed.minLength = parsed(newValue); break
+      case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
-        this.observed.readonly = (newValue === 'readonly') || (newValue === '')
+        my.observed.readonly = (newValue === 'readonly') || (newValue === '')
         break
       case 'line-wrapping':
-        this.observed.LineWrapping = (newValue === 'line-wrapping') || (newValue === '')
+        my.observed.LineWrapping = (newValue === 'line-wrapping') || (newValue === '')
         break
       case 'resizable':
-        this.observed.resizable = (newValue === 'resizable') || (newValue === '')
+        my.observed.resizable = (newValue === 'resizable') || (newValue === '')
         break
       case 'enabled':
-        this.observed.enabled = (newValue === 'enabled') || (newValue === '')
+        my.observed.enabled = (newValue === 'enabled') || (newValue === '')
         break
       default: return false // triggers automatic mapping
     }
@@ -3037,10 +3007,10 @@ console.log('retrieving "Value"')
       Placeholder, readonly, SpellChecking
     } = my.observed
 
-    if (document.activeElement === this) {
-      Value = this.renderedValue
+    if (document.activeElement === me) {
+      Value = my.renderedValue
     } else {
-      this.renderedValue = Value
+      my.renderedValue = Value
     }
 
     if (LineWrapping === 'none') { LineWrapping = undefined }
@@ -3060,11 +3030,11 @@ console.log('retrieving "Value"')
       <style>
         :host { display:inline-block }
       </style>
-      <textarea disabled=${! this.observed.enabled} style=${Style}
+      <textarea disabled=${! my.observed.enabled} style=${Style}
         readonly=${readonly} wrap=${LineWrapping}
         minlength=${minLength} maxlength=${maxLength}
         placeholder=${Placeholder} spellcheck=${SpellChecking}
-        onInput=${onInput} onBlur=${this.render.bind(this)}
+        onInput=${onInput} onBlur=${my.render.bind(me)}
       >${Value}</>
     `
   })
