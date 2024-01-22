@@ -149,13 +149,13 @@ Otherwise, just _load your package_, e.g. the `full-bundle` with all predefined 
 (t.b.w)
 
 - **`Applet`**<br>is a getter which returns a reference to the closest visual of 'this' one with behaviour "Applet"
-- **`Card`**<br>is a getter which returns a reference to the closest visual of 'this' one with behaviour "Card"
+- **`Card`**<br>is a getter which returns a reference to the closest visual of 'this' one with behaviour "Card"<br>&nbsp;<br>
 - **`outerVisual`**<br>is a getter which returns a reference to the next outer visual of 'this' one
 - **`outermostVisual`**<br>is a getter which returns a reference to the outermost visual of 'this' one
 - **`closestVisualWithBehaviour (BehaviourName)`**<br>returns a reference to the closest visual of 'this' one with the given `BehaviourName` - please note, that the "closest visual" may also be 'this' one
 - **`closestOuterVisualWithBehaviour (BehaviourName)`**<br>returns a reference to the closest _outer_ visual of 'this' one with the given `BehaviourName`
 - **`closestVisualMatching (Selector)`**<br>returns a reference to the closest visual of 'this' one matching the given `Selector` - please note, that the "closest visual" may also be 'this' one
-- **`closestOuterVisualMatching (Selector)`**<br>returns a reference to the closest _outer_ visual of 'this' one matching the given `Selector`
+- **`closestOuterVisualMatching (Selector)`**<br>returns a reference to the closest _outer_ visual of 'this' one matching the given `Selector`<br>&nbsp;<br>
 - **`innerVisuals`**<br>is a getter which returns a (possibly empty) list of all visuals which are direct children of 'this' one
 - **`innerVisualsWithBehaviour (BehaviourName)`**<br>returns a (possibly empty) list of all visuals with the given `BehaviourName` which are direct children of 'this' one
 - **`innerVisualsMatching (Selector)`**<br>returns a (possibly empty) list of all visuals with the given `BehaviourName` which match the given `Selector`
@@ -173,8 +173,8 @@ function (
 }
 ```
 
-- **`my`**<br>
-- **`me`**<br><br>&nbsp;<br>
+- **`my`**<br>contains a reference to `this` visual (i.e., the one in whose context the current script is running). If you define getters and setters for observed and unobserved variables, inside these accessors, `this` will refer to the data structure rather than to the visual - in such situations, `my` will help you refering to the actual visual. Additionally, you may use `my` to let your code look like ordinary english: e.g., `my.observed.Value = ...`
+- **`me`**<br>is just a synonym for `me` and may be used wherever the resulting code will read more like ordinary english: e.g., in `my.render.bind(me)`<br>&nbsp;<br>
 - **`RSC`**<br>contains a reference to RSC itself - thus, if you want to use any of its exported functions, you don't have to import the module yourself
 - **`JIL`**<br>since RSC uses the [javascript-interface-library](https://github.com/rozek/javascript-interface-library) internally anyway, you may use this reference to that library in order to avoid having to import it in your scripts yourself<br>&nbsp;<br>
 - **`onAttributeChange`**<br>`onAttributeChange((normalizedName,newValue) => ...)` can be used to install a function (with the given signature) that will be called whenever an attribute of an RSC element was changed. Only one callback function can be installed, later invocations of `onAttributeChange` overwrite previously registered callbacks
