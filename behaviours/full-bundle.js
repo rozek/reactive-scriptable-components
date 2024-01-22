@@ -2,8 +2,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('centered',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                               rsc-centered                               --
@@ -30,8 +30,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('horizontal',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                              rsc-horizontal                              --
@@ -82,8 +82,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('vertical',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                               rsc-vertical                               --
@@ -138,8 +138,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('tabular',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                               rsc-tabular                                --
@@ -248,8 +248,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('cColSpan',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                               rsc-colspan                                --
@@ -264,8 +264,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('Gap',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                                 rsc-gap                                  --
@@ -308,8 +308,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('HTMLView',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                               rsc-htmlview                               --
@@ -343,8 +343,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('TextView',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                               rsc-textview                               --
@@ -376,8 +376,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('ImageView',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                              rsc-imageview                               --
@@ -436,8 +436,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Button',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                            rsc-native-button                             --
@@ -483,8 +483,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Checkbox',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                           rsc-native-checkbox                            --
@@ -552,8 +552,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Radiobutton',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                          rsc-native-radiobutton                          --
@@ -615,8 +615,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Gauge',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                             rsc-native-gauge                             --
@@ -705,8 +705,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Progressbar',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                          rsc-native-progressbar                          --
@@ -762,8 +762,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Slider',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                            rsc-native-slider                             --
@@ -898,8 +898,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Textline-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                        rsc-native-textline-input                         --
@@ -1052,8 +1052,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Password-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                        rsc-native-password-input                         --
@@ -1167,8 +1167,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Number-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                        rsc-native-number-input                         --
@@ -1323,8 +1323,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-PhoneNumber-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                       rsc-native-phonenumber-input                       --
@@ -1467,8 +1467,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-EMailAddress-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                      rsc-native-emailaddress-input                       --
@@ -1623,8 +1623,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-URL-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                           rsc-native-url-input                           --
@@ -1767,8 +1767,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Time-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                          rsc-native-time-input                           --
@@ -1920,8 +1920,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-DateTime-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                        rsc-native-datetime-input                         --
@@ -2073,8 +2073,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Date-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                          rsc-native-date-input                           --
@@ -2226,8 +2226,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Week-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                          rsc-native-week-input                           --
@@ -2379,8 +2379,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Month-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                          rsc-native-month-input                          --
@@ -2532,8 +2532,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Search-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                         rsc-native-search-input                          --
@@ -2687,8 +2687,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Color-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                          rsc-native-color-input                          --
@@ -2782,8 +2782,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-DropDown',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                           rsc-native-dropdown                            --
@@ -2903,8 +2903,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('native-Text-Input',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                          rsc-native-text-input                           --
@@ -3049,8 +3049,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('Applet',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                                rsc-applet                                --
@@ -3071,8 +3071,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('Title',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                                rsc-title                                 --
@@ -3093,8 +3093,8 @@ import { registerBehaviour } from 'RSC'
 
   registerBehaviour('Label',
     function (
-      RSC,JIL, onAttributeChange, onAttachment,onDetachment, toRender,
-      html, on,once,off,trigger, reactively
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
     ) {
 //------------------------------------------------------------------------------
 //--                                rsc-label                                 --
