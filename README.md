@@ -56,8 +56,8 @@ This approach allows to write simple web applications within minutes - the autho
 - **Observed and Unobserved Variables**<br>RSC components usually have to store some values they need for their operation. For that purpose, RSC provides both an `observed` and an `unobserved` data structure for every component which can be freely used as required. "Observed" entries may then be used to trigger "reactive functions" or update "reactive attributes" whenever their values change
 - **Reactive Functions**<br>"reactive functions" (defined using `reactively(() => ...)`) are functions that will be automatically invoked whenever any of the observed(!) values they use internally have changed
 - **Reactive Attributes**<br>"reactive attributes" have names starting with one or two dollar signs (e.g., `$value` or `$$value`) and establish a "reactive binding" between a reactive variable of the component itself (`observed.value` in this example) and another reactive variable in an outer RSC component - both a reference to that outer component and the path to the other reactive variable have to be specified in the attribute itself
-- **Event Handlers as Function Calls**<br>(t.b.w)
-- **Error Indicators**<br>(t.b.w)
+- **Event Handlers as Function Calls**<br>sometimes, RSC components do not directly change other (reactive) variables but start some action - to support such use cases, RSC components may trigger events or handle them. In contrast to DOM events, however, RSC events may be used like function calls, i.e., it is allowed to provide arbitrary arguments and possible to wait for a result from event handling
+- **Error Indicators**<br>often, it is difficult to recognize and track errors which occured in behaviour or component scripts, or during event handling. For that reason, RSC marks faulty components with an "error indicator": just click on such an indicator to reveal details about the detected error
 
 ## Browser Requirements (and Polyfills) ##
 
