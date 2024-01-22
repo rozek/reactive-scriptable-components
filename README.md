@@ -2,7 +2,7 @@
 
 light-weight reactive scriptable web components
 
-> **Warning**: this framework is currently under active development - consider it as incomplete pre-alpha software: anything may change, some changes _may_ even break existing applications (although I don't _expect_ any of them). Thus, please stay tuned and come back here from time to time to see if there is a (well-documented) version that you may safely use...
+> **Warning**: this framework is currently under active development - consider it as incomplete pre-alpha software: anything may change, some changes _may_ even break existing applications (although I don't _expect_ amny of them). **Thus, please stay tuned and come back here from time to time to see if there is a (well-documented) version that you may safely use...**
 
 The idea behind this framework is to allow for the rapid development of small reactive web applications. To give you an idea of what these web apps could look like, consider the following example (which implements a simple calculator that converts temperatures between °Celsius and °Fahrenheit, see [live demo](https://rozek.github.io/reactive-scriptable-components/examples/Temperature-Converter.html)):
 
