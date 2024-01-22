@@ -105,7 +105,7 @@ Additionally, it is useful to provide an "import map" that allows scripts to imp
  </script>
 ```
 
-Most modern browsers support import maps and web components - except Safari browsers < 16.4 or (any browsers on) devices with iOS < 16.4. If you need to support these, you should add the following lines and load "polyfills" that fill these gaps:
+Most modern browsers support import maps and web components - except Safari browsers < 16.4 or (any browsers on) devices with iOS < 16.4. If you need to support these browsers as well, you should add the following lines and load "polyfills" that fill any gaps:
 
 ```html
  <!-- Import Map Polyfill from https://github.com/guybedford/es-module-shims -->
@@ -122,7 +122,7 @@ If you don't use any kind of build tool but create your web application directly
 <script type="module" src="https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"></script>
 ```
 
-If you already load any of the predefined behaviour bundles (such as the `full-bundle`
+If you already load any of the predefined behaviour bundles such as the `full-bundle`
 
 ```html
  <script type="module"
