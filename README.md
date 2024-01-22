@@ -50,18 +50,18 @@ This approach allows to write simple web applications within minutes - the autho
 "reactive-scriptable-components" offer the following fundamental features:
 
 - **Script Attributes**<br>(small) scripts may be directly provided as an HTML attribute of a component - this keeps an element and it's functionality together
-- **Script Elements**<br>(larger) scripts may be provided as a `<script type="rsc-script"/>` element within the component they belong to - e.g., below all other inner elements. This approach keeps the internal structure of an RSC component visible and still allows a component and its code to be kept close together
+- **Script Elements**<br>(larger) scripts may be provided as a `<script type="rsc-script"/>` element within the component they belong to - e.g., below all other inner HTML elements. This approach keeps the internal structure of an RSC component visible and still allows a component and its code to be kept close together
 - **Delegated Scripts**<br>if you want to separate the "look" from its "feel", you may provide "delegated scripts" (`<script type="rsc-script" for="..."/>`) for elements that can be identified by a CSS selector (e.g., `#id`, `.class`, `[attr="value"]` etc.)
 - **Behaviour Scripts**<br>if you have multiple RSC components that share the same functionality, you may define a "behaviour" and provide the shared code in a separate `<script type="rsc-script" for-behaviour="..."/>` element. If there are both a behaviour and an element script for a given RSC component, the behaviour script is executed before the element script.
 - **Observed and Unobserved Variables**<br>RSC components usually have to store some values they need for their operation. For that purpose, RSC provides both an `observed` and an `unobserved` data structure for every component which can be freely used as required. "Observed" entries may then be used to trigger "reactive functions" or update "reactive attributes" whenever their values change
 - **Reactive Functions**<br>"reactive functions" (defined using `reactively(() => ...)`) are functions that will be automatically invoked whenever any of the observed(!) values they use internally have changed
 - **Reactive Attributes**<br>"reactive attributes" have names starting with one or two dollar signs (e.g., `$value` or `$$value`) and establish a "reactive binding" between a reactive variable of the component itself (`observed.value` in this example) and another reactive variable in an outer RSC component - both a reference to that outer component and the path to the other reactive variable have to be specified in the attribute itself
-- **Event Handlers as Function Calls**<br>sometimes, RSC components do not directly change other (reactive) variables but start some action - to support such use cases, RSC components may trigger events or handle them. In contrast to DOM events, however, RSC events may be used like function calls, i.e., it is allowed to provide arbitrary arguments and possible to wait for a result from event handling
+- **Event Handlers as Function Calls**<br>sometimes, RSC components do not directly change other (reactive) variables but initiate an activity - to support such use cases, RSC components may trigger events or handle them. In contrast to DOM events, however, RSC events may be used like function calls, i.e., it is allowed to provide arbitrary arguments and possible to wait for a result from event handling
 - **Error Indicators**<br>often, it is difficult to recognize and track errors which occured in behaviour or component scripts, or during event handling. For that reason, RSC marks faulty components with an "error indicator": just click on such an indicator to reveal details about the detected error
 
 ## Browser Requirements (and Polyfills) ##
 
-RSC is based on relatively modern web technologies which _should_ be available in most browsers out-of-the-box - for those that lack these features (particularily Safari versions < 16.4 or devices with iOS versions < 16.4), polyfills have been included to plug these holes:
+RSC is based on relatively modern web technologies which _should_ already be available in most browsers out-of-the-box - but for those that lack these features (particularily Safari versions < 16.4 or devices with iOS versions < 16.4), polyfills have been included to plug these holes:
 
 - [Import Maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) (see [availability across browsers](https://caniuse.com/mdn-html_elements_script_type_importmap))<br>for a polyfill see [https://github.com/guybedford/es-module-shims](https://github.com/guybedford/es-module-shims)
 - [Custom Elements v1](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements) (see [availability across browsers](https://caniuse.com/?search=Custom%20Elements))<br>for a polyfill see [https://github.com/webcomponents/webcomponentsjs](https://github.com/webcomponents/webcomponentsjs)
@@ -92,7 +92,7 @@ In order to avoid initial flashing of "custom Elements" (aka "Web Components") y
 
 This trick applies to all kinds of Web Components, not just those presented here.
 
-Additionally, it's useful to provide an "import map" that allows scripts to import modules by name rather than by URL:
+Additionally, it is useful to provide an "import map" that allows scripts to import modules by name rather than by URL:
 
 ```html
  <script type="importmap">
@@ -122,7 +122,15 @@ If you don't use any kind of build tool but create your web application directly
 <script type="module" src="https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"></script>
 ```
 
-That's all...
+If you already load any of the predefined behaviour bundles (such as the `full-bundle`
+
+```html
+ <script type="module"
+  src="https://rozek.github.io/reactive-scriptable-components/behaviours/full-bundle.js"
+ ></script>
+```
+
+you may even do without explicitly loading the RSC module as the the bundles already import it themselves
 
 ### Using RSC with a Module Bundler ###
 
