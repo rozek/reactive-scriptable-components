@@ -1658,7 +1658,96 @@ console.error('rendering failure',Signal)
     }
     public set Error (ErrorInfo:RSC_ErrorInfo|undefined) {
       setErrorOfVisual(this,ErrorInfo)
+    }  /**** Applet ****/
+
+    public get Applet ():RSC_Visual|undefined {
+      return closestVisualWithBehaviour(this,'Applet')
     }
+    public set Applet (_:RSC_Visual|undefined) { throwReadOnlyError('Applet') }
+
+  /**** Card ****/
+
+    public get Card ():RSC_Visual|undefined {
+      return closestVisualWithBehaviour(this,'Card')
+    }
+    public set Card (_:RSC_Visual|undefined) { throwReadOnlyError('Card') }
+
+  /**** outerVisual ****/
+
+    public get outerVisual ():RSC_Visual|undefined {
+      return outerVisualOf(this)
+    }
+    public set outerVisual (_:RSC_Visual|undefined) { throwReadOnlyError('outerVisual') }
+
+  /**** outermostVisual ****/
+
+    public get outermostVisual ():RSC_Visual|undefined {
+      return outermostVisualOf(this)
+    }
+    public set outermostVisual (_:RSC_Visual|undefined) { throwReadOnlyError('outermostVisual') }
+
+  /**** innerVisuals ****/
+
+    public get innerVisuals ():RSC_Visual[] {
+      return innerVisualsOf(this)
+    }
+    public set innerVisuals (_:RSC_Visual[]) { throwReadOnlyError('innerVisuals') }
+
+  /**** closestVisualWithBehaviour ****/
+
+    public closestVisualWithBehaviour (BehaviourName:RSC_Name):RSC_Visual|undefined {
+      return closestVisualWithBehaviour(this,BehaviourName)
+    }
+
+  /**** closestOuterVisualWithBehaviour ****/
+
+    public closestOuterVisualWithBehaviour (BehaviourName:RSC_Name):RSC_Visual|undefined {
+      const outerVisual = outerVisualOf(this)
+      return (
+        outerVisual == null
+        ? undefined
+        : closestVisualWithBehaviour(outerVisual,BehaviourName)
+      )
+    }
+
+  /**** closestVisualMatching ****/
+
+    public closestVisualMatching (Selector:Textline):RSC_Visual|undefined {
+      return closestVisualMatching(this,Selector)
+    }
+
+  /**** closestOuterVisualMatching ****/
+
+    public closestOuterVisualMatching (Selector:Textline):RSC_Visual|undefined {
+      const outerVisual = outerVisualOf(this)
+      return (
+        outerVisual == null
+        ? undefined
+        : closestVisualMatching(outerVisual,Selector)
+      )
+    }
+
+  /**** innerVisualsWithBehaviour ****/
+
+    public innerVisualsWithBehaviour (BehaviourName:RSC_Name):RSC_Visual[] {
+      expectName('behaviour name',BehaviourName)
+
+      return innerVisualsOf(this).filter(
+        (Visual) => BehaviourNameOfVisual(Visual) === BehaviourName
+      )
+    }
+
+  /**** innerVisualsMatching ****/
+
+    public innerVisualsMatching (Selector:Textline):RSC_Visual[] {
+      expectTextline('CSS selector',Selector)
+
+      return innerVisualsOf(this).filter(
+        (Visual) => Visual.matches(Selector)
+      )
+    }
+
+
   }
 
   customElements.define('rsc-visual', RSC_Visual)
