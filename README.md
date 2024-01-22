@@ -4,7 +4,7 @@ light-weight reactive scriptable web components
 
 > **Warning**: this framework is currently under active development - consider it as incomplete pre-alpha software: anything may change, some changes _may_ even break existing applications (although I don't _expect_ any of them). Thus, please stay tuned and come back here from time to time to see if there is a (well-documented) version that you may safely use...
 
-The idea behind this framework is to allow for the rapid development of small reactive web applications. To give you an idea of what these web apps could look like, consider the following example (which implements a simple calculator that converts temperatures between °Celsius and °Fahrenheit, see [live demo](https://rozek.github.io/reactive-scriptable-components/Temperature-Converter.html), take care of [browser requirements](https://github.com/rozek/reactive-scriptable-components?tab=readme-ov-file#browser-requirements), particularily on devices with iOS versions < 16.4):
+The idea behind this framework is to allow for the rapid development of small reactive web applications. To give you an idea of what these web apps could look like, consider the following example (which implements a simple calculator that converts temperatures between °Celsius and °Fahrenheit, see [live demo](https://rozek.github.io/reactive-scriptable-components/Temperature-Converter.html)):
 
 ![Screenshot of the Temperature Converter Example](TemperatureConverter-Screenshot.png)
 
@@ -59,12 +59,12 @@ This approach allows to write simple web applications within minutes - the autho
 - **Event Handlers as Function Calls**<br>(t.b.w)
 - **Error Indicators**<br>(t.b.w)
 
-## Browser Requirements ##
+## Browser Requirements (and Polyfills) ##
 
-RSC is based on relatively modern web technologies which _should_ be available in most browsers - except on Safari versions < 16.4 or devices with iOS versions < 16.4:
+RSC is based on relatively modern web technologies which _should_ be available in most browsers out-of-the-box - for those that lack these features (particularily Safari versions < 16.4 or devices with iOS versions < 16.4), polyfills have been included to plug these holes:
 
-- [Custom Elements v1](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements) (see [availability across browsers](https://caniuse.com/?search=Custom%20Elements))<br>RSC includes a polyfill for browsers without support for custom elements
-- [Import Maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) (see [availability across browsers](https://caniuse.com/mdn-html_elements_script_type_importmap))<br>enter specific URLs instead of module names in import statements if you really need to support older browsers
+- [Import Maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) (see [availability across browsers](https://caniuse.com/mdn-html_elements_script_type_importmap))<br>for a polyfill see [https://github.com/guybedford/es-module-shims](https://github.com/guybedford/es-module-shims)
+- [Custom Elements v1](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements) (see [availability across browsers](https://caniuse.com/?search=Custom%20Elements))<br>for a polyfill see [https://github.com/webcomponents/webcomponentsjs](https://github.com/webcomponents/webcomponentsjs)
 
 ## Inlined Dependencies ##
 
