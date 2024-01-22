@@ -54,8 +54,8 @@ This approach allows to write simple web applications within minutes - the autho
 - **Delegated Scripts**<br>if you want to separate the "look" from its "feel", you may provide "delegated scripts" (`<script type="rsc-script" for="..."/>`) for elements that can be identified by a CSS selector (e.g., `#id`, `.class`, `[attr="value"]` etc.)
 - **Behaviour Scripts**<br>if you have multiple RSC components that share the same functionality, you may define a "behaviour" and provide the shared code in a separate `<script type="rsc-script" for-behaviour="..."/>` element. If there are both a behaviour and an element script for a given RSC component, the behaviour script is executed before the element script.
 - **Observed and Unobserved Variables**<br>RSC components usually have to store some values they need for their operation. For that purpose, RSC provides both an `observed` and an `unobserved` data structure for every component which can be freely used as required. "Observed" entries may then be used to trigger "reactive functions" or update "reactive attributes" whenever their values change
-- **Reactive Functions**<br>(t.b.w)
-- **Reactive Attributes**<br>(t.b.w)
+- **Reactive Functions**<br>"reactive functions" (defined using `reactively(() => ...)`) are functions that will be automatically invoked whenever any of the observed(!) values they use internally have changed
+- **Reactive Attributes**<br>"reactive attributes" have names starting with one or two dollar signs (e.g., `$value` or `$$value`) and establish a "reactive binding" between a reactive variable of the component itself (`observed.value` in this example) and another reactive variable in an outer RSC component - both a reference to that outer component and the path to the other reactive variable have to be specified in the attribute itself
 - **Event Handlers as Function Calls**<br>(t.b.w)
 - **Error Indicators**<br>(t.b.w)
 
