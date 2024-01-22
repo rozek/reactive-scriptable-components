@@ -160,15 +160,15 @@ function (
 - **`RSC`**<br>contains a reference to RSC itself - thus, if you want to use any of its exported functions, you don't have to import the module yourself
 - **`JIL`**<br>since RSC uses the [javascript-interface-library](https://github.com/rozek/javascript-interface-library) internally anyway, you may use this reference to that library in order to avoid having to import it in your scripts yourself
 - **`onAttributeChange`**<br>`onAttributeChange((normalizedName,newValue) => ...)` can be used to install a function (with the given signature) that will be called whenever an attribute of an RSC element was changed. Only one callback function can be installed, later invocations of `onAttributeChange` overwrite formerly registered callbacks
-- **`onAttachment`**<br>
-- **`onDetachment`**<br>
-- **`toRender`**<br>
-- **`html`**<br>
-- **`on`**<br>
+- **`onAttachment`**<br>`onAttachment(() => ...)` can be used to install a function that will be called whenever an RSC element is added to the DOM while RSC is running (and all behaviours have already been defined). Only one callback function can be installed, later invocations of `onAttachment` overwrite formerly registered callbacks
+- **`onDetachment`**<br>`onDetachment(() => ...)` can be used to install a function that will be called whenever an RSC element is removed from the DOM. Only one callback function can be installed, later invocations of `onDetachment` overwrite formerly registered callbacks
+- **`toRender`**<br>`toRender(() => ...)` can be used to install a function that will be called whenever an RSC element has to be (re-)rendered. Only one callback function can be installed, later invocations of `toRender` overwrite formerly registered callbacks
+- **`html`**<br>is a reference to the [htm markup function](https://github.com/rozek/htm#--htm-hyperscript-tagged-markup--) prepared for being used with [preact](https://github.com/preactjs/preact) - i.e., within RSC scripts
+- **`on`**<br>`on(events, selectors, data, (Event) => ...)` can be used to install a handler for the given (comma-separated) list of `events`, sent from (RSC or DOM) elements identified by any of the (optionally) given (comma-separated) selectors ...
 - **`once`**<br>
 - **`off`**<br>
 - **`trigger`**<br>
-- **`reactively`**<br>
+- **`reactively`**<br>`reactively(() => ...)`
 
 ### Behaviour Scripts ###
 
