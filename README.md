@@ -4,7 +4,7 @@ light-weight reactive scriptable web components
 
 > **Warning**: this framework is currently under active development - consider it as incomplete pre-alpha software: anything may change, some changes _may_ even break existing applications (although I don't _expect_ any of them). Thus, please stay tuned and come back here from time to time to see if there is a (well-documented) version that you may safely use...
 
-The idea behind this framework is to allow for the rapid development of small reactive web applications. To give you an idea of what these web apps could look like, consider the following example (which implements a simple calculator that converts temperatures between °Celsius and °Fahrenheit, see [live demo](https://rozek.github.io/reactive-scriptable-components/Temperature-Converter.html)):
+The idea behind this framework is to allow for the rapid development of small reactive web applications. To give you an idea of what these web apps could look like, consider the following example (which implements a simple calculator that converts temperatures between °Celsius and °Fahrenheit, see [live demo](https://rozek.github.io/reactive-scriptable-components/Temperature-Converter.html), take care of browser requirements, particularily on devices with iOS versions < 16.4):
 
 ![Screenshot of the Temperature Converter Example](TemperatureConverter-Screenshot.png)
 
@@ -58,6 +58,13 @@ This approach allows to write simple web applications within minutes - the autho
 - **Reactive Attributes**<br>(t.b.w)
 - **Event Handlers as Function Calls**<br>(t.b.w)
 - **Error Indicators**<br>(t.b.w)
+
+## Browser Requirements ##
+
+RSC is based on relatively modern web technologies which _should_ be available in most browsers - except on Safari versions < 16.4 or devices with iOS versions < 16.4:
+
+- [Custom Elements v1](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements) (see [availability across browsers](https://caniuse.com/?search=Custom%20Elements))<br>RSC includes a polyfill for browsers without support for custom elements
+- [Import Maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) (see [availability across browsers](https://caniuse.com/mdn-html_elements_script_type_importmap))<br>enter specific URLs instead of module names in import statements if you really need to support older browsers
 
 ## Inlined Dependencies ##
 
