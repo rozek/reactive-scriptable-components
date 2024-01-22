@@ -119,10 +119,12 @@ If you don't use any kind of build tool but create your web application directly
 Then, if you don't use any package that already _imports_ the RSC module, _load_ it with the following lines:
 
 ```html
-<script type="module" src="https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"></script>
+<script type="module"
+ src="https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"
+></script>
 ```
 
-Otherwise, just load your package, e.g. the `full-bundle` with all predefined RSC behaviours:
+Otherwise, just _load your package_, e.g. the `full-bundle` with all predefined RSC behaviours:
 
 ```html
  <script type="module"
@@ -142,26 +144,45 @@ Otherwise, just load your package, e.g. the `full-bundle` with all predefined RS
 
 (t.b.w) (lifecycle handling, nesting, containment validation)
 
+### Additional Element Properties and Methods ###
+
+(t.b.w)
+
+- **`Applet`**<br>
+- **`Card`**<br>
+- **`outerVisual`**<br>
+- **`outermostVisual`**<br>
+- **`innerVisuals`**<br>
+- **`closestVisualMatching`**<br>
+- **`closestOuterVisualMatching`**<br>
+- **`closestVisualWithBehaviour`**<br>
+- **`closestOuterVisualWithBehaviour`**<br>
+- **`innerVisualsMatching`**<br>
+- **`innerVisualsWithBehaviour`**<br>
+
+
 ### Element Scripts ###
 
 (t.b.w) (script as function bodies, script attributes, script elements, delegated scripts)
 
 ```javascript
 function (
-  RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+  my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
   toRender, html, on,once,off,trigger, reactively
 ) {
 // this is where scripts are inserted
 }
 ```
 
+- **`my`**<br>
+- **`me`**<br><br>&nbsp;<br>
 - **`RSC`**<br>contains a reference to RSC itself - thus, if you want to use any of its exported functions, you don't have to import the module yourself
-- **`JIL`**<br>since RSC uses the [javascript-interface-library](https://github.com/rozek/javascript-interface-library) internally anyway, you may use this reference to that library in order to avoid having to import it in your scripts yourself
+- **`JIL`**<br>since RSC uses the [javascript-interface-library](https://github.com/rozek/javascript-interface-library) internally anyway, you may use this reference to that library in order to avoid having to import it in your scripts yourself<br>&nbsp;<br>
 - **`onAttributeChange`**<br>`onAttributeChange((normalizedName,newValue) => ...)` can be used to install a function (with the given signature) that will be called whenever an attribute of an RSC element was changed. Only one callback function can be installed, later invocations of `onAttributeChange` overwrite formerly registered callbacks
 - **`onAttachment`**<br>`onAttachment(() => ...)` can be used to install a function that will be called whenever an RSC element is added to the DOM while RSC is running (and all behaviours have already been defined). Only one callback function can be installed, later invocations of `onAttachment` overwrite formerly registered callbacks
 - **`onDetachment`**<br>`onDetachment(() => ...)` can be used to install a function that will be called whenever an RSC element is removed from the DOM. Only one callback function can be installed, later invocations of `onDetachment` overwrite formerly registered callbacks
 - **`toRender`**<br>`toRender(() => ...)` can be used to install a function that will be called whenever an RSC element has to be (re-)rendered. Only one callback function can be installed, later invocations of `toRender` overwrite formerly registered callbacks
-- **`html`**<br>is a reference to the [htm markup function](https://github.com/rozek/htm#--htm-hyperscript-tagged-markup--) prepared for being used with [preact](https://github.com/preactjs/preact) - i.e., within RSC scripts
+- **`html`**<br>is a reference to the [htm markup function](https://github.com/rozek/htm#--htm-hyperscript-tagged-markup--) prepared for being used with [preact](https://github.com/preactjs/preact) - i.e., within RSC scripts<br>&nbsp;<br>
 - **`on`**<br>`on(events, selectors, data, (Event) => ...)` can be used to install a handler for the given (comma-separated) list of `events`, sent from (RSC or DOM) elements identified by any of the (optionally) given (comma-separated) selectors ...
 - **`once`**<br>
 - **`off`**<br>
