@@ -50,8 +50,8 @@ This approach allows to write simple web applications within minutes - the autho
 "reactive-scriptable-components" offer the following fundamental features:
 
 - **Script Attributes**<br>(small) scripts may be directly provided as an HTML attribute of a component - this keeps an element and it's functionality together
-- **Script Elements**<br>(larger) scripts may be provided as a `<script type="rsc-script"/>` element within the component they belong to - e.g., below all other inner elements. This approach keeps the internal structure of an RSC component visible and still allows code to be kept close to the component it belongs to
-- **Delegated Scripts**<br>if you want to separate the "look" from its "feel", you may provide "delegated scripts" (`<script type="rsc-script" for="..."`) for elements that can be identified by a CSS selector (e.g., by `id`, by `class`, by `name` etc.)
+- **Script Elements**<br>(larger) scripts may be provided as a `<script type="rsc-script"/>` element within the component they belong to - e.g., below all other inner elements. This approach keeps the internal structure of an RSC component visible and still allows a component and its code to be kept close together
+- **Delegated Scripts**<br>if you want to separate the "look" from its "feel", you may provide "delegated scripts" (`<script type="rsc-script" for="..."/>`) for elements that can be identified by a CSS selector (e.g., `#id`, `.class`, `[attr="value"]` etc.)
 - **Behaviour Scripts**<br>if you have multiple RSC components that share the same functionality, you may define a "behaviour" and provide the shared code in a separate `<script type="rsc-script" for-behaviour="..."/>` element. Behaviour and element scripts may be combined
 - **Observed and Unobserved Variables**<br>(t.b.w)
 - **Reactive Functions**<br>(t.b.w)
