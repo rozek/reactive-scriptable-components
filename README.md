@@ -61,7 +61,7 @@ This approach allows to write simple web applications within minutes - the autho
 
 ## Browser Requirements (and Polyfills) ##
 
-RSC is based on relatively modern web technologies which _should_ already be available in most browsers out-of-the-box - but for those that lack these features (particularily Safari versions < 16.4 or devices with iOS versions < 16.4), polyfills have been included to plug these holes:
+RSC is based on relatively modern web technologies which _should_ already be available in most browsers out-of-the-box - but for those that lack these features (particularily Safari versions < 16.4 or devices with iOS versions < 16.4), polyfills have been included in the examples to plug these holes:
 
 - [Import Maps](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script/type/importmap) (see [availability across browsers](https://caniuse.com/mdn-html_elements_script_type_importmap))<br>for a polyfill see [https://github.com/guybedford/es-module-shims](https://github.com/guybedford/es-module-shims)
 - [Custom Elements v1](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_custom_elements) (see [availability across browsers](https://caniuse.com/?search=Custom%20Elements))<br>for a polyfill see [https://github.com/webcomponents/webcomponentsjs](https://github.com/webcomponents/webcomponentsjs)
@@ -92,7 +92,18 @@ In order to avoid initial flashing of "custom Elements" (aka "Web Components") y
 
 This trick applies to all kinds of Web Components, not just those presented here.
 
-Additionally, it is useful to provide an "import map" that allows scripts to import modules by name rather than by URL:
+Most modern browsers already support import maps and web components out-of-the-box - except Safari browsers < 16.4 or (any browsers on) devices with iOS < 16.4. If you need to support these browsers as well, you should add the following lines directly after the `<style/>` section mentioned above:
+
+```html
+ <!-- Import Map Polyfill from https://github.com/guybedford/es-module-shims -->
+ <script src="https://rozek.github.io/reactive-scriptable-components/polyfills/es-module-shims.js"></script>
+ <!-- Web Components Polyfill from https://github.com/webcomponents/webcomponentsjs -->
+ <script src="https://rozek.github.io/reactive-scriptable-components/polyfills/webcomponents-bundle.js"></script>
+```
+
+### Using RSC in a "No-Build Environment" (e.g., directly in the Browser) ###
+
+If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, you should first provide an "import map" that allows scripts to import modules by name rather than by URL. Just append the following lines to the `<head/>` section of your HTML file:
 
 ```html
  <script type="importmap">
@@ -105,32 +116,19 @@ Additionally, it is useful to provide an "import map" that allows scripts to imp
  </script>
 ```
 
-Most modern browsers support import maps and web components - except Safari browsers < 16.4 or (any browsers on) devices with iOS < 16.4. If you need to support these browsers as well, you should add the following lines and load "polyfills" that fill any gaps:
-
-```html
- <!-- Import Map Polyfill from https://github.com/guybedford/es-module-shims -->
- <script src="https://rozek.github.io/reactive-scriptable-components/polyfills/es-module-shims.js"></script>
- <!-- Web Components Polyfill from https://github.com/webcomponents/webcomponentsjs -->
- <script src="https://rozek.github.io/reactive-scriptable-components/polyfills/webcomponents-bundle.js"></script>
-```
-
-### Using RSC in a "No-Build Environment" (e.g., directly in the Browser) ###
-
-If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, just append the following line to the `<head/>` section (after/below all RSC behaviour scripts, if you have any):
+Then, if you don't use any package that already _imports_ the RSC module, _load_ it with the following lines:
 
 ```html
 <script type="module" src="https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"></script>
 ```
 
-If you already load any of the predefined behaviour bundles such as the `full-bundle`
+Otherwise, just load your package, e.g. the `full-bundle` with all predefined RSC behaviours:
 
 ```html
  <script type="module"
   src="https://rozek.github.io/reactive-scriptable-components/behaviours/full-bundle.js"
  ></script>
 ```
-
-you may even do without explicitly loading the RSC module as the the bundles already import it themselves
 
 ### Using RSC with a Module Bundler ###
 
