@@ -174,7 +174,7 @@ function (
 ```
 
 - **`my`**<br>contains a reference to `this` visual (i.e., the one in whose context the current script is running). If you define getters and setters for observed and unobserved variables, inside these accessors, `this` will refer to the data structure rather than to the visual - in such situations, `my` will help you refering to the actual visual. Additionally, you may use `my` to let your code look like ordinary english: e.g., `my.observed.Value = ...`
-- **`me`**<br>is just a synonym for `me` and may be used wherever the resulting code will read more like ordinary english: e.g., in `my.render.bind(me)`<br>&nbsp;<br>
+- **`me`**<br>is just a synonym for `my` and may be used wherever the resulting code will then read more like ordinary english: e.g., like in `my.render.bind(me)`<br>&nbsp;<br>
 - **`RSC`**<br>contains a reference to RSC itself - thus, if you want to use any of its exported functions, you don't have to import the module yourself
 - **`JIL`**<br>since RSC uses the [javascript-interface-library](https://github.com/rozek/javascript-interface-library) internally anyway, you may use this reference to that library in order to avoid having to import it in your scripts yourself<br>&nbsp;<br>
 - **`onAttributeChange`**<br>`onAttributeChange((normalizedName,newValue) => ...)` can be used to install a function (with the given signature) that will be called whenever an attribute of an RSC element was changed. Only one callback function can be installed, later invocations of `onAttributeChange` overwrite previously registered callbacks
