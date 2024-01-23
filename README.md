@@ -158,7 +158,9 @@ Compared to standard HTML elements, RSC components provide a few additional prop
 - **`closestOuterVisualMatching (Selector)`**<br>returns a reference to the closest _outer_ visual of `this` one matching the given `Selector`<br>&nbsp;<br>
 - **`innerVisuals`**<br>is a getter which returns a (possibly empty) list of all visuals which are direct children of `this` one
 - **`innerVisualsWithBehaviour (BehaviourName)`**<br>returns a (possibly empty) list of all visuals with the given `BehaviourName` which are direct children of `this` one
-- **`innerVisualsMatching (Selector)`**<br>returns a (possibly empty) list of all visuals with the given `BehaviourName` which match the given `Selector`
+- **`innerVisualsMatching (Selector)`**<br>returns a (possibly empty) list of all visuals which are direct children of `this` one and match the given `Selector`
+- **`innerElements`**<br>is a getter which returns a (possibly empty) list of all elements (i.e., not only RSC components) which are direct children of `this` one
+- **`innerElementsMatching (Selector)`**<br>returns a (possibly empty) list of all elements (i.e., not only RSC components) which are direct children of `this` one and match the given `Selector`
 
 ### Component Scripts ###
 
