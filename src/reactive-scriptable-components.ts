@@ -375,6 +375,7 @@ namespace RSC {
     observedAttributes:RSC_Name[] = []
   ):void {
     expectName('behaviour name',Name)
+console.log('registering behaviour',Name)
 
     if (! ValueIsFunction(SourceOrExecutable)) {
       expectText('behaviour script',SourceOrExecutable)
@@ -1693,6 +1694,13 @@ console.error('rendering failure',Signal)
     }
     public set innerVisuals (_:RSC_Visual[]) { throwReadOnlyError('innerVisuals') }
 
+  /**** innerElements ****/
+
+    public get innerElements ():Element[] {
+      return innerElementsOf(this)
+    }
+    public set innerElements (_:Element[]) { throwReadOnlyError('innerElements') }
+
   /**** closestVisualWithBehaviour ****/
 
     public closestVisualWithBehaviour (BehaviourName:RSC_Name):RSC_Visual|undefined {
@@ -1744,6 +1752,16 @@ console.error('rendering failure',Signal)
 
       return innerVisualsOf(this).filter(
         (Visual) => Visual.matches(Selector)
+      )
+    }
+
+  /**** innerElementsMatching ****/
+
+    public innerElementsMatching (Selector:Textline):Element[] {
+      expectTextline('CSS selector',Selector)
+
+      return innerElementsOf(this).filter(
+        (Element) => Element.matches(Selector)
       )
     }
 
