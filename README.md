@@ -148,16 +148,16 @@ Otherwise, just _load your package_, e.g. the `full-bundle` with all predefined 
 
 (t.b.w)
 
-- **`Applet`**<br>is a getter which returns a reference to the closest visual of 'this' one with behaviour "Applet"
-- **`Card`**<br>is a getter which returns a reference to the closest visual of 'this' one with behaviour "Card"<br>&nbsp;<br>
-- **`outerVisual`**<br>is a getter which returns a reference to the next outer visual of 'this' one
-- **`outermostVisual`**<br>is a getter which returns a reference to the outermost visual of 'this' one
-- **`closestVisualWithBehaviour (BehaviourName)`**<br>returns a reference to the closest visual of 'this' one with the given `BehaviourName` - please note, that the "closest visual" may also be 'this' one
-- **`closestOuterVisualWithBehaviour (BehaviourName)`**<br>returns a reference to the closest _outer_ visual of 'this' one with the given `BehaviourName`
-- **`closestVisualMatching (Selector)`**<br>returns a reference to the closest visual of 'this' one matching the given `Selector` - please note, that the "closest visual" may also be 'this' one
-- **`closestOuterVisualMatching (Selector)`**<br>returns a reference to the closest _outer_ visual of 'this' one matching the given `Selector`<br>&nbsp;<br>
-- **`innerVisuals`**<br>is a getter which returns a (possibly empty) list of all visuals which are direct children of 'this' one
-- **`innerVisualsWithBehaviour (BehaviourName)`**<br>returns a (possibly empty) list of all visuals with the given `BehaviourName` which are direct children of 'this' one
+- **`Applet`**<br>is a getter which returns a reference to the closest visual of `this` one with behaviour "Applet"
+- **`Card`**<br>is a getter which returns a reference to the closest visual of `this` one with behaviour "Card"<br>&nbsp;<br>
+- **`outerVisual`**<br>is a getter which returns a reference to the next outer visual of `this` one
+- **`outermostVisual`**<br>is a getter which returns a reference to the outermost visual of `this` one
+- **`closestVisualWithBehaviour (BehaviourName)`**<br>returns a reference to the closest visual of `this` one with the given `BehaviourName` - please note, that the "closest" may also be `this` visual
+- **`closestOuterVisualWithBehaviour (BehaviourName)`**<br>returns a reference to the closest _outer_ visual of `this` one with the given `BehaviourName`
+- **`closestVisualMatching (Selector)`**<br>returns a reference to the closest visual of `this` one matching the given `Selector` - please note, that the "closest" may also be `this` visual
+- **`closestOuterVisualMatching (Selector)`**<br>returns a reference to the closest _outer_ visual of `this` one matching the given `Selector`<br>&nbsp;<br>
+- **`innerVisuals`**<br>is a getter which returns a (possibly empty) list of all visuals which are direct children of `this` one
+- **`innerVisualsWithBehaviour (BehaviourName)`**<br>returns a (possibly empty) list of all visuals with the given `BehaviourName` which are direct children of `this` one
 - **`innerVisualsMatching (Selector)`**<br>returns a (possibly empty) list of all visuals with the given `BehaviourName` which match the given `Selector`
 
 ### Element Scripts ###
