@@ -49,10 +49,10 @@ This approach allows to write simple web applications within minutes - the autho
 
 "reactive-scriptable-components" offer the following fundamental features:
 
-- **Script Attributes**<br>(small) scripts may be directly provided as an HTML attribute of a component - this keeps an element and it's functionality together
+- **Script Attributes**<br>(small) scripts may be directly provided as an HTML attribute of a component - this keeps a component and it's functionality together
 - **Script Elements**<br>(larger) scripts may be provided as a `<script type="rsc-script"/>` element within the component they belong to - e.g., below all other inner HTML elements. This approach keeps the internal structure of an RSC component visible and still allows a component and its code to be kept close together
-- **Delegated Scripts**<br>if you want to separate the "look" from its "feel", you may provide "delegated scripts" (`<script type="rsc-script" for="..."/>`) for elements that can be identified by a CSS selector (e.g., `#id`, `.class`, `[attr="value"]` etc.)
-- **Behaviour Scripts**<br>if you have multiple RSC components that share the same functionality, you may define a "behaviour" and provide the shared code in a separate `<script type="rsc-script" for-behaviour="..."/>` element. If there are both a behaviour and an element script for a given RSC component, the behaviour script is executed before the element script.
+- **Delegated Scripts**<br>if you want to separate the "look" from its "feel", you may provide "delegated scripts" (`<script type="rsc-script" for="..."/>`) for components that can be identified by a CSS selector (e.g., `#id`, `.class`, `[attr="value"]` etc.)
+- **Behaviour Scripts**<br>if you have multiple RSC components that share the same functionality, you may define a "behaviour" and provide the shared code in a separate `<script type="rsc-script" for-behaviour="..."/>` element. If there are both a behaviour and a component script for a given RSC component, the behaviour script is executed before the component script.
 - **Observed and Unobserved Variables**<br>RSC components usually have to store some values they need for their operation. For that purpose, RSC provides both an `observed` and an `unobserved` data structure for every component which can be freely used as required. "Observed" entries may then be used to trigger "reactive functions" or update "reactive attributes" whenever their values change
 - **Reactive Functions**<br>"reactive functions" (defined using `reactively(() => ...)`) are functions that will be automatically invoked whenever any of the observed(!) values they use internally have changed
 - **Reactive Attributes**<br>"reactive attributes" have names starting with one or two dollar signs (e.g., `$value` or `$$value`) and establish a "reactive binding" between a reactive variable of the component itself (`observed.value` in this example) and another reactive variable in an outer RSC component - both a reference to that outer component and the path to the other reactive variable have to be specified in the attribute itself
@@ -146,7 +146,7 @@ Otherwise, just _load your package_, e.g. the `full-bundle` with all predefined 
 
 ### Additional Element Properties and Methods ###
 
-(t.b.w)
+Compared to standard HTML elements, RSC components provide a few additional properties and methods which simplify behaviour and component scripts:
 
 - **`Applet`**<br>is a getter which returns a reference to the closest visual of `this` one with behaviour "Applet"
 - **`Card`**<br>is a getter which returns a reference to the closest visual of `this` one with behaviour "Card"<br>&nbsp;<br>
@@ -160,7 +160,7 @@ Otherwise, just _load your package_, e.g. the `full-bundle` with all predefined 
 - **`innerVisualsWithBehaviour (BehaviourName)`**<br>returns a (possibly empty) list of all visuals with the given `BehaviourName` which are direct children of `this` one
 - **`innerVisualsMatching (Selector)`**<br>returns a (possibly empty) list of all visuals with the given `BehaviourName` which match the given `Selector`
 
-### Element Scripts ###
+### Component Scripts ###
 
 (t.b.w) (script as function bodies, script attributes, script elements, delegated scripts)
 
@@ -175,14 +175,14 @@ function (
 
 - **`my`**<br>contains a reference to `this` visual (i.e., the one in whose context the current script is running). If you define getters and setters for observed and unobserved variables, inside these accessors, `this` will refer to the data structure rather than to the visual - in such situations, `my` will help you refering to the actual visual. Additionally, you may use `my` to let your code look like ordinary english: e.g., `my.observed.Value = ...`
 - **`me`**<br>is just a synonym for `my` and may be used wherever the resulting code will then read more like ordinary english: e.g., like in `my.render.bind(me)`<br>&nbsp;<br>
-- **`RSC`**<br>contains a reference to RSC itself - thus, if you want to use any of its exported functions, you don't have to import the module yourself
-- **`JIL`**<br>since RSC uses the [javascript-interface-library](https://github.com/rozek/javascript-interface-library) internally anyway, you may use this reference to that library in order to avoid having to import it in your scripts yourself<br>&nbsp;<br>
-- **`onAttributeChange`**<br>`onAttributeChange((normalizedName,newValue) => ...)` can be used to install a function (with the given signature) that will be called whenever an attribute of an RSC element was changed. Only one callback function can be installed, later invocations of `onAttributeChange` overwrite previously registered callbacks
-- **`onAttachment`**<br>`onAttachment(() => ...)` can be used to install a function that will be called whenever an RSC element is added to the DOM while RSC is running (and all behaviours have already been defined). Only one callback function can be installed, later invocations of `onAttachment` overwrite previously registered callbacks
-- **`onDetachment`**<br>`onDetachment(() => ...)` can be used to install a function that will be called whenever an RSC element is removed from the DOM. Only one callback function can be installed, later invocations of `onDetachment` overwrite previously registered callbacks<br>&nbsp;<br>
-- **`toRender`**<br>`toRender(() => ...)` can be used to install a function that will be called whenever an RSC element has to be (re-)rendered. Only one callback function can be installed, later invocations of `toRender` overwrite previously registered callbacks
+- **`RSC`**<br>contains a reference to RSC itself - thus, if you want to use any of its exported functions, you don't have to import the module yourself in your behaviour or component scripts
+- **`JIL`**<br>since RSC uses the [javascript-interface-library](https://github.com/rozek/javascript-interface-library) internally anyway, you may use this reference to that library in order to avoid having to import it in your scripts yourself in your behaviour or component scripts<br>&nbsp;<br>
+- **`onAttributeChange`**<br>`onAttributeChange((normalizedName,newValue) => ...)` can be used to install a function (with the given signature) that will be called whenever an attribute of an RSC component was changed. Only one callback function can be installed, later invocations of `onAttributeChange` overwrite previously registered callbacks
+- **`onAttachment`**<br>`onAttachment(() => ...)` can be used to install a function that will be called whenever an RSC component is added to the DOM while RSC is running (and all behaviours have already been defined). Only one callback function can be installed, later invocations of `onAttachment` overwrite previously registered callbacks
+- **`onDetachment`**<br>`onDetachment(() => ...)` can be used to install a function that will be called whenever an RSC component is removed from the DOM. Only one callback function can be installed, later invocations of `onDetachment` overwrite previously registered callbacks<br>&nbsp;<br>
+- **`toRender`**<br>`toRender(() => ...)` can be used to install a function that will be called whenever an RSC component has to be (re-)rendered. Only one callback function can be installed, later invocations of `toRender` overwrite previously registered callbacks
 - **`html`**<br>is a reference to the [htm markup function](https://github.com/rozek/htm#--htm-hyperscript-tagged-markup--) prepared for being used with [preact](https://github.com/preactjs/preact) - i.e., within RSC scripts<br>&nbsp;<br>
-- **`on`**<br>`on(events, selectors, data, (Event) => ...)` can be used to install a handler for the given (comma-separated) list of `events`, sent from (RSC or DOM) elements identified by any of the (optionally) given (comma-separated) selectors ...
+- **`on`**<br>`on(events, selectors, data, (Event) => ...)` can be used to install a handler for the given (comma-separated) list of `events`, sent from RSC components or DOM elements identified by any of the (optionally) given (comma-separated) selectors ...
 - **`once`**<br>
 - **`off`**<br>
 - **`trigger`**<br><br>&nbsp;<br>
@@ -190,7 +190,7 @@ function (
 
 ### Behaviour Scripts ###
 
-(t.b.w) (behaviour registry, behaviour definition, behaviour and element scripts together)
+(t.b.w) (behaviour registry, behaviour definition, behaviour and component scripts together)
 
 ### Observed and Unobserved Variables ###
 
@@ -303,7 +303,7 @@ It is always a good idea to protect a visual's state against faulty values. You 
 
 ### Attribute Mapping ###
 
-Internally, RSC works with arbitrary JavaScript values as their state, but initially, you may want to configure your visuals using element attributes (which are always strings). You may use the following code to map attributes to state variables
+Internally, RSC works with arbitrary JavaScript values as their state, but initially, you may want to configure your components using element attributes (which are always strings). You may use the following code to map attributes to state variables
 
 ```javascript
   onAttributeChange((Name, newValue) => {
