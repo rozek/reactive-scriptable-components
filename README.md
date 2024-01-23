@@ -109,8 +109,8 @@ If you don't use any kind of build tool but create your web application directly
  <script type="importmap">
  {
   "imports": {
-    "reactive-scriptable-library": "https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js",
-    "RSC":                         "https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"
+    "reactive-scriptable-components": "https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js",
+    "RSC":                            "https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"
   }
  }
  </script>
