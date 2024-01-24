@@ -915,7 +915,7 @@ import { registerBehaviour } from 'RSC'
 
   RSC.assign(my.unobserved,{
     Value:'',
-    minLength:0, maxLength:undefined,
+    Size:undefined, minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
     SpellChecking:'default', Suggestions:[],
     enabled:true,
@@ -927,6 +927,12 @@ import { registerBehaviour } from 'RSC'
     set Value (newValue) {
       JIL.allowTextline('input value',newValue)
       my.unobserved.Value = newValue
+    },
+
+    get Size () { return my.unobserved.Size },
+    set Size (newValue) {
+      JIL.allowOrdinal('number of visible characters',newValue)
+      my.unobserved.Size = newValue
     },
 
     get minLength () { return my.unobserved.minLength },
@@ -984,6 +990,7 @@ import { registerBehaviour } from 'RSC'
     }
 
     switch (Name) {
+      case 'size':       my.observed.Size      = parsed(newValue); break
       case 'min-length': my.observed.minLength = parsed(newValue); break
       case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
@@ -1007,8 +1014,8 @@ import { registerBehaviour } from 'RSC'
 
   toRender(() => {
     let {
-      Value, minLength,maxLength, Pattern, Placeholder, readonly, SpellChecking,
-      Suggestions
+      Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
+      SpellChecking, Suggestions
     } = my.observed
 
     if (document.activeElement === me) {
@@ -1046,7 +1053,7 @@ import { registerBehaviour } from 'RSC'
         }
       </style>
       <input type="text" list=${UUID} disabled=${! my.observed.enabled}
-        value=${Value} minlength=${minLength} maxlength=${maxLength}
+        value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         spellcheck=${SpellChecking} readonly=${readonly}
         onInput=${onInput} onBlur=${my.render.bind(me)}
@@ -1057,7 +1064,7 @@ import { registerBehaviour } from 'RSC'
 
 
     },[
-      'Value','minLength','maxLength','Pattern','Placeholder','readonly',
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
       'SpellChecking','Suggestions','enabled'
     ]
   )
@@ -1074,7 +1081,7 @@ import { registerBehaviour } from 'RSC'
 
   RSC.assign(my.unobserved,{
     Value:'',
-    minLength:0, maxLength:undefined,
+    Size:undefined, minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
     enabled:true,
     UUID:undefined // is used internally - do not touch!
@@ -1085,6 +1092,12 @@ import { registerBehaviour } from 'RSC'
     set Value (newValue) {
       JIL.allowTextline('input value',newValue)
       my.unobserved.Value = newValue
+    },
+
+    get Size () { return my.unobserved.Size },
+    set Size (newValue) {
+      JIL.allowOrdinal('number of visible characters',newValue)
+      my.unobserved.Size = newValue
     },
 
     get minLength () { return my.unobserved.minLength },
@@ -1130,6 +1143,7 @@ import { registerBehaviour } from 'RSC'
     }
 
     switch (Name) {
+      case 'size':       my.observed.Size      = parsed(newValue); break
       case 'min-length': my.observed.minLength = parsed(newValue); break
       case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
@@ -1145,7 +1159,7 @@ import { registerBehaviour } from 'RSC'
 
 
   toRender(() => {
-    let { Value, minLength,maxLength, Pattern, Placeholder, readonly } = my.observed
+    let { Value, Size, minLength,maxLength, Pattern, Placeholder, readonly } = my.observed
 
     if (document.activeElement === me) {
       Value = my.renderedValue
@@ -1168,7 +1182,7 @@ import { registerBehaviour } from 'RSC'
         }
       </style>
       <input type="password" disabled=${! my.observed.enabled}
-        value=${Value} minlength=${minLength} maxlength=${maxLength}
+        value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder} readonly=${readonly}
         onInput=${onInput} onBlur=${my.render.bind(me)}
       />
@@ -1177,7 +1191,7 @@ import { registerBehaviour } from 'RSC'
 
 
     },[
-      'Value','minLength','maxLength','Pattern','Placeholder','readonly',
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
       'enabled'
     ]
   )
@@ -1355,7 +1369,7 @@ import { registerBehaviour } from 'RSC'
 
   RSC.assign(my.unobserved,{
     Value:'',
-    minLength:0, maxLength:undefined,
+    Size:undefined, minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
     Suggestions:[],
     enabled:true,
@@ -1367,6 +1381,12 @@ import { registerBehaviour } from 'RSC'
     set Value (newValue) {
       JIL.allowTextline('input value',newValue)
       my.unobserved.Value = newValue
+    },
+
+    get Size () { return my.unobserved.Size },
+    set Size (newValue) {
+      JIL.allowOrdinal('number of visible characters',newValue)
+      my.unobserved.Size = newValue
     },
 
     get minLength () { return my.unobserved.minLength },
@@ -1418,6 +1438,7 @@ import { registerBehaviour } from 'RSC'
     }
 
     switch (Name) {
+      case 'size':       my.observed.Size      = parsed(newValue); break
       case 'min-length': my.observed.minLength = parsed(newValue); break
       case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
@@ -1441,7 +1462,7 @@ import { registerBehaviour } from 'RSC'
 
   toRender(() => {
     let {
-      Value, minLength,maxLength, Pattern, Placeholder, readonly,
+      Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
       Suggestions
     } = my.observed
 
@@ -1476,7 +1497,7 @@ import { registerBehaviour } from 'RSC'
         }
       </style>
       <input type="tel" list=${UUID} disabled=${! my.observed.enabled}
-        value=${Value} minlength=${minLength} maxlength=${maxLength}
+        value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         readonly=${readonly}
         onInput=${onInput} onBlur=${my.render.bind(me)}
@@ -1487,7 +1508,7 @@ import { registerBehaviour } from 'RSC'
 
 
     },[
-      'Value','minLength','maxLength','Pattern','Placeholder','readonly',
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
       'Suggestions','enabled'
     ]
   )
@@ -1504,7 +1525,7 @@ import { registerBehaviour } from 'RSC'
 
   RSC.assign(my.unobserved,{
     Value:[], multiple:false,                      // "Value" is always an array
-    minLength:0, maxLength:undefined,
+    Size:undefined, minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
     Suggestions:[],
     enabled:true,
@@ -1516,6 +1537,12 @@ import { registerBehaviour } from 'RSC'
     set Value (newValue) {
       JIL.allowListSatisfying('input value list',newValue, JIL.ValueIsEMailAddress)
       my.unobserved.Value = (newValue == null ? [] : newValue.slice())
+    },
+
+    get Size () { return my.unobserved.Size },
+    set Size (newValue) {
+      JIL.allowOrdinal('number of visible characters',newValue)
+      my.unobserved.Size = newValue
     },
 
     get multiple () { return my.unobserved.multiple },
@@ -1579,6 +1606,7 @@ import { registerBehaviour } from 'RSC'
       case 'multiple':
         my.observed.multiple = (newValue === 'multiple') || (newValue === '')
         break
+      case 'size':       my.observed.Size      = parsed(newValue); break
       case 'min-length': my.observed.minLength = parsed(newValue); break
       case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
@@ -1602,7 +1630,7 @@ import { registerBehaviour } from 'RSC'
 
   toRender(() => {
     let {
-      Value, multiple, minLength,maxLength, Pattern, Placeholder, readonly,
+      Value, Size, multiple, minLength,maxLength, Pattern, Placeholder, readonly,
       Suggestions
     } = my.observed
 
@@ -1637,7 +1665,7 @@ import { registerBehaviour } from 'RSC'
         }
       </style>
       <input type="email" list=${UUID} disabled=${! my.observed.enabled}
-        value=${Value.join(',')} minlength=${minLength} maxlength=${maxLength}
+        value=${Value.join(',')} size=${Size} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         readonly=${readonly}
         onInput=${onInput} onBlur=${my.render.bind(me)}
@@ -1648,7 +1676,7 @@ import { registerBehaviour } from 'RSC'
 
 
     },[
-      'Value','multiple','minLength','maxLength','Pattern','Placeholder',
+      'Value','Size','multiple','minLength','maxLength','Pattern','Placeholder',
       'readonly','Suggestions','enabled'
     ]
   )
@@ -1665,7 +1693,7 @@ import { registerBehaviour } from 'RSC'
 
   RSC.assign(my.unobserved,{
     Value:'',
-    minLength:0, maxLength:undefined,
+    Size:undefined, minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
     Suggestions:[],
     enabled:true,
@@ -1677,6 +1705,12 @@ import { registerBehaviour } from 'RSC'
     set Value (newValue) {
       JIL.allowURL('input value',newValue)
       my.unobserved.Value = newValue
+    },
+
+    get Size () { return my.unobserved.Size },
+    set Size (newValue) {
+      JIL.allowOrdinal('number of visible characters',newValue)
+      my.unobserved.Size = newValue
     },
 
     get minLength () { return my.unobserved.minLength },
@@ -1728,6 +1762,7 @@ import { registerBehaviour } from 'RSC'
     }
 
     switch (Name) {
+      case 'size':       my.observed.Size      = parsed(newValue); break
       case 'min-length': my.observed.minLength = parsed(newValue); break
       case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
@@ -1751,7 +1786,7 @@ import { registerBehaviour } from 'RSC'
 
   toRender(() => {
     let {
-      Value, minLength,maxLength, Pattern, Placeholder, readonly,
+      Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
       Suggestions
     } = my.observed
 
@@ -1786,7 +1821,7 @@ import { registerBehaviour } from 'RSC'
         }
       </style>
       <input type="url" list=${UUID} disabled=${! my.observed.enabled}
-        value=${Value} minlength=${minLength} maxlength=${maxLength}
+        value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         readonly=${readonly}
         onInput=${onInput} onBlur=${my.render.bind(me)}
@@ -1797,7 +1832,7 @@ import { registerBehaviour } from 'RSC'
 
 
     },[
-      'Value','minLength','maxLength','Pattern','Placeholder','readonly',
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
       'Suggestions','enabled'
     ]
   )
@@ -2604,7 +2639,7 @@ import { registerBehaviour } from 'RSC'
 
   RSC.assign(my.unobserved,{
     Value:'',
-    minLength:0, maxLength:undefined,
+    Size:undefined, minLength:0, maxLength:undefined,
     Pattern:undefined, Placeholder:undefined, readonly:false,
     SpellChecking:'default', Suggestions:[],
     enabled:true,
@@ -2616,6 +2651,12 @@ import { registerBehaviour } from 'RSC'
     set Value (newValue) {
       JIL.allowTextline('input value',newValue)
       my.unobserved.Value = newValue
+    },
+
+    get Size () { return my.unobserved.Size },
+    set Size (newValue) {
+      JIL.allowOrdinal('number of visible characters',newValue)
+      my.unobserved.Size = newValue
     },
 
     get minLength () { return my.unobserved.minLength },
@@ -2673,6 +2714,7 @@ import { registerBehaviour } from 'RSC'
     }
 
     switch (Name) {
+      case 'size':       my.observed.Size      = parsed(newValue); break
       case 'min-length': my.observed.minLength = parsed(newValue); break
       case 'max-length': my.observed.maxLength = parsed(newValue); break
       case 'readonly':
@@ -2696,8 +2738,8 @@ import { registerBehaviour } from 'RSC'
 
   toRender(() => {
     let {
-      Value, minLength,maxLength, Pattern, Placeholder, readonly, SpellChecking,
-      Suggestions
+      Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
+      SpellChecking, Suggestions
     } = my.observed
 
     if (document.activeElement === me) {
@@ -2735,7 +2777,7 @@ import { registerBehaviour } from 'RSC'
         }
       </style>
       <input type="search" list=${UUID} disabled=${! my.observed.enabled}
-        value=${Value} minlength=${minLength} maxlength=${maxLength}
+        value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
         pattern=${Pattern} placeholder=${Placeholder}
         spellcheck=${SpellChecking} readonly=${readonly}
         onInput=${onInput} onBlur=${my.render.bind(me)}
@@ -2746,7 +2788,7 @@ import { registerBehaviour } from 'RSC'
 
 
     },[
-      'Value','minLength','maxLength','Pattern','Placeholder','readonly',
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
       'SpellChecking','Suggestions','enabled'
     ]
   )
@@ -2864,6 +2906,7 @@ import { registerBehaviour } from 'RSC'
 
   RSC.assign(my.unobserved,{
     Value:[],      // internally, "Value" is always a list, even if (! multiple)
+    Size:undefined,
     multiple:false, Options:[],
     enabled:true,
   }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
@@ -2882,6 +2925,12 @@ import { registerBehaviour } from 'RSC'
         JIL.allowTextline('input value',newValue)
         my.unobserved.Value = (newValue == null ? [] : [newValue])
       }
+    },
+
+    get Size () { return my.unobserved.Size },
+    set Size (newValue) {
+      JIL.allowOrdinal('number of visible characters',newValue)
+      my.unobserved.Size = newValue
     },
 
     get multiple () { return my.unobserved.multiple },
@@ -2909,6 +2958,9 @@ import { registerBehaviour } from 'RSC'
     }
 
     switch (Name) {
+      case 'size':
+        my.observed.Size = parsed(newValue)
+        break
       case 'multiple':
         my.observed.multiple = (newValue === 'multiple') || (newValue === '')
         break
@@ -2929,7 +2981,7 @@ import { registerBehaviour } from 'RSC'
 
 
   toRender(() => {
-    let Value = my.unobserved.Value  // "my.unobserved.Value" is always an array
+    let { Value, Size } = my.unobserved            // "Value" is always an array
 
     if (document.activeElement === me) {
       Value = my.renderedValue
@@ -2964,7 +3016,7 @@ import { registerBehaviour } from 'RSC'
           -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
         }
       </style>
-      <select disabled=${! my.observed.enabled}
+      <select disabled=${! my.observed.enabled} size=${Size}
         onInput=${onInput} onBlur=${my.render.bind(me)}
       >
         ${OptionList.map(({ Label,Value }) => {
@@ -2975,7 +3027,7 @@ import { registerBehaviour } from 'RSC'
   })
 
 
-    },['Value','multiple','Options','enabled']
+    },['Value','Size','multiple','Options','enabled']
   )
 
 
