@@ -246,7 +246,7 @@ import { registerBehaviour } from 'RSC'
   )
 
 
-  registerBehaviour('cColSpan',
+  registerBehaviour('ColSpan',
     function (
       my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
       toRender, html, on,once,off,trigger, reactively
@@ -3250,5 +3250,32 @@ import { registerBehaviour } from 'RSC'
 
 
     },['Value','Color']
+  )
+
+
+  registerBehaviour('powered',
+    function (
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
+    ) {
+//------------------------------------------------------------------------------
+//--                               rsc-powered                                --
+//------------------------------------------------------------------------------
+
+  toRender(() => html`
+    <style>
+      :host {
+        display:inline-block; position:relative;
+        font-family:'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+        font-size:10px; font-weight:normal; line-height:normal;
+        text-align:right;
+      }
+      a { text-decoration:underline; color:greenyellow }
+    </style>
+    powered by <a href="https://github.com/rozek/reactive-scriptable-components">Reactive Scriptable Components</a>
+  `)
+
+
+    },[]
   )
 
