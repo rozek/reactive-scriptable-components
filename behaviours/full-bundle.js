@@ -234,7 +234,7 @@ import { registerBehaviour } from 'RSC'
         ` : ''}
         <tbody>
           ${Rows.map((Row) => {
-            return html`<tr valign="${verticalAlignment}">${Row}</tr>`
+            return html`<tr style="vertical-align:${verticalAlignment}">${Row}</tr>`
           })}
         </tbody>
       </table>
@@ -331,7 +331,7 @@ import { registerBehaviour } from 'RSC'
         display:inline-block; position:relative;
       }
     </style>
-    <div style="display:block; position:relative; width:100%; height:100%"
+    <div style="display:inline-block; position:relative; width:100%; height:100%"
       dangerouslySetInnerHTML=${{__html:my.observed.Value}}
     />
   `)
@@ -420,7 +420,10 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block; font-size:0px; line-height:0px }
+        :host {
+          display:inline-block; position:relative;
+          font-size:0px; line-height:0px
+        }
       </style>
       <img src=${Value} style="
         object-fit:${ImageScaling === 'stretch' ? 'fill ' : ImageScaling};
@@ -467,7 +470,7 @@ import { registerBehaviour } from 'RSC'
   toRender(() => {
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
       </style>
       <button disabled=${! my.observed.enabled}>
         ${my.observed.Value}
@@ -536,7 +539,7 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
       </style>
       <input type="checkbox" disabled=${! my.observed.enabled}
         checked=${isChecked} indeterminate=${isIndeterminate}
@@ -598,7 +601,7 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
       </style>
       <input type="radio" disabled=${! my.observed.enabled}
         checked=${isChecked}
@@ -689,7 +692,7 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
       </style>
       <meter value=${isNaN(Value) ? '' : Value}
         min=${Minimum} low=${lowerBound} opt=${Optimum}
@@ -749,7 +752,7 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
       </style>
       <progress value=${isNaN(Value) ? '' : Value} max=${Maximum} />
     `
@@ -879,7 +882,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="range" list=${UUID} disabled=${! my.observed.enabled}
         value=${isNaN(Value) ? '' : Value}
@@ -1030,7 +1038,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="text" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
@@ -1147,7 +1160,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="password" disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
@@ -1301,7 +1319,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="text" list=${UUID} disabled=${! my.observed.enabled}
         value=${isNaN(Value) ? '' : Value}
@@ -1445,7 +1468,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="tel" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
@@ -1601,7 +1629,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="email" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value.join(',')} minlength=${minLength} maxlength=${maxLength}
@@ -1745,7 +1778,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="url" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
@@ -1899,7 +1937,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="time" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
@@ -2052,7 +2095,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="datetime-local" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
@@ -2205,7 +2253,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="date" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
@@ -2358,7 +2411,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="week" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
@@ -2511,7 +2569,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="month" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
@@ -2664,7 +2727,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="search" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value} minlength=${minLength} maxlength=${maxLength}
@@ -2765,7 +2833,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        input {
+          display:inline-block; position:relative;
+          /* width:100%; height:100%; */
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <input type="color" list=${UUID} disabled=${! my.observed.enabled}
         value=${Value}
@@ -2884,7 +2957,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        select {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <select disabled=${! my.observed.enabled}
         onInput=${onInput} onBlur=${my.render.bind(me)}
@@ -3028,7 +3106,12 @@ import { registerBehaviour } from 'RSC'
 
     return html`
       <style>
-        :host { display:inline-block }
+        :host { display:inline-block; position:relative }
+        textarea {
+          display:inline-block; position:relative;
+          width:100%; height:100%;
+          -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+        }
       </style>
       <textarea disabled=${! my.observed.enabled} style=${Style}
         readonly=${readonly} wrap=${LineWrapping}
@@ -3068,6 +3151,7 @@ import { registerBehaviour } from 'RSC'
 
     },[]
   )
+
 
   registerBehaviour('Title',
     function (
@@ -3111,5 +3195,60 @@ import { registerBehaviour } from 'RSC'
 
 
     },[]
+  )
+
+
+  registerBehaviour('Icon',
+    function (
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
+    ) {
+//------------------------------------------------------------------------------
+//--                                 rsc-icon                                 --
+//------------------------------------------------------------------------------
+
+  RSC.assign(my.unobserved,{
+    Value:'', Color:'black',
+  })
+
+  RSC.assign(my.observed,{
+    get Value () { return my.unobserved.Value },
+    set Value (newValue) {
+      JIL.allowURL('icon URL value',newValue)
+      my.unobserved.Value = (newValue == null ? '' : newValue.trim())
+    },
+
+    get Color () { return my.unobserved.Color },
+    set Color (newValue) {
+      JIL.allowColor('icon color',newValue)
+      my.unobserved.Color = newValue || 'black'
+    },
+  })
+
+  toRender(() => {
+    const { Value, Color } = my.observed
+
+    return html`
+      <style>
+        :host {
+          display:inline-block; position:relative;
+          width:24px; height:24px;
+          font-size:0px; line-height:0px;
+        }
+        div {
+          display:block; position:absolute;
+          left:0px; top:0px; width:100%; height:100%;
+          -webkit-mask-image:url(${Value});    mask-image:url(${Value});
+          -webkit-mask-size:contain;           mask-size:contain;
+          -webkit-mask-position:center center; mask-position:center center;
+          background-color:${Color};
+        }
+      </style>
+      <div/>
+    `
+  })
+
+
+    },['Value','Color']
   )
 
