@@ -437,6 +437,102 @@ import { registerBehaviour } from 'RSC'
   )
 
 
+  registerBehaviour('WebView',
+    function (
+      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
+      toRender, html, on,once,off,trigger, reactively
+    ) {
+//------------------------------------------------------------------------------
+//--                               rsc-webview                                --
+//------------------------------------------------------------------------------
+
+  const DefaultSandboxPermissions = (
+    'allow-downloads allow-forms allow-modals allow-orientation-lock ' +
+    'allow-pointer-lock allow-popups allow-same-origin allow-scripts'
+  )
+
+  RSC.assign(my.unobserved,{
+    Value:'',
+    PermissionsPolicy:undefined, ReferrerPolicy:undefined,
+    SandboxPermissions:DefaultSandboxPermissions, allowsFullscreen:false
+  })
+
+  RSC.assign(my.observed,{
+    get Value () { return my.unobserved.Value },
+    set Value (newValue) {
+      JIL.allowURL('image URL value',newValue)
+      my.unobserved.Value = newValue || ''
+    },
+
+    get PermissionsPolicy () { return my.unobserved.PermissionsPolicy },
+    set PermissionsPolicy (newValue) {
+      JIL.allowText('permissions policy',newValue)
+      my.unobserved.PermissionsPolicy = newValue
+    },
+
+    get ReferrerPolicy () { return my.unobserved.ReferrerPolicy },
+    set ReferrerPolicy (newValue) {
+      JIL.allowOneOf('referrer policy',newValue, [
+        'no-referrer','no-referrer-when-downgrade',
+        'origin','origin-when-cross-origin','same-origin',
+        'strict-origin','strict-origin-when-cross-origin',
+        'unsafe-url'
+      ])
+      my.unobserved.ReferrerPolicy = newValue
+    },
+
+    get SandboxPermissions () { return my.unobserved.SandboxPermissions },
+    set SandboxPermissions (newValue) {
+      JIL.allowText('sandbox permissions list',newValue)
+      my.unobserved.SandboxPermissions = newValue || DefaultSandboxPermissions
+    },
+
+    get FullscreenPermission () { return my.unobserved.FullscreenPermission },
+    set FullscreenPermission (newValue) {
+      JIL.expectBoolean('fullscreen permission',newValue)
+      my.unobserved.FullscreenPermission = newValue
+    },
+  })
+
+  onAttributeChange((Name, newValue) => {
+    switch (Name) {
+      case 'allow':    my.observed.PermissionsPolicy  = newValue; break
+      case 'referrer': my.observed.ReferrerPolicy     = newValue; break
+      case 'sandbox':  my.observed.SandboxPermissions = newValue; break
+      case 'allow-fullscreen':
+        my.observed.FullscreenPermission = (newValue === 'allow-fullscreen') || (newValue === '')
+        break
+      default: return false // triggers automatic mapping
+    }
+    return true
+  })
+
+  toRender(() => {
+    const {
+      Value,
+      PermissionsPolicy, ReferrerPolicy, SandboxPermissions, FullscreenPermission
+    } = my.observed
+
+    return html`
+      <style>
+        :host { display:inline-block; position:relative }
+        iframe {
+          display:block; position:relative;
+          width:100%; height:100%; overflow:scroll;
+        }
+      </style>
+      <iframe src=${Value} style="
+      " allow=${PermissionsPolicy} allowfullscreen=${FullscreenPermission}
+        sandbox=${SandboxPermissions} referrerpolicy=${ReferrerPolicy}
+      />
+    `
+  })
+
+
+    },['Value','PermissionsPolicy', 'ReferrerPolicy','SandboxPermissions','allowsFullscreen']
+  )
+
+
   registerBehaviour('native-Button',
     function (
       my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
@@ -1011,7 +1107,6 @@ import { registerBehaviour } from 'RSC'
     return true
   })
 
-
   toRender(() => {
     let {
       Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
@@ -1156,7 +1251,6 @@ import { registerBehaviour } from 'RSC'
     }
     return true
   })
-
 
   toRender(() => {
     let { Value, Size, minLength,maxLength, Pattern, Placeholder, readonly } = my.observed
@@ -1303,7 +1397,6 @@ import { registerBehaviour } from 'RSC'
     }
     return true
   })
-
 
   toRender(() => {
     let {
@@ -1458,7 +1551,6 @@ import { registerBehaviour } from 'RSC'
     }
     return true
   })
-
 
   toRender(() => {
     let {
@@ -1627,7 +1719,6 @@ import { registerBehaviour } from 'RSC'
     return true
   })
 
-
   toRender(() => {
     let {
       Value, Size, multiple, minLength,maxLength, Pattern, Placeholder, readonly,
@@ -1782,7 +1873,6 @@ import { registerBehaviour } from 'RSC'
     }
     return true
   })
-
 
   toRender(() => {
     let {
@@ -1942,7 +2032,6 @@ import { registerBehaviour } from 'RSC'
     return true
   })
 
-
   toRender(() => {
     let {
       Value, Minimum,Maximum, Stepping, Placeholder, readonly,
@@ -2099,7 +2188,6 @@ import { registerBehaviour } from 'RSC'
     }
     return true
   })
-
 
   toRender(() => {
     let {
@@ -2258,7 +2346,6 @@ import { registerBehaviour } from 'RSC'
     return true
   })
 
-
   toRender(() => {
     let {
       Value, Minimum,Maximum, Stepping, Placeholder, readonly,
@@ -2416,7 +2503,6 @@ import { registerBehaviour } from 'RSC'
     return true
   })
 
-
   toRender(() => {
     let {
       Value, Minimum,Maximum, Stepping, Placeholder, readonly,
@@ -2573,7 +2659,6 @@ import { registerBehaviour } from 'RSC'
     }
     return true
   })
-
 
   toRender(() => {
     let {
@@ -2735,7 +2820,6 @@ import { registerBehaviour } from 'RSC'
     return true
   })
 
-
   toRender(() => {
     let {
       Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
@@ -2847,7 +2931,6 @@ import { registerBehaviour } from 'RSC'
     }
     return true
   })
-
 
   toRender(() => {
     let { Value, Suggestions } = my.observed
@@ -2978,7 +3061,6 @@ import { registerBehaviour } from 'RSC'
     }
     return true
   })
-
 
   toRender(() => {
     let { Value, Size } = my.unobserved            // "Value" is always an array
@@ -3130,7 +3212,6 @@ import { registerBehaviour } from 'RSC'
     return true
   })
 
-
   toRender(() => {
     let {
       Value, LineWrapping, resizable, minLength,maxLength,
@@ -3179,29 +3260,6 @@ import { registerBehaviour } from 'RSC'
       'Value','LineWrapping','resizable','minLength','maxLength','Placeholder',
       'readonly','SpellChecking','enabled'
     ]
-  )
-
-
-  registerBehaviour('Applet',
-    function (
-      my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
-      toRender, html, on,once,off,trigger, reactively
-    ) {
-//------------------------------------------------------------------------------
-//--                                rsc-applet                                --
-//------------------------------------------------------------------------------
-
-  toRender(() => html`
-    <style>
-      :host {
-        display:inline-block; position:relative;
-      }
-    </style>
-    <slot/>
-  `)
-
-
-    },[]
   )
 
 
