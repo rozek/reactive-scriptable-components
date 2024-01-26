@@ -449,6 +449,10 @@ console.log('registering behaviour',Name)
     Name:'Visual', AttributeSet:{ value:'Value' }
   }
 
+  BehaviourRegistry['applet'] = {
+    Name:'Applet', AttributeSet:{ value:'Value' }
+  }
+
 /**** registerBehaviourFromElement ****/
 
   function registerBehaviourFromElement (ScriptElement:Element):void {
@@ -1769,6 +1773,30 @@ console.error('rendering failure',Signal)
   }
 
   customElements.define('rsc-visual', RSC_Visual)
+
+//------------------------------------------------------------------------------
+//--                                RSC_Applet                                --
+//------------------------------------------------------------------------------
+
+  class RSC_Applet extends RSC_Visual {
+    static observedAttributes:string[] = ['value']         // may be overwritten
+
+    public constructor () {       // already with all attributes and inner nodes
+      super()
+      RendererForVisual.set(this, function render () {
+        return html`
+          <style>
+            :host {
+              display:inline-block; position:relative;
+            }
+          </style>
+          <slot/>
+        `
+      })
+    }
+  }
+
+  customElements.define('rsc-applet', RSC_Applet)
 
 /**** startAllAppletsInDocument ****/
 
