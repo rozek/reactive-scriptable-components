@@ -66,6 +66,7 @@ namespace RSC {
 
 /**** throwReadOnlyError ****/
 
+// @ts-ignore TS2534 why is TS complaining here?
   export function throwReadOnlyError (Name:string):never {
     throwError(
       'ReadOnlyProperty: property ' + quoted(Name) + ' must not be set'
@@ -406,6 +407,7 @@ console.log('registering behaviour',Name)
           'ForbiddenOperation: cannot overwrite intrinsic behaviour ' + quoted(Name)
         )
 
+// @ts-ignore we know that "BehaviourInfo.Source != null"
         if (BehaviourInfo.Source.trim() !== (SourceOrExecutable as Text).trim()) throwError(
           'ForbiddenOperation: cannot overwrite existing behaviour ' + quoted(Name)
         )
@@ -663,6 +665,7 @@ console.log('registering behaviour',Name)
       )
     }
 
+// @ts-ignore TS2454 we know that "Executable != null"
     (ScriptDelegationSet as RSC_ScriptDelegationSet)[Selector] = { Selector, Source, Executable }
   }
 
@@ -1382,6 +1385,7 @@ console.error('attribute change failure',Signal)
       }
     }
 
+// @ts-ignore TS2322 we know that "Base != null"
     return { Base,PathList }
   }
 
@@ -1863,15 +1867,29 @@ console.error('attachment handler failure',Signal)
 
 /**** start-up in a well-defined way ****/
 
-  document.addEventListener("readystatechange", (Event) => {
-    if (document.readyState === 'complete') {
-      registerAllBehavioursFoundInHead()
+  function startRSC () {
+    registerAllBehavioursFoundInHead()
 
-      RSC_isRunning = true
-      startAllAppletsInDocument()
-    }
-  })
+    RSC_isRunning = true
+    startAllAppletsInDocument()
+  }
+
+  if (document.readyState === 'complete') {
+    startRSC()
+console.log('RSC has been started')
+  } else {
+console.log('waiting for document to become "complete"')
+    document.addEventListener("readystatechange", (Event) => {
+      if (document.readyState === 'complete') {
+        startRSC()
+console.log('RSC has finally been started')
+      }
+    })
+  }
 }
+
+const global = (new Function('return this'))()
+global.RSC = RSC
 
 export const {
   assign, isRunning,
