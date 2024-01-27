@@ -106,14 +106,14 @@ Most modern browsers already support import maps and web components out-of-the-b
 If you don't use any kind of build tool but create your web application directly in the browser or in an HTML file, you should first provide an "import map" that allows scripts to import modules by name rather than by URL. Just append the following lines to the `<head/>` section of your HTML file:
 
 ```html
- <script type="importmap">
- {
+<script type="importmap">
+{
   "imports": {
     "reactive-scriptable-components": "https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js",
     "RSC":                            "https://rozek.github.io/reactive-scriptable-components/dist/reactive-scriptable-components.modern.js"
   }
- }
- </script>
+}
+</script>
 ```
 
 Then, if you don't use any package that already _imports_ the RSC module, _load_ it with the following lines:
