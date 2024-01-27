@@ -47,11 +47,9 @@ const { observe, computed, dispose } = hyperactiv
 namespace RSC {
   export const assign = JIL.ObjectMergedWith
 
-/**** isRunning ****/
+  assign(RSC,{ render, html, Component }, { observe, computed, dispose })
 
-  let RSC_isRunning:boolean = false
-
-  export function isRunning () { return RSC_isRunning }
+  let RSC_isRunning:boolean = false               // has to be initialized early
 
 //------------------------------------------------------------------------------
 //--                             Type Definitions                             --
@@ -1170,6 +1168,22 @@ console.error('element script execution failure',Signal)
   const reactiveFunctionsForVisual:WeakMap<RSC_Visual,Function[]>  = new WeakMap()
   const reactiveAttributesForVisual:WeakMap<RSC_Visual,Function[]> = new WeakMap()
 
+/**** observed/unobserved ****/
+
+  const globalObservables = observe({},{ deep:false })
+  const globalInternals   = {}
+
+  export var observed:Indexable   = {}           // will be replaced in a moment
+  export var unobserved:Indexable = {}                                   // dto.
+
+  assign(RSC,{
+    get observed ():Indexable  { return globalObservables },
+    set observed (_:Indexable) { throwReadOnlyError('observed') },
+
+    get unobserved ():Indexable  { return globalInternals },
+    set unobserved (_:Indexable) { throwReadOnlyError('unobserved') },
+  })
+
 /**** ObservablesOfVisual ****/
 
   const ObservablesForVisual:WeakMap<RSC_Visual,Indexable> = new WeakMap()
@@ -1332,7 +1346,7 @@ console.error('attribute change failure',Signal)
 /**** parsedAccessPathFromVisual ****/
 
   type RSC_AccessPath = {
-    Base:RSC_Visual,
+    Base:RSC_Visual|typeof RSC,
     PathList:string[]
   }
 
@@ -1349,17 +1363,23 @@ console.error('attribute change failure',Signal)
       'InvalidAccessPath:invalid access path ' + quoted(literalPath)
     )
 
-    let Selector = literalPath.slice(0,SplitIndex)
-    if (ValueIsName(Selector)) {
-      const normalizedName = Selector.toLowerCase()
-      Selector = `rsc-${normalizedName},[behaviour="${normalizedName}"]`
-    }
+    let Base:RSC_Visual|typeof RSC
 
-    let Base = closestVisualMatching(Visual,Selector)
-    if (Base == null) throwError(
-      'NoSuchVisual:could not find a close visual matching CSS selector' +
-      quoted(Selector)
-    )
+    let Selector = literalPath.slice(0,SplitIndex)
+    if (Selector === 'RSC') {
+      Base = RSC
+    } else {
+      if (ValueIsName(Selector)) {
+        const normalizedName = Selector.toLowerCase()
+        Selector = `rsc-${normalizedName},[behaviour="${normalizedName}"]`
+      }
+
+      let Base = closestVisualMatching(Visual,Selector)
+      if (Base == null) throwError(
+        'NoSuchVisual:could not find a close visual matching CSS selector' +
+        quoted(Selector)
+      )
+    }
 
     let AccessPath = literalPath.slice(SplitIndex + 9).trim()
 
@@ -1391,7 +1411,9 @@ console.error('attribute change failure',Signal)
 
 /**** ValueOfReactiveVariable ****/
 
-  function ValueOfReactiveVariable (Base:RSC_Visual, PathList:string[]):any {
+  function ValueOfReactiveVariable (
+    Base:RSC_Visual|typeof RSC, PathList:string[]
+  ):any {
     let Value:any = Base.observed[PathList[0]]
       for (let i = 1, l = PathList.length; i < l; i++) {
         if (Value == null) throwError(
@@ -1405,7 +1427,7 @@ console.error('attribute change failure',Signal)
 /**** setValueOfReactiveVariable ****/
 
   function setValueOfReactiveVariable (
-    Base:RSC_Visual, PathList:string[], Value:any
+    Base:RSC_Visual|typeof RSC, PathList:string[], Value:any
   ):void {
     let Variable:Indexable = Base.observed
       for (let i = 0, l = PathList.length-1; i < l; i++) {
@@ -1587,7 +1609,7 @@ console.error('detachment handler failure',Signal)
   /**** observed ****/
 
     public get observed ():Indexable  { return ObservablesOfVisual(this) }
-    public set observed (_:Indexable) { throwReadOnlyError('observable') }
+    public set observed (_:Indexable) { throwReadOnlyError('observed') }
 
   /**** unobserved ****/
 
@@ -1802,6 +1824,59 @@ console.error('rendering failure',Signal)
 
   customElements.define('rsc-applet', RSC_Applet)
 
+/**** isRunning ****/
+
+  export function isRunning () { return RSC_isRunning }
+
+/**** runAllScriptsInHead ****/
+
+  function runAllScriptsInHead ():void {
+    innerElementsOf(document.head).forEach((Element) => {
+      if (Element.matches('script[type="rsc-script"]')) {
+        if (Element.hasAttribute('for'))           { return }
+        if (Element.hasAttribute('for-behaviour')) { return }
+
+        runScriptFromElement(Element)
+      }
+    })
+  }
+
+/**** runAllScriptsInBody ****/
+
+  function runAllScriptsInBody ():void {
+    innerElementsOf(document.body).forEach((Element) => {
+      if (Element.matches('script[type="rsc-script"]')) {
+        if (Element.hasAttribute('for'))           { return }
+        if (Element.hasAttribute('for-behaviour')) { return }
+
+        runScriptFromElement(Element)
+      }
+    })
+  }
+
+/**** runScriptFromElement ****/
+
+  function runScriptFromElement (ScriptElement:Element):void {
+    let Source = ScriptElement.innerHTML
+
+    let Executable:Function
+    try {
+      Executable = new Function(
+        'RSC,JIL, observe,computed,dispose', Source
+      )
+    } catch (Signal) {
+      console.error('RSC script compilation failure',Signal)
+      return
+    }
+
+    try {
+      Executable(RSC,JIL, observe,computed,dispose)
+    } catch (Signal) {
+      console.error('RSC script execution failure',Signal)
+      return
+    }
+  }
+
 /**** startAllAppletsInDocument ****/
 
   function startAllAppletsInDocument ():void {
@@ -1869,6 +1944,9 @@ console.error('attachment handler failure',Signal)
 
   function startRSC () {
     registerAllBehavioursFoundInHead()
+
+    runAllScriptsInHead()
+    runAllScriptsInBody()
 
     RSC_isRunning = true
     startAllAppletsInDocument()
