@@ -370,14 +370,15 @@ namespace RSC {
 /**** registerBehaviour ****/
 
   export function registerBehaviour (
-    Name:RSC_Name, SourceOrExecutable:Text|Function,
+    Name:RSC_Name, SourceOrExecutable:Text|Function|undefined,
     observedAttributes:RSC_Name[] = []
   ):void {
     expectName('behaviour name',Name)
 console.log('registering behaviour',Name)
 
-    if (! ValueIsFunction(SourceOrExecutable)) {
+    if ((SourceOrExecutable != null) && ! ValueIsFunction(SourceOrExecutable)) {
       expectText('behaviour script',SourceOrExecutable)
+      if ((SourceOrExecutable as string).trim() === '') { SourceOrExecutable = undefined }
     }
 
     allowListSatisfying(
@@ -394,7 +395,7 @@ console.log('registering behaviour',Name)
       observedAttributes = observedAttributes.map((Name) => Name.toLowerCase())
     }
 
-    if (ValueIsFunction(SourceOrExecutable)) {
+    if ((SourceOrExecutable == null) || ValueIsFunction(SourceOrExecutable)) {
       BehaviourRegistry[normalizedName] = {
         Name, AttributeSet, Executable:SourceOrExecutable as Function
       }
@@ -485,10 +486,16 @@ console.log('registering behaviour',Name)
     )
   }
 
-/**** registerAllBehavioursFoundInHead ****/
+/**** registerAllBehavioursFoundInHeadAndBody ****/
 
-  function registerAllBehavioursFoundInHead ():void {
+  function registerAllBehavioursFoundInHeadAndBody ():void {
     innerElementsOf(document.head).forEach((Element) => {
+      if (Element.matches('script[type="rsc-script"][for-behaviour]')) {
+        registerBehaviourFromElement(Element)
+      }
+    })
+
+    innerElementsOf(document.body).forEach((Element) => {
       if (Element.matches('script[type="rsc-script"][for-behaviour]')) {
         registerBehaviourFromElement(Element)
       }
@@ -1170,7 +1177,7 @@ console.error('element script execution failure',Signal)
 
 /**** observed/unobserved ****/
 
-  const globalObservables = observe({},{ deep:false })
+  const globalObservables = observe({},{ deep:false, batch:true })
   const globalInternals   = {}
 
   export var observed:Indexable   = {}           // will be replaced in a moment
@@ -1652,9 +1659,13 @@ console.error('detachment handler failure',Signal)
         if (! this.hasError) {
           const Renderer = RendererForVisual.get(this)
           if (Renderer == null) {
-            if (this.tagName === 'RSC-VISUAL') {
-              Rendering = html`${this.observed['Value']}<slot/>`
-            }
+            Rendering = html`
+              <style>
+                :host { display:inline-block; position:relative }
+              </style>
+              ${this.observed.Value}
+              <slot/>
+            `
           } else {
             try {
               Rendering = Renderer.call(this)
@@ -1828,9 +1839,9 @@ console.error('rendering failure',Signal)
 
   export function isRunning () { return RSC_isRunning }
 
-/**** runAllScriptsInHead ****/
+/**** runAllScriptsInHeadAndBody ****/
 
-  function runAllScriptsInHead ():void {
+  function runAllScriptsInHeadAndBody ():void {
     innerElementsOf(document.head).forEach((Element) => {
       if (Element.matches('script[type="rsc-script"]')) {
         if (Element.hasAttribute('for'))           { return }
@@ -1839,11 +1850,7 @@ console.error('rendering failure',Signal)
         runScriptFromElement(Element)
       }
     })
-  }
 
-/**** runAllScriptsInBody ****/
-
-  function runAllScriptsInBody ():void {
     innerElementsOf(document.body).forEach((Element) => {
       if (Element.matches('script[type="rsc-script"]')) {
         if (Element.hasAttribute('for'))           { return }
@@ -1943,10 +1950,8 @@ console.error('attachment handler failure',Signal)
 /**** start-up in a well-defined way ****/
 
   function startRSC () {
-    registerAllBehavioursFoundInHead()
-
-    runAllScriptsInHead()
-    runAllScriptsInBody()
+    registerAllBehavioursFoundInHeadAndBody()
+    runAllScriptsInHeadAndBody()
 
     RSC_isRunning = true
     startAllAppletsInDocument()
