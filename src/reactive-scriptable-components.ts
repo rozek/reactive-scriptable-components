@@ -1959,13 +1959,13 @@ console.error('attachment handler failure',Signal)
 
   if (document.readyState === 'complete') {
     startRSC()
-console.log('RSC has been started')
+console.log('RSC was started')
   } else {
 console.log('waiting for document to become "complete"')
     document.addEventListener("readystatechange", (Event) => {
       if (document.readyState === 'complete') {
         startRSC()
-console.log('RSC has finally been started')
+console.log('RSC was finally started')
       }
     })
   }
