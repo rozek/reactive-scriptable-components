@@ -1,6 +1,6 @@
 {
   "name": "reactive-scriptable-components",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "light-weight reactive scriptable web components",
   "type": "module",
   "source": "src/reactive-scriptable-components.ts",
