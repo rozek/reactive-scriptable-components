@@ -593,6 +593,7 @@ console.log('registering behaviour',Name)
           (forbiddenVisualsSelector != null) &&
           innerVisual.matches(forbiddenVisualsSelector)
         )) {
+console.log('removing inner visual',innerVisual,'from',Visual)
           innerVisual.remove()
         }
       })
@@ -1824,7 +1825,9 @@ console.error('rendering failure',Signal)
         return html`
           <style>
             :host {
-              display:inline-block; position:relative;
+              display:block; position:relative;
+              background:white; color:black;
+              font-size:14px; font-weight:normal; line-height:1.4;
             }
           </style>
           <slot/>
@@ -1889,7 +1892,14 @@ console.error('rendering failure',Signal)
   function startAllAppletsInDocument ():void {
     document.body.querySelectorAll('rsc-applet,[behaviour="applet"]').forEach(
       (DOMElement) => {
-        if (ValueIsVisual(DOMElement)) { startVisual(DOMElement as RSC_Visual) }
+        if (ValueIsVisual(DOMElement)) {
+          let Applet = DOMElement as RSC_Visual
+
+          let VisualToStart = outermostVisualOf(Applet) || Applet
+          if (! VisualWasInitialized(VisualToStart)) {
+            startVisual(VisualToStart)
+          }
+        }
       }
     )
   }
