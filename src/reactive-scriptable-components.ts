@@ -18,10 +18,15 @@ import {
   ValueIsListSatisfying,
   ValueIsURL,
   ValidatorForClassifier, acceptNil, rejectNil,
-  expectText, expectTextline, expectedTextline,
+  allowBoolean, expectBoolean,
+  allowNumber, expectNumber, allowNumberInRange, expectNumberInRange,
+  allowInteger, expectInteger, allowIntegerInRange, expectIntegerInRange,
+  allowString, expectString, allowStringMatching, expectStringMatching,
+    expectText, expectTextline, expectedTextline,
   expectFunction,
   allowListSatisfying,
   expectInstanceOf,
+  allowOneOf,
 } from 'javascript-interface-library'
 
 import { render, html, Component } from 'htm/preact'
@@ -144,75 +149,6 @@ namespace RSC {
   export const expectErrorInfo = ValidatorForClassifier(
     ValueIsErrorInfo, rejectNil, 'RSC error information record'
   ), expectedErrorInfo = expectErrorInfo
-
-//------------------------------------------------------------------------------
-//--                        Value Acceptance Functions                        --
-//------------------------------------------------------------------------------
-
-/**** acceptableBoolean ****/
-
-  export function acceptableBoolean (Value:any, Default:boolean):boolean {
-    return (ValueIsBoolean(Value) ? Value : Default)
-  }
-
-/**** acceptableNumber ****/
-
-  export function acceptableNumber (Value:any, Default:number) {
-    return (ValueIsNumber(Value) ? Value : Default)
-  }
-
-/**** acceptableNumberInRange ****/
-
-  export function acceptableNumberInRange (
-    Value:any, Default:number,
-    minValue:number = -Infinity, maxValue:number = Infinity,
-    withMin:boolean = false, withMax:boolean = false
-  ) {
-    return (
-      ValueIsNumberInRange(Value,minValue,maxValue,withMin,withMax) ? Value : Default
-    )
-  }
-
-/**** acceptableInteger ****/
-
-  export function acceptableInteger (Value:any, Default:number) {
-    return (ValueIsInteger(Value) ? Value : Default)
-  }
-
-/**** acceptableIntegerInRange ****/
-
-  export function acceptableIntegerInRange (
-    Value:any, Default:number,
-    minValue:number = -Infinity, maxValue:number = Infinity
-  ) {
-    return (ValueIsIntegerInRange(Value,minValue,maxValue) ? Value : Default)
-  }
-
-/**** acceptableString ****/
-
-  export function acceptableString (Value:any, Default:string) {
-    return (ValueIsString(Value) ? Value : Default)
-  }
-
-/**** acceptableNonEmptyString ****/
-
-  export function acceptableNonEmptyString (Value:any, Default:string) {
-    return (ValueIsString(Value) && (Value.trim() !== '') ? Value : Default)
-  }
-
-/**** acceptableStringMatching ****/
-
-  export function acceptableStringMatching (
-    Value:any, Default:string, Pattern:RegExp
-  ) {
-    return (ValueIsStringMatching(Value,Pattern) ? Value : Default)
-  }
-
-/**** acceptableURL ****/
-
-  export function acceptableURL (Value:any, Default:URL):URL {
-    return (ValueIsURL(Value) ? Value : Default)
-  }
 
 /**** newUUID ****/
 
@@ -1838,6 +1774,293 @@ console.error('rendering failure',Signal)
 
   customElements.define('rsc-applet', RSC_Applet)
 
+//------------------------------------------------------------------------------
+//--                      Property Convenience Functions                      --
+//------------------------------------------------------------------------------
+
+/**** booleanProperty ****/
+
+  export function booleanProperty (
+    my:RSC_Visual, PropertyName:string, Default?:boolean,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():boolean { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:boolean) { throwReadOnlyError(PropertyName) }
+          : function (newValue:boolean) {
+              ;(Default == null ? expectBoolean : allowBoolean)(
+                '"' + PropertyName + '" setting', newValue
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** numericProperty ****/
+
+  export function numericProperty (
+    my:RSC_Visual, PropertyName:string, Default?:number,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():number { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:number) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number) {
+              ;(Default == null ? expectNumber : allowNumber)(
+                '"' + PropertyName + '" setting', newValue
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** numericPropertyInRange ****/
+
+  export function numericPropertyInRange (
+    my:RSC_Visual, PropertyName:string,
+    lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false,
+    Default?:number, readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():number { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:number) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number) {
+              ;(Default == null ? expectNumberInRange : allowNumberInRange)(
+                '"' + PropertyName + '" setting', newValue,
+                lowerLimit,upperLimit, withLower,withUpper
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** integralProperty ****/
+
+  export function integralProperty (
+    my:RSC_Visual, PropertyName:string, Default?:number,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():number { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:number) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number) {
+              ;(Default == null ? expectInteger : allowInteger)(
+                '"' + PropertyName + '" setting', newValue
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** integralPropertyInRange ****/
+
+  export function integralPropertyInRange (
+    my:RSC_Visual, PropertyName:string,
+    lowerLimit?:number, upperLimit?:number, Default?:number,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():number { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:number) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number) {
+              ;(Default == null ? expectIntegerInRange : allowIntegerInRange)(
+                '"' + PropertyName + '" setting', newValue,
+                lowerLimit,upperLimit
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** literalProperty ****/
+
+  export function literalProperty (
+    my:RSC_Visual, PropertyName:string, Default?:string,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:string) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number) {
+              ;(Default == null ? expectString : allowString)(
+                '"' + PropertyName + '" setting', newValue
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** literalPropertyMatching ****/
+
+  export function literalPropertyMatching (
+    my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:string) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number) {
+              ;(Default == null ? expectStringMatching : allowStringMatching)(
+                '"' + PropertyName + '" setting', newValue, Pattern
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+//------------------------------------------------------------------------------
+//--                     Attribute Convenience Functions                      --
+//------------------------------------------------------------------------------
+
+/**** handleBooleanAttribute ****/
+
+  export function handleBooleanAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+    if (reportedName === AttributeName) {
+      allowOneOf('"' + AttributeName + '" value',reportedValue,[
+        AttributeName, '', 'true', 'false'
+      ])
+
+      let newValue = (reportedValue != null) || (reportedValue !== 'false')
+      my.observed[PropertyName || Name] = newValue
+
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
+/**** handleNumericAttribute ****/
+
+  export function handleNumericAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+    if (reportedName === AttributeName) {
+      if (reportedValue == null) {
+        my.observed[PropertyName || Name] = undefined
+      } else {
+        let newValue = parseFloat(reportedValue)
+        if (isNaN(newValue)) throwError(
+          'InvalidAttribute: invalid "' + AttributeName + '" given'
+        )
+
+        my.observed[PropertyName || Name] = newValue
+      }
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
+/**** handleLiteralAttribute ****/
+
+  export function handleLiteralAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+    if (reportedName === AttributeName) {
+      my.observed[PropertyName || Name] = reportedValue
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
+/**** handleSettingOrKeywordAttribute ****/
+
+  export function handleSettingOrKeywordAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string,
+    permittedValues:string[], permittedKeywords?:string[],
+    PropertyName?:string,
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+
+  /**** take care of removed attributes ****/
+
+    let foundSomething = (reportedName == AttributeName)
+    if (! foundSomething) {
+      (permittedKeywords || permittedValues).forEach((Keyword) => {
+        let KeywordName = Keyword.toLowerCase()
+        if (reportedName === KeywordName) { foundSomething = true }
+      })
+    }
+
+  /**** compare all related values ****/
+
+    let newSetting:string|undefined|null = undefined
+      if (my.hasAttribute(AttributeName)) {
+        const AttributeValue = my.getAttribute(AttributeName)
+        allowOneOf('"' + AttributeName + '" value',AttributeValue, permittedValues)
+
+        newSetting     = AttributeValue             // may event set "undefined"
+        foundSomething = true
+      }
+
+      (permittedKeywords || permittedValues).forEach((Keyword) => {
+        let KeywordName = Keyword.toLowerCase()
+        if (my.hasAttribute(AttributeName)) {
+          const KeywordValue = my.getAttribute(KeywordName)
+          allowOneOf('"' + KeywordName + '" value',KeywordValue,[
+            KeywordName, '', 'true', 'false'
+          ])
+
+          if (KeywordValue !== 'false') {
+            switch (true) {
+              case newSetting == null:     newSetting = Keyword; break
+              case newSetting === Keyword: break
+              default: throwError(
+                'ConflictingAttributes: conflicting "' + AttributeName + '" settings found'
+              )
+            }
+          }
+        }
+      })
+    if (foundSomething) {
+      my.observed[PropertyName || Name] = reportedValue
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
 /**** isRunning ****/
 
   export function isRunning () { return RSC_isRunning }
@@ -1995,5 +2218,10 @@ export const {
   outerVisualOf,VisualContaining, outermostVisualOf,
   closestVisualWithBehaviour, closestVisualMatching,
   innerVisualsOf,
-  registerBehaviour
+  registerBehaviour,
+  observed, unobserved,
+  booleanProperty, numericProperty, numericPropertyInRange, integralProperty, integralPropertyInRange,
+  literalProperty, literalPropertyMatching,
+  handleBooleanAttribute, handleNumericAttribute, handleLiteralAttribute,
+  handleSettingOrKeywordAttribute,
 } = RSC
