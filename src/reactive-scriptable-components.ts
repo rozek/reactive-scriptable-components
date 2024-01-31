@@ -26,7 +26,7 @@ import {
   expectFunction,
   allowListSatisfying,
   expectInstanceOf,
-  allowOneOf,
+  allowOneOf, expectOneOf,
 } from 'javascript-interface-library'
 
 import { render, html, Component } from 'htm/preact'
@@ -1943,6 +1943,30 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
+/**** OneOfProperty ****/
+
+  export function OneOfProperty (
+    my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:string) { throwReadOnlyError(PropertyName) }
+          : function (newValue:string) {
+              ;(Default == null ? expectOneOf : allowOneOf)(
+                '"' + PropertyName + '" setting', newValue, allowedValues
+              )
+console.log('setting property',PropertyName,newValue)
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
 //------------------------------------------------------------------------------
 //--                     Attribute Convenience Functions                      --
 //------------------------------------------------------------------------------
@@ -2037,7 +2061,7 @@ console.error('rendering failure',Signal)
 
       (permittedKeywords || permittedValues).forEach((Keyword) => {
         let KeywordName = Keyword.toLowerCase()
-        if (my.hasAttribute(AttributeName)) {
+        if (my.hasAttribute(KeywordName)) {
           const KeywordValue = my.getAttribute(KeywordName)
           allowOneOf('"' + KeywordName + '" value',KeywordValue,[
             KeywordName, '', 'true', 'false'
@@ -2055,7 +2079,7 @@ console.error('rendering failure',Signal)
         }
       })
     if (foundSomething) {
-      my.observed[PropertyName || Name] = reportedValue
+      my.observed[PropertyName || Name] = newSetting
       return true                      // because the attribute has been handled
     } else {
       return false
@@ -2221,7 +2245,7 @@ export const {
   registerBehaviour,
   observed, unobserved,
   booleanProperty, numericProperty, numericPropertyInRange, integralProperty, integralPropertyInRange,
-  literalProperty, literalPropertyMatching,
+  literalProperty, literalPropertyMatching, OneOfProperty,
   handleBooleanAttribute, handleNumericAttribute, handleLiteralAttribute,
   handleSettingOrKeywordAttribute,
 } = RSC
