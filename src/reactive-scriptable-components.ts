@@ -1793,7 +1793,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:boolean) { throwReadOnlyError(PropertyName) }
           : function (newValue:boolean) {
-              ;(Default == null ? expectBoolean : allowBoolean)(
+              ;(Default === undefined ? expectBoolean : allowBoolean)(
                 '"' + PropertyName + '" setting', newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
@@ -1819,7 +1819,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:boolean[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:boolean[]) {
-              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
                 '"' + PropertyName + '" setting', newValue, ValueIsBoolean
               )
               my.unobserved[PropertyName] = ((
@@ -1844,7 +1844,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:number) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
-              ;(Default == null ? expectNumber : allowNumber)(
+              ;(Default === undefined ? expectNumber : allowNumber)(
                 '"' + PropertyName + '" setting', newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
@@ -1870,7 +1870,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:number[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:number[]) {
-              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
                 '"' + PropertyName + '" setting', newValue, ValueIsNumber
               )
               my.unobserved[PropertyName] = ((
@@ -1896,7 +1896,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:number) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
-              ;(Default == null ? expectNumberInRange : allowNumberInRange)(
+              ;(Default === undefined ? expectNumberInRange : allowNumberInRange)(
                 '"' + PropertyName + '" setting', newValue,
                 lowerLimit,upperLimit, withLower,withUpper
               )
@@ -1924,7 +1924,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:number[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:number[]) {
-              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
                 '"' + PropertyName + '" setting', newValue, (Value) => {
                   return ValueIsNumberInRange(Value, lowerLimit,upperLimit, withLower,withUpper)
                 }
@@ -1951,7 +1951,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:number) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
-              ;(Default == null ? expectInteger : allowInteger)(
+              ;(Default === undefined ? expectInteger : allowInteger)(
                 '"' + PropertyName + '" setting', newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
@@ -1977,7 +1977,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:number[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:number[]) {
-              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
                 '"' + PropertyName + '" setting', newValue, ValueIsInteger
               )
               my.unobserved[PropertyName] = ((
@@ -2003,7 +2003,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:number) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
-              ;(Default == null ? expectIntegerInRange : allowIntegerInRange)(
+              ;(Default === undefined ? expectIntegerInRange : allowIntegerInRange)(
                 '"' + PropertyName + '" setting', newValue,
                 lowerLimit,upperLimit
               )
@@ -2031,7 +2031,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:number[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:number[]) {
-              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
                 '"' + PropertyName + '" setting', newValue, (Value) => {
                   return ValueIsIntegerInRange(Value, lowerLimit,upperLimit)
                 }
@@ -2058,7 +2058,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
-              ;(Default == null ? expectString : allowString)(
+              ;(Default === undefined ? expectString : allowString)(
                 '"' + PropertyName + '" setting', newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
@@ -2084,7 +2084,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:string[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:string[]) {
-              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
                 '"' + PropertyName + '" setting', newValue, ValueIsString
               )
               my.unobserved[PropertyName] = ((
@@ -2109,7 +2109,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
-              ;(Default == null ? expectStringMatching : allowStringMatching)(
+              ;(Default === undefined ? expectStringMatching : allowStringMatching)(
                 '"' + PropertyName + '" setting', newValue, Pattern
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
@@ -2135,7 +2135,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:string[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:string[]) {
-              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
                 '"' + PropertyName + '" setting', newValue, (Value) => {
                   return ValueIsStringMatching(Value,Pattern)
                 }
@@ -2162,7 +2162,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:string) {
-              ;(Default == null ? expectOneOf : allowOneOf)(
+              ;(Default === undefined ? expectOneOf : allowOneOf)(
                 '"' + PropertyName + '" setting', newValue, allowedValues
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
@@ -2188,7 +2188,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:string[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:string[]) {
-              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
                 '"' + PropertyName + '" setting', newValue, (Value) => {
                   return ValueIsOneOf(Value,allowedValues)
                 }
@@ -2215,7 +2215,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
-              ;(Default == null ? expectURL : allowURL)(
+              ;(Default === undefined ? expectURL : allowURL)(
                 '"' + PropertyName + '" setting', newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
@@ -2241,7 +2241,7 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:string[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:string[]) {
-              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
                 '"' + PropertyName + '" setting', newValue, ValueIsURL
               )
               my.unobserved[PropertyName] = ((
