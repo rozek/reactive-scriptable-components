@@ -278,24 +278,24 @@ function (
 
 * **`throwReadOnlyError (Name:string):never`** <br>
 &nbsp;<br>
-* **`BooleanProperty(my:RSC_Visual, PropertyName:string, Default?:boolean, readonly:boolean = false):object`** <br>
-* **`BooleanListProperty(my:RSC_Visual, PropertyName:string, Default?:boolean[], readonly:boolean = false):object`** <br>
-* **`NumberProperty(my:RSC_Visual, PropertyName:string, Default?:number, readonly:boolean = false):object`** <br>
-* **`NumberListProperty(my:RSC_Visual, PropertyName:string, Default?:number[], readonly:boolean = false):object`** <br>
-* **`NumberPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false, Default?:number, readonly:boolean = false):object`** <br>
-* **`NumberListPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false, Default?:number[], readonly:boolean = false):object`** <br>
-* **`IntegerProperty(my:RSC_Visual, PropertyName:string, Default?:number, readonly:boolean = false):object`** <br>
-* **`IntegerListProperty(my:RSC_Visual, PropertyName:string, Default?:number[], readonly:boolean = false):object`** <br>
-* **`IntegerPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, Default?:number, readonly:boolean = false):object`** <br>
-* **`IntegerListPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, Default?:number[], readonly:boolean = false):object`** <br>
-* **`StringProperty(my:RSC_Visual, PropertyName:string, Default?:string, readonly:boolean = false):object`** <br>
-* **`StringListProperty(my:RSC_Visual, PropertyName:string, Default?:string[], readonly:boolean = false):object`** <br>
-* **`StringPropertyMatching(my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string, readonly:boolean = false):object`** <br>
-* **`StringListPropertyMatching(my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string[], readonly:boolean = false):object`** <br>
-* **`OneOfProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string, readonly:boolean = false):object`** <br>
-* **`OneOfListProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string[], readonly:boolean = false):object`** <br>
-* **`URLProperty(my:RSC_Visual, PropertyName:string, Default?:string, readonly:boolean = false):object`** <br>
-* **`URLListProperty(my:RSC_Visual, PropertyName:string, Default?:string[], readonly:boolean = false):object`** <br>
+* **`BooleanProperty(my:RSC_Visual, PropertyName:string, Default?:boolean, Description?:string, readonly:boolean = false):object`** <br>
+* **`BooleanListProperty(my:RSC_Visual, PropertyName:string, Default?:boolean[], Description?:string, readonly:boolean = false):object`** <br>
+* **`NumberProperty(my:RSC_Visual, PropertyName:string, Default?:number, Description?:string, readonly:boolean = false):object`** <br>
+* **`NumberListProperty(my:RSC_Visual, PropertyName:string, Default?:number[], Description?:string, readonly:boolean = false):object`** <br>
+* **`NumberPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false, Default?:number, Description?:string, readonly:boolean = false):object`** <br>
+* **`NumberListPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false, Default?:number[], Description?:string, readonly:boolean = false):object`** <br>
+* **`IntegerProperty(my:RSC_Visual, PropertyName:string, Default?:number, Description?:string, readonly:boolean = false):object`** <br>
+* **`IntegerListProperty(my:RSC_Visual, PropertyName:string, Default?:number[], Description?:string, readonly:boolean = false):object`** <br>
+* **`IntegerPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, Default?:number, Description?:string, readonly:boolean = false):object`** <br>
+* **`IntegerListPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, Default?:number[], Description?:string, readonly:boolean = false):object`** <br>
+* **`StringProperty(my:RSC_Visual, PropertyName:string, Default?:string, Description?:string, readonly:boolean = false):object`** <br>
+* **`StringListProperty(my:RSC_Visual, PropertyName:string, Default?:string[], Description?:string, readonly:boolean = false):object`** <br>
+* **`StringPropertyMatching(my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string, Description?:string, readonly:boolean = false):object`** <br>
+* **`StringListPropertyMatching(my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string[], Description?:string, readonly:boolean = false):object`** <br>
+* **`OneOfProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string, Description?:string, readonly:boolean = false):object`** <br>
+* **`OneOfListProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string[], Description?:string, readonly:boolean = false):object`** <br>
+* **`URLProperty(my:RSC_Visual, PropertyName:string, Default?:string, Description?:string, readonly:boolean = false):object`** <br>
+* **`URLListProperty(my:RSC_Visual, PropertyName:string, Default?:string[], Description?:string, readonly:boolean = false):object`** <br>
 &nbsp;<br>
 * **`handleBooleanAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
 * **`handleBooleanListAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
