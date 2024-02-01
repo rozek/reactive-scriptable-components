@@ -246,22 +246,51 @@ function (
 
 (t.b.w)
 
-  assign, 
-  isRunning,
-  throwReadOnlyError,
-  ValueIsDOMElement, allowDOMElement, allowedDOMElement, expectDOMElement, expectedDOMElement,
-  ValueIsVisual, allowVisual, allowedVisual, expectVisual, expectedVisual,
-  ValueIsName, allowName, allowedName, expectName, expectedName,
-  ValueIsErrorInfo, allowErrorInfo, allowedErrorInfo, expectErrorInfo, expectedErrorInfo,
-  newUUID,
-  outerVisualOf,
-  VisualContaining, 
-  outermostVisualOf,
-  closestVisualWithBehaviour, 
-  closestVisualMatching,
-  innerVisualsOf,
-  registerBehaviour
+* **`assign`** <br>
+* **`isRunning ():boolean`** <br>
+* **`ValueIsDOMElement (Value:any):boolean`** <br>
+* **`allow/expect[ed]DOMElement (Description:string, Argument:any):Element|null|undefined`** <br>
+* **`ValueIsVisual (Value:any):boolean`** <br>
+* **`allow/expect[ed]Visual (Description:string, Argument:any):RSC_Visual|null|undefined`** <br>
+* **`ValueIsName (Value:any):boolean`** <br>
+* **`allow/expect[ed]dName (Description:string, Argument:any):RSC_Name|null|undefined`** <br>
+* **`ValueIsErrorInfo (Value:any):boolean`** <br>
+* **`allow/expect[ed]ErrorInfo (Description:string, Argument:any):RSC_ErrorInfo|null|undefined`** <br>
+* **`newUUID ():RSC_UUID`** <br>
+* **`outerVisualOf (DOMElement:HTMLElement):RSC_Visual|undefined`** <br>
+* **`VisualContaining (DOMElement:HTMLElement):RSC_Visual|undefined`** <br>
+* **`outermostVisualOf (DOMElement:HTMLElement):RSC_Visual|undefined`** <br>
+* **`closestVisualWithBehaviour(DOMElement:HTMLElement, BehaviourName:RSC_Name):RSC_Visual|undefined`** <br>
+* **`closestVisualMatchingclosestVisualMatching (DOMElement:HTMLElement, Selector:Textline):RSC_Visual|undefined`** <br>
+* **`innerVisualsOf (DOMElement:HTMLElement):RSC_Visual[]`** <br>
+* **`registerBehaviour(Name:RSC_Name, SourceOrExecutable:Text|Function|undefined, observedAttributes:RSC_Name[] = []):void`** <br>
 
+### Global Reactivity ###
+
+(t.b.w)
+
+* **`observed`** <br>
+* **`unobserved`** <br>
+
+### Convenience Functions for Behaviour (and Visual) Scripts ###
+
+(t.b.w)
+
+* **`throwReadOnlyError (Name:string):never`** <br>
+&nbsp;<br>
+* **`booleanProperty(my:RSC_Visual, PropertyName:string, Default?:boolean, readonly:boolean = false):object`** <br>
+* **`numericProperty(my:RSC_Visual, PropertyName:string, Default?:number, readonly:boolean = false):object`** <br>
+* **`numericPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false, Default?:number, readonly:boolean = false):object`** <br>
+* **`integralProperty(my:RSC_Visual, PropertyName:string, Default?:number, readonly:boolean = false):object`** <br>
+* **`integralPropertyInRange(my:RSC_Visual, PropertyName:string, lowerLimit?:number, upperLimit?:number, Default?:number, readonly:boolean = false):object`** <br>
+* **`literalProperty(my:RSC_Visual, PropertyName:string, Default?:string, readonly:boolean = false):object`** <br>
+* **`literalPropertyMatching(my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string, readonly:boolean = false):object`** <br>
+* **`OneOfProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string, readonly:boolean = false):object`** <br>
+&nbsp;<br>
+* **`handleBooleanAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
+* **`handleNumericAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
+* **`handleLiteralAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
+* **`handleSettingOrKeywordAttribute (reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, permittedValues:string[], permittedKeywords?:string[], PropertyName?:string):boolean`** <br>
 
 ## Script Templates ##
 
