@@ -16,6 +16,7 @@ import {
   ValueIsFunction,
   ValueIsObject, ValueIsArray,
   ValueIsListSatisfying,
+  ValueIsOneOf,
   ValueIsURL,
   ValidatorForClassifier, acceptNil, rejectNil,
   allowBoolean, expectBoolean,
@@ -24,9 +25,9 @@ import {
   allowString, expectString, allowStringMatching, expectStringMatching,
     expectText, expectTextline, expectedTextline,
   expectFunction,
-  allowListSatisfying,
+  allowListSatisfying, expectListSatisfying,
   expectInstanceOf,
-  allowOneOf, expectOneOf,
+  allowOneOf, allowedOneOf, expectOneOf,
 } from 'javascript-interface-library'
 
 import { render, html, Component } from 'htm/preact'
@@ -1778,9 +1779,9 @@ console.error('rendering failure',Signal)
 //--                      Property Convenience Functions                      --
 //------------------------------------------------------------------------------
 
-/**** booleanProperty ****/
+/**** BooleanProperty ****/
 
-  export function booleanProperty (
+  export function BooleanProperty (
     my:RSC_Visual, PropertyName:string, Default?:boolean,
     readonly:boolean = false
   ):object {
@@ -1801,9 +1802,37 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
-/**** numericProperty ****/
+/**** BooleanListProperty ****/
 
-  export function numericProperty (
+  export function BooleanListProperty (
+    my:RSC_Visual, PropertyName:string, Default?:boolean[],
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():boolean[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:boolean[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:boolean[]) {
+              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+                '"' + PropertyName + '" setting', newValue, ValueIsBoolean
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as boolean[]).slice()
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** NumberProperty ****/
+
+  export function NumberProperty (
     my:RSC_Visual, PropertyName:string, Default?:number,
     readonly:boolean = false
   ):object {
@@ -1824,9 +1853,37 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
-/**** numericPropertyInRange ****/
+/**** NumberListProperty ****/
 
-  export function numericPropertyInRange (
+  export function NumberListProperty (
+    my:RSC_Visual, PropertyName:string, Default?:number[],
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():number[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:number[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number[]) {
+              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+                '"' + PropertyName + '" setting', newValue, ValueIsNumber
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as number[]).slice()
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** NumberPropertyInRange ****/
+
+  export function NumberPropertyInRange (
     my:RSC_Visual, PropertyName:string,
     lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false,
     Default?:number, readonly:boolean = false
@@ -1849,9 +1906,40 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
-/**** integralProperty ****/
+/**** NumberListPropertyInRange ****/
 
-  export function integralProperty (
+  export function NumberListPropertyInRange (
+    my:RSC_Visual, PropertyName:string,
+    lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false,
+    Default?:number[], readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():number[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:number[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number[]) {
+              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+                '"' + PropertyName + '" setting', newValue, (Value) => {
+                  return ValueIsNumberInRange(Value, lowerLimit,upperLimit, withLower,withUpper)
+                }
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as number[]).slice()
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** IntegerProperty ****/
+
+  export function IntegerProperty (
     my:RSC_Visual, PropertyName:string, Default?:number,
     readonly:boolean = false
   ):object {
@@ -1872,9 +1960,37 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
-/**** integralPropertyInRange ****/
+/**** IntegerListProperty ****/
 
-  export function integralPropertyInRange (
+  export function IntegerListProperty (
+    my:RSC_Visual, PropertyName:string, Default?:number[],
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():number[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:number[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number[]) {
+              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+                '"' + PropertyName + '" setting', newValue, ValueIsInteger
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as number[]).slice()
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** IntegerPropertyInRange ****/
+
+  export function IntegerPropertyInRange (
     my:RSC_Visual, PropertyName:string,
     lowerLimit?:number, upperLimit?:number, Default?:number,
     readonly:boolean = false
@@ -1897,9 +2013,40 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
-/**** literalProperty ****/
+/**** IntegerListPropertyInRange ****/
 
-  export function literalProperty (
+  export function IntegerListPropertyInRange (
+    my:RSC_Visual, PropertyName:string,
+    lowerLimit?:number, upperLimit?:number, Default?:number[],
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():number[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:number[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number[]) {
+              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+                '"' + PropertyName + '" setting', newValue, (Value) => {
+                  return ValueIsIntegerInRange(Value, lowerLimit,upperLimit)
+                }
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as number[]).slice()
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** StringProperty ****/
+
+  export function StringProperty (
     my:RSC_Visual, PropertyName:string, Default?:string,
     readonly:boolean = false
   ):object {
@@ -1920,9 +2067,37 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
-/**** literalPropertyMatching ****/
+/**** StringListProperty ****/
 
-  export function literalPropertyMatching (
+  export function StringListProperty (
+    my:RSC_Visual, PropertyName:string, Default?:string[],
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:string[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:string[]) {
+              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+                '"' + PropertyName + '" setting', newValue, ValueIsString
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as string[]).slice()
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** StringPropertyMatching ****/
+
+  export function StringPropertyMatching (
     my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string,
     readonly:boolean = false
   ):object {
@@ -1937,6 +2112,36 @@ console.error('rendering failure',Signal)
                 '"' + PropertyName + '" setting', newValue, Pattern
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** StringListPropertyMatching ****/
+
+  export function StringListPropertyMatching (
+    my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string[],
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:string[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:string[]) {
+              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+                '"' + PropertyName + '" setting', newValue, (Value) => {
+                  return ValueIsStringMatching(Value,Pattern)
+                }
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as string[]).slice()
             }
         )
       })
@@ -1959,8 +2164,37 @@ console.error('rendering failure',Signal)
               ;(Default == null ? expectOneOf : allowOneOf)(
                 '"' + PropertyName + '" setting', newValue, allowedValues
               )
-console.log('setting property',PropertyName,newValue)
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** OneOfListProperty ****/
+
+  export function OneOfListProperty (
+    my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string[],
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:string[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:string[]) {
+              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+                '"' + PropertyName + '" setting', newValue, (Value) => {
+                  return ValueIsOneOf(Value,allowedValues)
+                }
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as string[]).slice()
             }
         )
       })
@@ -1979,7 +2213,7 @@ console.log('setting property',PropertyName,newValue)
   ):boolean {
     const AttributeName = Name.toLowerCase()
     if (reportedName === AttributeName) {
-      allowOneOf('"' + AttributeName + '" value',reportedValue,[
+      allowOneOf('"' + AttributeName + '" attribute',reportedValue,[
         AttributeName, '', 'true', 'false'
       ])
 
@@ -1991,6 +2225,28 @@ console.log('setting property',PropertyName,newValue)
       return false
     }
   }
+
+/**** handleBooleanListAttribute ****/
+
+  export function handleBooleanListAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+    if (reportedName === AttributeName) {
+      let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n([ \t\r]*\n)*/)
+        .map((Value,i) => allowedOneOf(
+          '"' + AttributeName + '" attribute entry #' + (i+1),
+          Value.trim(), ['true', 'false']
+        ) === 'true')
+      my.observed[PropertyName || Name] = newValue
+
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
+
 /**** handleNumericAttribute ****/
 
   export function handleNumericAttribute (
@@ -2004,7 +2260,7 @@ console.log('setting property',PropertyName,newValue)
       } else {
         let newValue = parseFloat(reportedValue)
         if (isNaN(newValue)) throwError(
-          'InvalidAttribute: invalid "' + AttributeName + '" given'
+          'InvalidAttribute: invalid "' + AttributeName + '" attribute given'
         )
 
         my.observed[PropertyName || Name] = newValue
@@ -2014,6 +2270,32 @@ console.log('setting property',PropertyName,newValue)
       return false
     }
   }
+
+/**** handleNumericListAttribute ****/
+
+  export function handleNumericListAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+    if (reportedName === AttributeName) {
+      let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n([ \t\r]*\n)*/)
+        .map((Value,i) => {
+          let newValue = parseFloat(Value)
+            if (isNaN(newValue)) throwError(
+              'InvalidAttribute: "' + AttributeName + '" attribute entry #' +
+              (i+1) + ' is not a valid number'
+            )
+          return newValue
+        })
+      my.observed[PropertyName || Name] = newValue
+
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
+
 /**** handleLiteralAttribute ****/
 
   export function handleLiteralAttribute (
@@ -2028,6 +2310,43 @@ console.log('setting property',PropertyName,newValue)
       return false
     }
   }
+
+/**** handleLiteralListAttribute (allows empty entries) ****/
+
+  export function handleLiteralListAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+    if (reportedName === AttributeName) {
+      let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n/)
+        .map((Line) => Line.trim())
+      my.observed[PropertyName || Name] = newValue
+
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
+
+/**** handleLiteralLinesAttribute (allows empty entries) ****/
+
+  export function handleLiteralLinesAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+    if (reportedName === AttributeName) {
+      let newValue = (reportedValue || '').trim().split(/\n/)
+        .map((Line) => Line.trim())
+      my.observed[PropertyName || Name] = newValue
+
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
+
 /**** handleSettingOrKeywordAttribute ****/
 
   export function handleSettingOrKeywordAttribute (
@@ -2053,7 +2372,7 @@ console.log('setting property',PropertyName,newValue)
     let newSetting:string|undefined|null = undefined
       if (my.hasAttribute(AttributeName)) {
         const AttributeValue = my.getAttribute(AttributeName)
-        allowOneOf('"' + AttributeName + '" value',AttributeValue, permittedValues)
+        allowOneOf('"' + AttributeName + '" attribute',AttributeValue, permittedValues)
 
         newSetting     = AttributeValue             // may event set "undefined"
         foundSomething = true
@@ -2063,7 +2382,7 @@ console.log('setting property',PropertyName,newValue)
         let KeywordName = Keyword.toLowerCase()
         if (my.hasAttribute(KeywordName)) {
           const KeywordValue = my.getAttribute(KeywordName)
-          allowOneOf('"' + KeywordName + '" value',KeywordValue,[
+          allowOneOf('"' + KeywordName + '" attribute',KeywordValue,[
             KeywordName, '', 'true', 'false'
           ])
 
@@ -2072,7 +2391,7 @@ console.log('setting property',PropertyName,newValue)
               case newSetting == null:     newSetting = Keyword; break
               case newSetting === Keyword: break
               default: throwError(
-                'ConflictingAttributes: conflicting "' + AttributeName + '" settings found'
+                'ConflictingAttributes: conflicting "' + AttributeName + '" attribute found'
               )
             }
           }
@@ -2085,6 +2404,65 @@ console.log('setting property',PropertyName,newValue)
       return false
     }
   }
+
+/**** handleJSONAttribute ****/
+
+  export function handleJSONAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+    if (reportedName === AttributeName) {
+      let JSONObject
+        if ((reportedValue != null) && (reportedValue.trim() === '')) {
+          reportedValue = undefined
+        }
+
+        if (reportedValue != null) {
+          try {
+            JSONObject = JSON.parse(reportedValue)
+          } catch (Signal) {
+            throwError(
+              'InvalidAttribute: the given "' + AttributeName + '" ' +
+              'attribute is not a valid JSON string'
+            )
+          }
+        }
+      my.observed[PropertyName || Name] = JSONObject
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
+
+/**** handleJSONLinesAttribute ****/
+
+  export function handleJSONLinesAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = Name.toLowerCase()
+    if (reportedName === AttributeName) {
+      let JSONLines
+        if (reportedValue != null) {
+          JSONLines = reportedValue.trim().split('\n').map((Line,i) => {
+            try {
+              return JSON.parse(reportedValue)
+            } catch (Signal) {
+              throwError(
+                'InvalidAttribute: line #' + (i+1) + ' in the given ' +
+                '"' + AttributeName + '" attribute is not a valid JSON string'
+              )
+            }
+          })
+        }
+      my.observed[PropertyName || Name] = JSONLines
+      return true                      // because the attribute has been handled
+    } else {
+      return false
+    }
+  }
+
 /**** isRunning ****/
 
   export function isRunning () { return RSC_isRunning }
@@ -2244,8 +2622,11 @@ export const {
   innerVisualsOf,
   registerBehaviour,
   observed, unobserved,
-  booleanProperty, numericProperty, numericPropertyInRange, integralProperty, integralPropertyInRange,
-  literalProperty, literalPropertyMatching, OneOfProperty,
+  BooleanProperty, BooleanListProperty,
+  NumberProperty, NumberListProperty, NumberPropertyInRange, NumberListPropertyInRange,
+  IntegerProperty, IntegerListProperty, IntegerPropertyInRange, IntegerListPropertyInRange,
+  StringProperty, StringListProperty, StringPropertyMatching, StringListPropertyMatching,
+  OneOfProperty, OneOfListProperty,
   handleBooleanAttribute, handleNumericAttribute, handleLiteralAttribute,
   handleSettingOrKeywordAttribute,
 } = RSC
