@@ -2627,6 +2627,9 @@ export const {
   IntegerProperty, IntegerListProperty, IntegerPropertyInRange, IntegerListPropertyInRange,
   StringProperty, StringListProperty, StringPropertyMatching, StringListPropertyMatching,
   OneOfProperty, OneOfListProperty,
-  handleBooleanAttribute, handleNumericAttribute, handleLiteralAttribute,
+  handleBooleanAttribute, handleBooleanListAttribute,
+  handleNumericAttribute, handleNumericListAttribute,
+  handleLiteralAttribute, handleLiteralListAttribute, handleLiteralLinesAttribute,
   handleSettingOrKeywordAttribute,
+  handleJSONAttribute, handleJSONLinesAttribute,
 } = RSC
