@@ -294,6 +294,8 @@ function (
 * **`StringListPropertyMatching(my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string[], readonly:boolean = false):object`** <br>
 * **`OneOfProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string, readonly:boolean = false):object`** <br>
 * **`OneOfListProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string[], readonly:boolean = false):object`** <br>
+* **`URLProperty(my:RSC_Visual, PropertyName:string, Default?:string, readonly:boolean = false):object`** <br>
+* **`URLListProperty(my:RSC_Visual, PropertyName:string, Default?:string[], readonly:boolean = false):object`** <br>
 &nbsp;<br>
 * **`handleBooleanAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
 * **`handleBooleanListAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
