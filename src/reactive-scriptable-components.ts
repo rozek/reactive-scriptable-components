@@ -28,6 +28,7 @@ import {
   allowListSatisfying, expectListSatisfying,
   expectInstanceOf,
   allowOneOf, allowedOneOf, expectOneOf,
+  allowURL, expectURL,
 } from 'javascript-interface-library'
 
 import { render, html, Component } from 'htm/preact'
@@ -2201,6 +2202,57 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
+/**** URLProperty ****/
+
+  export function URLProperty (
+    my:RSC_Visual, PropertyName:string, Default?:string,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:string) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number) {
+              ;(Default == null ? expectURL : allowURL)(
+                '"' + PropertyName + '" setting', newValue
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** URLListProperty ****/
+
+  export function URLListProperty (
+    my:RSC_Visual, PropertyName:string, Default?:string[],
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:string[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:string[]) {
+              ;(Default == null ? expectListSatisfying : allowListSatisfying)(
+                '"' + PropertyName + '" setting', newValue, ValueIsURL
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as string[]).slice()
+            }
+        )
+      })
+    return Descriptor
+  }
+
 //------------------------------------------------------------------------------
 //--                     Attribute Convenience Functions                      --
 //------------------------------------------------------------------------------
@@ -2627,6 +2679,7 @@ export const {
   IntegerProperty, IntegerListProperty, IntegerPropertyInRange, IntegerListPropertyInRange,
   StringProperty, StringListProperty, StringPropertyMatching, StringListPropertyMatching,
   OneOfProperty, OneOfListProperty,
+  URLProperty, URLListProperty,
   handleBooleanAttribute, handleBooleanListAttribute,
   handleNumericAttribute, handleNumericListAttribute,
   handleLiteralAttribute, handleLiteralListAttribute, handleLiteralLinesAttribute,
