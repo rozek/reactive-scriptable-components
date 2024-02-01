@@ -1784,7 +1784,7 @@ console.error('rendering failure',Signal)
 
   export function BooleanProperty (
     my:RSC_Visual, PropertyName:string, Default?:boolean,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -1794,7 +1794,7 @@ console.error('rendering failure',Signal)
           ? function (_:boolean) { throwReadOnlyError(PropertyName) }
           : function (newValue:boolean) {
               ;(Default === undefined ? expectBoolean : allowBoolean)(
-                '"' + PropertyName + '" setting', newValue
+                Description || ('"' + PropertyName + '" setting'), newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
             }
@@ -1807,7 +1807,7 @@ console.error('rendering failure',Signal)
 
   export function BooleanListProperty (
     my:RSC_Visual, PropertyName:string, Default?:boolean[],
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -1820,7 +1820,7 @@ console.error('rendering failure',Signal)
           ? function (_:boolean[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:boolean[]) {
               ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
-                '"' + PropertyName + '" setting', newValue, ValueIsBoolean
+                Description || ('"' + PropertyName + '" setting'), newValue, ValueIsBoolean
               )
               my.unobserved[PropertyName] = ((
                 newValue == null ? Default : newValue
@@ -1835,7 +1835,7 @@ console.error('rendering failure',Signal)
 
   export function NumberProperty (
     my:RSC_Visual, PropertyName:string, Default?:number,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -1845,7 +1845,7 @@ console.error('rendering failure',Signal)
           ? function (_:number) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
               ;(Default === undefined ? expectNumber : allowNumber)(
-                '"' + PropertyName + '" setting', newValue
+                Description || ('"' + PropertyName + '" setting'), newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
             }
@@ -1858,7 +1858,7 @@ console.error('rendering failure',Signal)
 
   export function NumberListProperty (
     my:RSC_Visual, PropertyName:string, Default?:number[],
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -1871,7 +1871,7 @@ console.error('rendering failure',Signal)
           ? function (_:number[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:number[]) {
               ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
-                '"' + PropertyName + '" setting', newValue, ValueIsNumber
+                Description || ('"' + PropertyName + '" setting'), newValue, ValueIsNumber
               )
               my.unobserved[PropertyName] = ((
                 newValue == null ? Default : newValue
@@ -1887,7 +1887,7 @@ console.error('rendering failure',Signal)
   export function NumberPropertyInRange (
     my:RSC_Visual, PropertyName:string,
     lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false,
-    Default?:number, readonly:boolean = false
+    Default?:number, Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -1897,7 +1897,7 @@ console.error('rendering failure',Signal)
           ? function (_:number) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
               ;(Default === undefined ? expectNumberInRange : allowNumberInRange)(
-                '"' + PropertyName + '" setting', newValue,
+                Description || ('"' + PropertyName + '" setting'), newValue,
                 lowerLimit,upperLimit, withLower,withUpper
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
@@ -1912,7 +1912,7 @@ console.error('rendering failure',Signal)
   export function NumberListPropertyInRange (
     my:RSC_Visual, PropertyName:string,
     lowerLimit?:number, upperLimit?:number, withLower:boolean = false, withUpper:boolean = false,
-    Default?:number[], readonly:boolean = false
+    Default?:number[], Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -1925,7 +1925,7 @@ console.error('rendering failure',Signal)
           ? function (_:number[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:number[]) {
               ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
-                '"' + PropertyName + '" setting', newValue, (Value) => {
+                Description || ('"' + PropertyName + '" setting'), newValue, (Value) => {
                   return ValueIsNumberInRange(Value, lowerLimit,upperLimit, withLower,withUpper)
                 }
               )
@@ -1942,7 +1942,7 @@ console.error('rendering failure',Signal)
 
   export function IntegerProperty (
     my:RSC_Visual, PropertyName:string, Default?:number,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -1952,7 +1952,7 @@ console.error('rendering failure',Signal)
           ? function (_:number) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
               ;(Default === undefined ? expectInteger : allowInteger)(
-                '"' + PropertyName + '" setting', newValue
+                Description || ('"' + PropertyName + '" setting'), newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
             }
@@ -1965,7 +1965,7 @@ console.error('rendering failure',Signal)
 
   export function IntegerListProperty (
     my:RSC_Visual, PropertyName:string, Default?:number[],
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -1978,7 +1978,7 @@ console.error('rendering failure',Signal)
           ? function (_:number[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:number[]) {
               ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
-                '"' + PropertyName + '" setting', newValue, ValueIsInteger
+                Description || ('"' + PropertyName + '" setting'), newValue, ValueIsInteger
               )
               my.unobserved[PropertyName] = ((
                 newValue == null ? Default : newValue
@@ -1994,7 +1994,7 @@ console.error('rendering failure',Signal)
   export function IntegerPropertyInRange (
     my:RSC_Visual, PropertyName:string,
     lowerLimit?:number, upperLimit?:number, Default?:number,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2004,7 +2004,7 @@ console.error('rendering failure',Signal)
           ? function (_:number) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
               ;(Default === undefined ? expectIntegerInRange : allowIntegerInRange)(
-                '"' + PropertyName + '" setting', newValue,
+                Description || ('"' + PropertyName + '" setting'), newValue,
                 lowerLimit,upperLimit
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
@@ -2019,7 +2019,7 @@ console.error('rendering failure',Signal)
   export function IntegerListPropertyInRange (
     my:RSC_Visual, PropertyName:string,
     lowerLimit?:number, upperLimit?:number, Default?:number[],
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2032,7 +2032,7 @@ console.error('rendering failure',Signal)
           ? function (_:number[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:number[]) {
               ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
-                '"' + PropertyName + '" setting', newValue, (Value) => {
+                Description || ('"' + PropertyName + '" setting'), newValue, (Value) => {
                   return ValueIsIntegerInRange(Value, lowerLimit,upperLimit)
                 }
               )
@@ -2049,7 +2049,7 @@ console.error('rendering failure',Signal)
 
   export function StringProperty (
     my:RSC_Visual, PropertyName:string, Default?:string,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2059,7 +2059,7 @@ console.error('rendering failure',Signal)
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
               ;(Default === undefined ? expectString : allowString)(
-                '"' + PropertyName + '" setting', newValue
+                Description || ('"' + PropertyName + '" setting'), newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
             }
@@ -2072,7 +2072,7 @@ console.error('rendering failure',Signal)
 
   export function StringListProperty (
     my:RSC_Visual, PropertyName:string, Default?:string[],
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2085,7 +2085,7 @@ console.error('rendering failure',Signal)
           ? function (_:string[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:string[]) {
               ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
-                '"' + PropertyName + '" setting', newValue, ValueIsString
+                Description || ('"' + PropertyName + '" setting'), newValue, ValueIsString
               )
               my.unobserved[PropertyName] = ((
                 newValue == null ? Default : newValue
@@ -2100,7 +2100,7 @@ console.error('rendering failure',Signal)
 
   export function StringPropertyMatching (
     my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2110,7 +2110,7 @@ console.error('rendering failure',Signal)
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
               ;(Default === undefined ? expectStringMatching : allowStringMatching)(
-                '"' + PropertyName + '" setting', newValue, Pattern
+                Description || ('"' + PropertyName + '" setting'), newValue, Pattern
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
             }
@@ -2123,7 +2123,7 @@ console.error('rendering failure',Signal)
 
   export function StringListPropertyMatching (
     my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string[],
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2136,7 +2136,7 @@ console.error('rendering failure',Signal)
           ? function (_:string[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:string[]) {
               ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
-                '"' + PropertyName + '" setting', newValue, (Value) => {
+                Description || ('"' + PropertyName + '" setting'), newValue, (Value) => {
                   return ValueIsStringMatching(Value,Pattern)
                 }
               )
@@ -2153,7 +2153,7 @@ console.error('rendering failure',Signal)
 
   export function TextProperty (
     my:RSC_Visual, PropertyName:string, Default?:string,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2163,7 +2163,7 @@ console.error('rendering failure',Signal)
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
               ;(Default === undefined ? expectText : allowText)(
-                '"' + PropertyName + '" setting', newValue
+                Description || ('"' + PropertyName + '" setting'), newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
             }
@@ -2176,7 +2176,7 @@ console.error('rendering failure',Signal)
 
   export function TextlineProperty (
     my:RSC_Visual, PropertyName:string, Default?:string,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2186,7 +2186,7 @@ console.error('rendering failure',Signal)
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
               ;(Default === undefined ? expectTextline : allowTextline)(
-                '"' + PropertyName + '" setting', newValue
+                Description || ('"' + PropertyName + '" setting'), newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
             }
@@ -2199,7 +2199,7 @@ console.error('rendering failure',Signal)
 
   export function OneOfProperty (
     my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2209,7 +2209,7 @@ console.error('rendering failure',Signal)
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:string) {
               ;(Default === undefined ? expectOneOf : allowOneOf)(
-                '"' + PropertyName + '" setting', newValue, allowedValues
+                Description || ('"' + PropertyName + '" setting'), newValue, allowedValues
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
             }
@@ -2222,7 +2222,7 @@ console.error('rendering failure',Signal)
 
   export function OneOfListProperty (
     my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string[],
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2235,7 +2235,7 @@ console.error('rendering failure',Signal)
           ? function (_:string[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:string[]) {
               ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
-                '"' + PropertyName + '" setting', newValue, (Value) => {
+                Description || ('"' + PropertyName + '" setting'), newValue, (Value) => {
                   return ValueIsOneOf(Value,allowedValues)
                 }
               )
@@ -2252,7 +2252,7 @@ console.error('rendering failure',Signal)
 
   export function URLProperty (
     my:RSC_Visual, PropertyName:string, Default?:string,
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2262,7 +2262,7 @@ console.error('rendering failure',Signal)
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:number) {
               ;(Default === undefined ? expectURL : allowURL)(
-                '"' + PropertyName + '" setting', newValue
+                Description || ('"' + PropertyName + '" setting'), newValue
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
             }
@@ -2275,7 +2275,7 @@ console.error('rendering failure',Signal)
 
   export function URLListProperty (
     my:RSC_Visual, PropertyName:string, Default?:string[],
-    readonly:boolean = false
+    Description?:string, readonly:boolean = false
   ):object {
     let Descriptor = {}
       Object.defineProperty(Descriptor, PropertyName, {
@@ -2288,7 +2288,7 @@ console.error('rendering failure',Signal)
           ? function (_:string[]) { throwReadOnlyError(PropertyName) }
           : function (newValue:string[]) {
               ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
-                '"' + PropertyName + '" setting', newValue, ValueIsURL
+                Description || ('"' + PropertyName + '" setting'), newValue, ValueIsURL
               )
               my.unobserved[PropertyName] = ((
                 newValue == null ? Default : newValue
