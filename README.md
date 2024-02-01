@@ -296,9 +296,15 @@ function (
 * **`OneOfListProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string[], readonly:boolean = false):object`** <br>
 &nbsp;<br>
 * **`handleBooleanAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
+* **`handleBooleanListAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
 * **`handleNumericAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
+* **`handleNumericListAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
 * **`handleLiteralAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
+* **`handleLiteralListAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
+* **`handleLiteralLinesAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
 * **`handleSettingOrKeywordAttribute (reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, permittedValues:string[], permittedKeywords?:string[], PropertyName?:string):boolean`** <br>
+* **`handleJSONAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
+* **`handleJSONLinesAttribute(reportedName:string, reportedValue:string|undefined, my:RSC_Visual, Name:string, PropertyName?:string):boolean`** <br>
 
 ## Script Templates ##
 
