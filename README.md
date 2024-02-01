@@ -292,6 +292,8 @@ function (
 * **`StringListProperty(my:RSC_Visual, PropertyName:string, Default?:string[], Description?:string, readonly:boolean = false):object`** <br>
 * **`StringPropertyMatching(my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string, Description?:string, readonly:boolean = false):object`** <br>
 * **`StringListPropertyMatching(my:RSC_Visual, PropertyName:string, Pattern:RegExp, Default?:string[], Description?:string, readonly:boolean = false):object`** <br>
+* **`TextProperty(my:RSC_Visual, PropertyName:string, Default?:string, Description?:string, readonly:boolean = false):object`** <br>
+* **`TextlineProperty(my:RSC_Visual, PropertyName:string, Default?:string, Description?:string, readonly:boolean = false):object`** <br>
 * **`OneOfProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string, Description?:string, readonly:boolean = false):object`** <br>
 * **`OneOfListProperty(my:RSC_Visual, PropertyName:string, allowedValues:string[], Default?:string[], Description?:string, readonly:boolean = false):object`** <br>
 * **`URLProperty(my:RSC_Visual, PropertyName:string, Default?:string, Description?:string, readonly:boolean = false):object`** <br>
