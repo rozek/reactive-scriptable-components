@@ -23,7 +23,7 @@ import {
   allowNumber, expectNumber, allowNumberInRange, expectNumberInRange,
   allowInteger, expectInteger, allowIntegerInRange, expectIntegerInRange,
   allowString, expectString, allowStringMatching, expectStringMatching,
-    expectText, expectTextline, expectedTextline,
+    allowText, expectText, allowTextline, expectTextline, expectedTextline,
   expectFunction,
   allowListSatisfying, expectListSatisfying,
   expectInstanceOf,
@@ -2149,6 +2149,52 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
+/**** TextProperty ****/
+
+  export function TextProperty (
+    my:RSC_Visual, PropertyName:string, Default?:string,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:string) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number) {
+              ;(Default === undefined ? expectText : allowText)(
+                '"' + PropertyName + '" setting', newValue
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** TextlineProperty ****/
+
+  export function TextlineProperty (
+    my:RSC_Visual, PropertyName:string, Default?:string,
+    readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:string) { throwReadOnlyError(PropertyName) }
+          : function (newValue:number) {
+              ;(Default === undefined ? expectTextline : allowTextline)(
+                '"' + PropertyName + '" setting', newValue
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue)
+            }
+        )
+      })
+    return Descriptor
+  }
+
 /**** OneOfProperty ****/
 
   export function OneOfProperty (
@@ -2678,6 +2724,7 @@ export const {
   NumberProperty, NumberListProperty, NumberPropertyInRange, NumberListPropertyInRange,
   IntegerProperty, IntegerListProperty, IntegerPropertyInRange, IntegerListPropertyInRange,
   StringProperty, StringListProperty, StringPropertyMatching, StringListPropertyMatching,
+  TextProperty, TextlineProperty,
   OneOfProperty, OneOfListProperty,
   URLProperty, URLListProperty,
   handleBooleanAttribute, handleBooleanListAttribute,
