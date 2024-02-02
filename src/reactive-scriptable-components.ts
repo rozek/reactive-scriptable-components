@@ -2331,7 +2331,7 @@ console.error('rendering failure',Signal)
   ):boolean {
     const AttributeName = Name.toLowerCase()
     if (reportedName === AttributeName) {
-      let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n([ \t\r]*\n)*/)
+      let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n/)
         .map((Value,i) => allowedOneOf(
           '"' + AttributeName + '" attribute entry #' + (i+1),
           Value.trim(), ['true', 'false']
@@ -2376,7 +2376,7 @@ console.error('rendering failure',Signal)
   ):boolean {
     const AttributeName = Name.toLowerCase()
     if (reportedName === AttributeName) {
-      let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n([ \t\r]*\n)*/)
+      let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n/)
         .map((Value,i) => {
           let newValue = parseFloat(Value)
             if (isNaN(newValue)) throwError(
