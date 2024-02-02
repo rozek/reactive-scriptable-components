@@ -773,7 +773,7 @@ console.log('removing inner visual',innerVisual,'from',Visual)
             })
           )
           break
-        default: debugger; throwError(
+        default: throwError(
           'InvalidArgument: Event instance or literal event type expected'
         )
       }
@@ -1320,7 +1320,7 @@ console.error('attribute change failure',Signal)
         Selector = `rsc-${normalizedName},[behaviour="${normalizedName}"]`
       }
 
-      let Base = closestVisualMatching(Visual,Selector)
+      Base = closestVisualMatching(Visual,Selector) as RSC_Visual
       if (Base == null) throwError(
         'NoSuchVisual:could not find a close visual matching CSS selector' +
         quoted(Selector)
@@ -1351,7 +1351,6 @@ console.error('attribute change failure',Signal)
       }
     }
 
-// @ts-ignore TS2322 we know that "Base != null"
     return { Base,PathList }
   }
 
