@@ -2463,6 +2463,7 @@ console.error('rendering failure',Signal)
         if (reportedName === KeywordName) { foundSomething = true }
       })
     }
+    if (! foundSomething) { return false }
 
   /**** compare all related values ****/
 
@@ -2494,12 +2495,8 @@ console.error('rendering failure',Signal)
           }
         }
       })
-    if (foundSomething) {
-      my.observed[PropertyName || Name] = newSetting
-      return true                      // because the attribute has been handled
-    } else {
-      return false
-    }
+    my.observed[PropertyName || Name] = newSetting
+    return true                        // because the attribute has been handled
   }
 
 /**** handleJSONAttribute ****/
