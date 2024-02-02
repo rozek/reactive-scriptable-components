@@ -276,7 +276,7 @@ function (
 
 (t.b.w)
 
-* **`throwReadOnlyError (Name:string):never`** <br>
+* **`throwReadOnlyError (Name:string):never`**<br>throws an error which indicates that the property called `Name` can not be modified
 &nbsp;<br>
 * **`BooleanProperty(my:RSC_Visual, PropertyName:string, Default?:boolean, Description?:string, readonly:boolean = false):object`** <br>
 * **`BooleanListProperty(my:RSC_Visual, PropertyName:string, Default?:boolean[], Description?:string, readonly:boolean = false):object`** <br>
