@@ -2302,6 +2302,43 @@ console.error('rendering failure',Signal)
 //--                     Attribute Convenience Functions                      --
 //------------------------------------------------------------------------------
 
+/**** handleEventAttributes ****/
+
+  export function handleEventAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, ...EventNames:string[]
+  ):boolean {
+    let foundSomething = false
+      EventNames.forEach((EventName) => {
+        const AttributeName = EventName.toLowerCase()
+        if (
+          (reportedName === 'on'  + AttributeName) ||
+          (reportedName === 'on-' + AttributeName)
+        ) {
+          foundSomething = true
+
+          if (reportedValue == null) {
+            unregisterAllMatchingEventHandlersFromVisual(my,EventName)
+          } else {
+            let compiledFunction:Function|undefined = undefined
+            try {
+              compiledFunction = new Function('Event',reportedValue)
+            } catch (Signal) {
+              throwError(
+                'CompilationFailure: could not compile handler for event "' +
+                EventName + '" from Attribute "' + reportedName + '", reason: ' +
+                Signal
+              )
+            }
+
+            registerEventHandlerForVisual(my, EventName, compiledFunction)
+          }
+        }
+      })
+    return foundSomething
+  }
+  export const handleEventAttributes = handleEventAttribute
+
 /**** handleBooleanAttribute ****/
 
   export function handleBooleanAttribute (
@@ -2723,6 +2760,7 @@ export const {
   TextProperty, TextlineProperty,
   OneOfProperty, OneOfListProperty,
   URLProperty, URLListProperty,
+  handleEventAttribute, handleEventAttributes,
   handleBooleanAttribute, handleBooleanListAttribute,
   handleNumericAttribute, handleNumericListAttribute,
   handleLiteralAttribute, handleLiteralListAttribute, handleLiteralLinesAttribute,
