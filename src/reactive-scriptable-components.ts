@@ -17,7 +17,7 @@ import {
   ValueIsObject, ValueIsArray,
   ValueIsListSatisfying,
   ValueIsOneOf,
-  ValueIsURL,
+  ValueIsColor, ValueIsURL,
   ValidatorForClassifier, acceptNil, rejectNil,
   allowBoolean, expectBoolean,
   allowNumber, expectNumber, allowNumberInRange, expectNumberInRange,
@@ -28,7 +28,9 @@ import {
   allowListSatisfying, expectListSatisfying,
   expectInstanceOf,
   allowOneOf, allowedOneOf, expectOneOf,
+  allowColor, expectColor,
   allowURL, expectURL,
+  HexColor,
 } from 'javascript-interface-library'
 
 import { render, html, Component } from 'htm/preact'
@@ -2058,7 +2060,7 @@ console.error('rendering failure',Signal)
         get: function ():string { return my.unobserved[PropertyName] },
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
-          : function (newValue:number) {
+          : function (newValue:string) {
               ;(Default === undefined ? expectString : allowString)(
                 Description || ('"' + PropertyName + '" setting'), newValue
               )
@@ -2109,7 +2111,7 @@ console.error('rendering failure',Signal)
         get: function ():string { return my.unobserved[PropertyName] },
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
-          : function (newValue:number) {
+          : function (newValue:string) {
               ;(Default === undefined ? expectStringMatching : allowStringMatching)(
                 Description || ('"' + PropertyName + '" setting'), newValue, Pattern
               )
@@ -2162,7 +2164,7 @@ console.error('rendering failure',Signal)
         get: function ():string { return my.unobserved[PropertyName] },
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
-          : function (newValue:number) {
+          : function (newValue:string) {
               ;(Default === undefined ? expectText : allowText)(
                 Description || ('"' + PropertyName + '" setting'), newValue
               )
@@ -2185,7 +2187,7 @@ console.error('rendering failure',Signal)
         get: function ():string { return my.unobserved[PropertyName] },
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
-          : function (newValue:number) {
+          : function (newValue:string) {
               ;(Default === undefined ? expectTextline : allowTextline)(
                 Description || ('"' + PropertyName + '" setting'), newValue
               )
@@ -2249,6 +2251,59 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
+/**** ColorProperty ****/
+
+  export function ColorProperty (
+    my:RSC_Visual, PropertyName:string, Default?:string,
+    Description?:string, readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string { return my.unobserved[PropertyName] },
+        set: (readonly
+          ? function (_:string) { throwReadOnlyError(PropertyName) }
+          : function (newValue:string) {
+              ;(Default === undefined ? expectColor : allowColor)(
+                Description || ('"' + PropertyName + '" setting'), newValue
+              )
+              my.unobserved[PropertyName] = (
+                newValue == null ? Default : HexColor(newValue)
+              )
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** ColorListProperty ****/
+
+  export function ColorListProperty (
+    my:RSC_Visual, PropertyName:string, Default?:string[],
+    Description?:string, readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string[] {
+          let Value = my.unobserved[PropertyName]
+          return (Value == null ? [] : Value.slice())
+        },
+        set: (readonly
+          ? function (_:string[]) { throwReadOnlyError(PropertyName) }
+          : function (newValue:string[]) {
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
+                Description || ('"' + PropertyName + '" setting'), newValue, ValueIsColor
+              )
+              my.unobserved[PropertyName] = ((
+                newValue == null ? Default : newValue
+              ) as string[]).map((Color) => HexColor(Color))
+            }
+        )
+      })
+    return Descriptor
+  }
+
 /**** URLProperty ****/
 
   export function URLProperty (
@@ -2261,7 +2316,7 @@ console.error('rendering failure',Signal)
         get: function ():string { return my.unobserved[PropertyName] },
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
-          : function (newValue:number) {
+          : function (newValue:string) {
               ;(Default === undefined ? expectURL : allowURL)(
                 Description || ('"' + PropertyName + '" setting'), newValue
               )
