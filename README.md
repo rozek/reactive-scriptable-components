@@ -59,6 +59,10 @@ This approach allows to write simple web applications within minutes - the autho
 - **Event Handlers as Function Calls**<br>sometimes, RSC components do not directly change other (reactive) variables but initiate an activity - to support such use cases, RSC components may trigger events or handle them. In contrast to DOM events, however, RSC events may be used like function calls, i.e., it is allowed to provide arbitrary arguments and possible to wait for a result from event handling
 - **Error Indicators**<br>often, it is difficult to recognize and track errors which occured in behaviour or component scripts, or during event handling. For that reason, RSC marks faulty components with an "error indicator": just click on such an indicator to reveal details about the detected error
 
+## Built-in Controls ##
+
+![Screenshot of built-in native HTML Controls](nativeControls-Screenshot.png)
+
 ## Browser Requirements (and Polyfills) ##
 
 RSC is based on relatively modern web technologies which _should_ already be available in most browsers out-of-the-box - but for those that lack these features (particularily Safari versions < 16.4 or devices with iOS versions < 16.4), polyfills have been included in the examples to plug these holes:
