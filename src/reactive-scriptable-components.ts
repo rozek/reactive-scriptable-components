@@ -997,7 +997,9 @@ console.error('element script execution failure',Signal)
       EventRegistryForVisual.set(Visual,EventRegistry = Object.create(null))
     }
 
-    EventList.forEach((Event) => {
+    EventList.forEach((Event:string) => {
+      Event = Event.toLowerCase()
+
       let EntriesForEvent:Indexable = (EventRegistry as Indexable)[Event]
       if (EntriesForEvent == null) {
         EntriesForEvent = (EventRegistry as Indexable)[Event] = Object.create(null)
