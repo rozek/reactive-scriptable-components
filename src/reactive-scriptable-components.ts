@@ -235,11 +235,11 @@ namespace RSC {
     expectDOMElement ('element',DOMElement)
     expectName('behaviour name',BehaviourName)
 
-    const normalizedName = BehaviourName.toLowerCase()
+    const normalizedName = normalizedBehaviourName(BehaviourName)
     while (DOMElement != null) {
       if (
         ValueIsVisual(DOMElement) &&
-        ((BehaviourNameOfVisual(DOMElement as RSC_Visual) || '').toLowerCase() === normalizedName)
+        (normalizedBehaviourName(BehaviourNameOfVisual(DOMElement as RSC_Visual) || '') === normalizedName)
       ) {
         return DOMElement as RSC_Visual
       }
@@ -304,7 +304,7 @@ namespace RSC {
 /**** InfoForBehaviour ****/
 
   function InfoForBehaviour (Name:RSC_Name):RSC_BehaviourInfo|undefined {
-    return BehaviourRegistry[Name.toLowerCase()]
+    return BehaviourRegistry[normalizedBehaviourName(Name)]
   }
 
 /**** registerBehaviour ****/
@@ -325,14 +325,14 @@ console.log('registering behaviour',Name)
       'list of observed element attributes', observedAttributes, ValueIsName
     )
 
-    let normalizedName = Name.toLowerCase()
+    let normalizedName = normalizedBehaviourName(Name)
 
     const AttributeSet = Object.create(null)
     if (observedAttributes != null) {
       observedAttributes.forEach(
         (internalName) => AttributeSet[normalizedAttributeName(internalName)] = internalName
       )
-      observedAttributes = observedAttributes.map((Name) => Name.toLowerCase())
+      observedAttributes = observedAttributes.map((Name) => normalizedAttributeName(Name))
     }
 
     if ((SourceOrExecutable == null) || ValueIsFunction(SourceOrExecutable)) {
@@ -400,7 +400,7 @@ console.log('registering behaviour',Name)
     let Name = expectedName(
       'behaviour name',ScriptElement.getAttribute('for-behaviour')
     )
-    if (Name.toLowerCase() === 'visual') throwError(
+    if (normalizedBehaviourName(Name) === 'visual') throwError(
       'ReservedName: behaviour name "visual" is reserved for internal use'
     )
 
@@ -452,19 +452,10 @@ console.log('registering behaviour',Name)
     })
   }
 
-/**** normalizedAttributeName ****/
+/**** normalizedBehaviourName ****/
 
-  function normalizedAttributeName (originalName:string):string {
-    return (
-      originalName[0].toLowerCase() +
-      originalName.slice(1).replace(/[A-Z]+/g,function (Match) {
-        return (
-          Match.length === 1
-          ? '-' + Match.toLowerCase()
-          : Match.slice(0,-1).toLowerCase() + '-' + Match.slice(-1).toLowerCase()
-        )
-      })
-    )
+  function normalizedBehaviourName (originalName:string):string {
+    return originalName.toLowerCase()
   }
 
 //registerAllBehavioursFoundInHead()           // not yet, only after RSC_Visual
@@ -497,8 +488,8 @@ console.log('registering behaviour',Name)
   ):void {
     Selector = Selector.trim()
     if (Selector !== '') {
-      const normalizedBehaviourName = BehaviourName.toLowerCase()
-      permittedVisualsSelectorWithinBehaviour[normalizedBehaviourName] = Selector
+      const normalizedName = normalizedBehaviourName(BehaviourName)
+      permittedVisualsSelectorWithinBehaviour[normalizedName] = Selector
     }
   }
 
@@ -509,8 +500,8 @@ console.log('registering behaviour',Name)
   ):void {
     Selector = Selector.trim()
     if (Selector !== '') {
-      const normalizedBehaviourName = BehaviourName.toLowerCase()
-      forbiddenVisualsSelectorWithinBehaviour[normalizedBehaviourName] = Selector
+      const normalizedName = normalizedBehaviourName(BehaviourName)
+      forbiddenVisualsSelectorWithinBehaviour[normalizedName] = Selector
     }
   }
 
@@ -520,9 +511,9 @@ console.log('registering behaviour',Name)
     const BehaviourName = BehaviourNameOfVisual(Visual)
     if (BehaviourName == null) { return }
 
-    const normalizedBehaviourName = BehaviourName.toLowerCase()
-    let permittedVisualsSelector = permittedVisualsSelectorWithinBehaviour[normalizedBehaviourName]
-    let forbiddenVisualsSelector = forbiddenVisualsSelectorWithinBehaviour[normalizedBehaviourName]
+    const normalizedName = normalizedBehaviourName(BehaviourName)
+    let permittedVisualsSelector = permittedVisualsSelectorWithinBehaviour[normalizedName]
+    let forbiddenVisualsSelector = forbiddenVisualsSelectorWithinBehaviour[normalizedName]
 
     if ((permittedVisualsSelector != null) || (forbiddenVisualsSelector != null)) {
       innerVisualsOf(Visual).forEach((innerVisual) => {
@@ -549,9 +540,9 @@ console.log('removing inner visual',innerVisual,'from',Visual)
     const BehaviourName = BehaviourNameOfVisual(Container)
     if (BehaviourName == null) { return }
 
-    const normalizedBehaviourName = BehaviourName.toLowerCase()
+    const normalizedName = normalizedBehaviourName(BehaviourName)
 
-    let permittedVisualsSelector = permittedVisualsSelectorWithinBehaviour[normalizedBehaviourName]
+    let permittedVisualsSelector = permittedVisualsSelectorWithinBehaviour[normalizedName]
     if (permittedVisualsSelector != null) {
       if (! Visual.matches(permittedVisualsSelector)) throwError(
         'InacceptableInnerVisual: the given visual is not allowed to become a ' +
@@ -559,7 +550,7 @@ console.log('removing inner visual',innerVisual,'from',Visual)
       )
     }
 
-    let forbiddenVisualsSelector = forbiddenVisualsSelectorWithinBehaviour[normalizedBehaviourName]
+    let forbiddenVisualsSelector = forbiddenVisualsSelectorWithinBehaviour[normalizedName]
     if (forbiddenVisualsSelector != null) {
       if (Visual.matches(forbiddenVisualsSelector)) throwError(
         'InacceptableInnerVisual: the given visual is not allowed to become a ' +
@@ -689,7 +680,7 @@ console.log('removing inner visual',innerVisual,'from',Visual)
   function compiledScript (Script:Text):Function {
     return new Function(
       'my,me, RSC,JIL, onAttributeChange, onAttachment,onDetachment, ' +
-      'toRender, html, on,once,off,trigger, reactively',
+      'toRender, html, on,once,off,trigger, reactively, ShadowRoot',
       Script || ''
     )                                                                // may fail!
   }
@@ -701,6 +692,7 @@ console.log('removing inner visual',innerVisual,'from',Visual)
     const onAttachment      = Visual.onAttachment     .bind(Visual)
     const onDetachment      = Visual.onDetachment     .bind(Visual)
     const toRender          = Visual.toRender         .bind(Visual)
+    const ShadowRoot        = ShadowRootForVisual.get(Visual)
 
   /**** on ****/
 
@@ -755,15 +747,15 @@ console.log('removing inner visual',innerVisual,'from',Visual)
   /**** trigger ****/
 
     function trigger (
-      EventToTrigger:string|Event, Arguments:any[],
+      EventToTrigger:string|Event, Arguments:any[] = [],
       bubbles = true
     ):boolean {
-      Arguments = (ValueIsArray(Arguments) ? Arguments.slice() : [])
+      Arguments = (ValueIsArray(Arguments) ? Arguments.slice() : [Arguments])
 
       switch (true) {
         case ValueIsString(EventToTrigger):
           EventToTrigger = new CustomEvent(
-            EventToTrigger as string, {
+            (EventToTrigger as string).toLowerCase(), {
               bubbles, cancelable:true, detail:{ Arguments }
             }
           )
@@ -802,7 +794,7 @@ console.log('removing inner visual',innerVisual,'from',Visual)
 
     Executable.apply(Visual, [
       Visual,Visual, RSC,JIL, onAttributeChange, onAttachment,onDetachment,
-      toRender, html, on,once,off,trigger, reactively
+      toRender, html, on,once,off,trigger, reactively, ShadowRoot
     ])
   }
 
@@ -932,7 +924,7 @@ console.error('element script execution failure',Signal)
     Handler = ArgList.shift() as Function
 
     _registerEventHandlerForVisual(
-      Visual, Events,Selector,Data,Handler, once
+      Visual, Events.toLowerCase(),Selector,Data,Handler, once
     )
   }
 
@@ -982,7 +974,7 @@ console.error('element script execution failure',Signal)
         Event.preventDefault()
       }
     }
-    (actualHandler as indexableFunction)['isFor'] = Handler
+    ;(actualHandler as indexableFunction)['isFor'] = Handler
 
     let EventList:string[]
     if (ValueIsEventNameWithSelector(Events)) {
@@ -1117,6 +1109,8 @@ console.error('element script execution failure',Signal)
 
   const reactiveFunctionsForVisual:WeakMap<RSC_Visual,Function[]>  = new WeakMap()
   const reactiveAttributesForVisual:WeakMap<RSC_Visual,Function[]> = new WeakMap()
+
+  const ignoredAttributesForVisual:WeakMap<RSC_Visual,Indexable> = new WeakMap()
 
 /**** observed/unobserved ****/
 
@@ -1275,10 +1269,12 @@ console.error('attribute change failure',Signal)
             reactiveAttributesForVisual.set(Visual,HandlerList = [])
           }
 
-          const Handler = computed(() => {
-            Visual.observed[originalName] = ValueOfReactiveVariable(Base, PathList)
-          })
-          HandlerList.push(Handler)
+          if (! VisualAttributeIsIgnored(Visual,reactiveName)) {
+            const Handler = computed(() => {
+              Visual.observed[originalName] = ValueOfReactiveVariable(Base, PathList)
+            })
+            HandlerList.push(Handler)
+          }
 
           if (reactiveName.startsWith('$$')) {
             const Handler = computed(() => {
@@ -1407,6 +1403,39 @@ console.error('attribute change failure',Signal)
     HandlerList.forEach((Handler) => {
       dispose(Handler)
     })
+  }
+
+/**** normalizedAttributeName ****/
+
+  function normalizedAttributeName (originalName:string):string {
+    let Result = originalName.replace(/^[$]{1,2}/,'')
+    return (
+      Result[0].toLowerCase() +
+      Result.slice(1).replace(/[A-Z]+/g,function (Match) {
+        return (
+          Match.length === 1
+          ? '-' + Match.toLowerCase()
+          : Match.slice(0,-1).toLowerCase() + '-' + Match.slice(-1).toLowerCase()
+        )
+      })
+    )
+  }/**** ignoreAttributeOfVisual ****/
+
+  function ignoreAttributeOfVisual (Visual:RSC_Visual, Attribute:string):void {
+    Attribute = Attribute.replace(/^[$]{1,2}/,'')
+
+    let ignoredAttributes = ignoredAttributesForVisual.get(Visual)
+    if (ignoredAttributes == null) {
+      ignoredAttributesForVisual.set(Visual, ignoredAttributes = Object.create(null))
+    }
+    (ignoredAttributes as Indexable)[Attribute] = true
+  }
+
+/**** VisualAttributeIsIgnored ****/
+
+  function VisualAttributeIsIgnored (Visual:RSC_Visual, Attribute:string):boolean {
+    Attribute = Attribute.replace(/^[$]{1,2}/,'')
+    return (ignoredAttributesForVisual.get(Visual)?.[Attribute] == true)
   }
 
 /**** registerReactiveFunctionIn ****/
@@ -2396,19 +2425,31 @@ console.error('rendering failure',Signal)
   }
   export const handleEventAttributes = handleEventAttribute
 
+/**** ignoreAttribute ****/
+
+  export function ignoreAttribute (
+    reportedName:string, reportedValue:string|undefined,
+    my:RSC_Visual, Name:string, PropertyName?:string
+  ):boolean {
+    const AttributeName = normalizedAttributeName(Name)
+    ignoreAttributeOfVisual(my,AttributeName)
+
+    return (reportedName === AttributeName)
+  }
+
 /**** handleBooleanAttribute ****/
 
   export function handleBooleanAttribute (
     reportedName:string, reportedValue:string|undefined,
     my:RSC_Visual, Name:string, PropertyName?:string
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
     if (reportedName === AttributeName) {
       allowOneOf('"' + AttributeName + '" attribute',reportedValue,[
         AttributeName, '', 'true', 'false'
       ])
 
-      let newValue = (reportedValue != null) || (reportedValue !== 'false')
+      let newValue = (reportedValue != null) && (reportedValue !== 'false')
       my.observed[PropertyName || Name] = newValue
 
       return true                      // because the attribute has been handled
@@ -2423,7 +2464,7 @@ console.error('rendering failure',Signal)
     reportedName:string, reportedValue:string|undefined,
     my:RSC_Visual, Name:string, PropertyName?:string
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
     if (reportedName === AttributeName) {
       let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n/)
         .map((Value,i) => allowedOneOf(
@@ -2444,7 +2485,7 @@ console.error('rendering failure',Signal)
     reportedName:string, reportedValue:string|undefined,
     my:RSC_Visual, Name:string, PropertyName?:string
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
     if (reportedName === AttributeName) {
       if (reportedValue == null) {
         my.observed[PropertyName || Name] = undefined
@@ -2468,7 +2509,7 @@ console.error('rendering failure',Signal)
     reportedName:string, reportedValue:string|undefined,
     my:RSC_Visual, Name:string, PropertyName?:string
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
     if (reportedName === AttributeName) {
       let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n/)
         .map((Value,i) => {
@@ -2493,7 +2534,7 @@ console.error('rendering failure',Signal)
     reportedName:string, reportedValue:string|undefined,
     my:RSC_Visual, Name:string, PropertyName?:string
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
     if (reportedName === AttributeName) {
       my.observed[PropertyName || Name] = reportedValue
       return true                      // because the attribute has been handled
@@ -2508,7 +2549,7 @@ console.error('rendering failure',Signal)
     reportedName:string, reportedValue:string|undefined,
     my:RSC_Visual, Name:string, PropertyName?:string
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
     if (reportedName === AttributeName) {
       let newValue = (reportedValue || '').trim().split(/\s*,\s*|\n/)
         .map((Line) => Line.trim())
@@ -2526,7 +2567,7 @@ console.error('rendering failure',Signal)
     reportedName:string, reportedValue:string|undefined,
     my:RSC_Visual, Name:string, PropertyName?:string
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
     if (reportedName === AttributeName) {
       let newValue = (reportedValue || '').trim().split(/\n/)
         .map((Line) => Line.trim())
@@ -2546,14 +2587,14 @@ console.error('rendering failure',Signal)
     permittedValues:string[], permittedKeywords?:string[],
     PropertyName?:string,
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
 
   /**** take care of removed attributes ****/
 
     let foundSomething = (reportedName == AttributeName)
     if (! foundSomething) {
       (permittedKeywords || permittedValues).forEach((Keyword) => {
-        let KeywordName = Keyword.toLowerCase()
+        let KeywordName = normalizedAttributeName(Keyword)
         if (reportedName === KeywordName) { foundSomething = true }
       })
     }
@@ -2571,7 +2612,7 @@ console.error('rendering failure',Signal)
       }
 
       (permittedKeywords || permittedValues).forEach((Keyword) => {
-        let KeywordName = Keyword.toLowerCase()
+        let KeywordName = normalizedAttributeName(Keyword)
         if (my.hasAttribute(KeywordName)) {
           const KeywordValue = my.getAttribute(KeywordName)
           allowOneOf('"' + KeywordName + '" attribute',KeywordValue,[
@@ -2599,7 +2640,7 @@ console.error('rendering failure',Signal)
     reportedName:string, reportedValue:string|undefined,
     my:RSC_Visual, Name:string, PropertyName?:string
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
     if (reportedName === AttributeName) {
       let JSONObject
         if ((reportedValue != null) && (reportedValue.trim() === '')) {
@@ -2629,7 +2670,7 @@ console.error('rendering failure',Signal)
     reportedName:string, reportedValue:string|undefined,
     my:RSC_Visual, Name:string, PropertyName?:string
   ):boolean {
-    const AttributeName = Name.toLowerCase()
+    const AttributeName = normalizedAttributeName(Name)
     if (reportedName === AttributeName) {
       let JSONLines
         if (reportedValue != null) {
