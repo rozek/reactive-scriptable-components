@@ -2250,9 +2250,9 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
-/**** ListSatisfyingProperty ****/
+/**** ListPropertySatisfying ****/
 
-  export function ListSatisfyingProperty (
+  export function ListPropertySatisfying (
     my:RSC_Visual, PropertyName:string, Validator:(Value:any) => boolean,
     Default?:string, Description?:string, readonly:boolean = false
   ):object {
@@ -2900,7 +2900,7 @@ export const {
   NumberProperty, NumberListProperty, NumberPropertyInRange, NumberListPropertyInRange,
   IntegerProperty, IntegerListProperty, IntegerPropertyInRange, IntegerListPropertyInRange,
   StringProperty, StringListProperty, StringPropertyMatching, StringListPropertyMatching,
-  TextProperty, TextlineProperty, ListProperty,
+  TextProperty, TextlineProperty, ListProperty, ListPropertySatisfying,
   OneOfProperty, OneOfListProperty,
   URLProperty, URLListProperty,
   handleEventAttribute, handleEventAttributes,
