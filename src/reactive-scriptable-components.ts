@@ -25,7 +25,7 @@ import {
   allowString, expectString, allowStringMatching, expectStringMatching,
     allowText, expectText, allowTextline, expectTextline, expectedTextline,
   expectFunction,
-  allowArray, expectArray, allowListSatisfying, expectListSatisfying,
+  allowList, expectList, allowListSatisfying, expectListSatisfying,
   expectInstanceOf,
   allowOneOf, allowedOneOf, expectOneOf,
   allowColor, expectColor,
@@ -2240,8 +2240,32 @@ console.error('rendering failure',Signal)
         set: (readonly
           ? function (_:string) { throwReadOnlyError(PropertyName) }
           : function (newValue:string) {
-              ;(Default === undefined ? expectArray : allowArray)(
+              ;(Default === undefined ? expectList : allowList)(
                 Description || ('"' + PropertyName + '" setting'), newValue
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue.slice())
+            }
+        )
+      })
+    return Descriptor
+  }
+
+/**** ListSatisfyingProperty ****/
+
+  export function ListSatisfyingProperty (
+    my:RSC_Visual, PropertyName:string, Validator:(Value:any) => boolean,
+    Default?:string, Description?:string, readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string { return (my.unobserved[PropertyName] || []).slice() },
+        set: (readonly
+          ? function (_:string) { throwReadOnlyError(PropertyName) }
+          : function (newValue:string) {
+              ;(Default === undefined ? expectListSatisfying : allowListSatisfying)(
+                Description || ('"' + PropertyName + '" setting'), newValue,
+                Validator
               )
               my.unobserved[PropertyName] = (newValue == null ? Default : newValue.slice())
             }
