@@ -25,7 +25,7 @@ import {
   allowString, expectString, allowStringMatching, expectStringMatching,
     allowText, expectText, allowTextline, expectTextline, expectedTextline,
   expectFunction,
-  allowListSatisfying, expectListSatisfying,
+  allowArray, expectArray, allowListSatisfying, expectListSatisfying,
   expectInstanceOf,
   allowOneOf, allowedOneOf, expectOneOf,
   allowColor, expectColor,
@@ -1419,7 +1419,9 @@ console.error('attribute change failure',Signal)
         )
       })
     )
-  }/**** ignoreAttributeOfVisual ****/
+  }
+
+/**** ignoreAttributeOfVisual (i.e., attribute should only be reactively read) ****/
 
   function ignoreAttributeOfVisual (Visual:RSC_Visual, Attribute:string):void {
     Attribute = Attribute.replace(/^[$]{1,2}/,'')
@@ -1776,8 +1778,6 @@ console.error('rendering failure',Signal)
         (Element) => Element.matches(Selector)
       )
     }
-
-
   }
 
   customElements.define('rsc-visual', RSC_Visual)
@@ -2227,6 +2227,29 @@ console.error('rendering failure',Signal)
     return Descriptor
   }
 
+/**** ListProperty ****/
+
+  export function ListProperty (
+    my:RSC_Visual, PropertyName:string, Default?:string,
+    Description?:string, readonly:boolean = false
+  ):object {
+    let Descriptor = {}
+      Object.defineProperty(Descriptor, PropertyName, {
+        configurable:true, enumerable:true,
+        get: function ():string { return (my.unobserved[PropertyName] || []).slice() },
+        set: (readonly
+          ? function (_:string) { throwReadOnlyError(PropertyName) }
+          : function (newValue:string) {
+              ;(Default === undefined ? expectArray : allowArray)(
+                Description || ('"' + PropertyName + '" setting'), newValue
+              )
+              my.unobserved[PropertyName] = (newValue == null ? Default : newValue.slice())
+            }
+        )
+      })
+    return Descriptor
+  }
+
 /**** OneOfProperty ****/
 
   export function OneOfProperty (
@@ -2425,7 +2448,7 @@ console.error('rendering failure',Signal)
   }
   export const handleEventAttributes = handleEventAttribute
 
-/**** ignoreAttribute ****/
+/**** ignoreAttribute (i.e., attribute should only be reactively read) ****/
 
   export function ignoreAttribute (
     reportedName:string, reportedValue:string|undefined,
@@ -2809,8 +2832,6 @@ console.error('attachment handler failure',Signal)
     startAllVisualsIn(Visual)
   }
 
-
-
 /**** start-up in a well-defined way ****/
 
   function startRSC () {
@@ -2855,7 +2876,7 @@ export const {
   NumberProperty, NumberListProperty, NumberPropertyInRange, NumberListPropertyInRange,
   IntegerProperty, IntegerListProperty, IntegerPropertyInRange, IntegerListPropertyInRange,
   StringProperty, StringListProperty, StringPropertyMatching, StringListPropertyMatching,
-  TextProperty, TextlineProperty,
+  TextProperty, TextlineProperty, ListProperty,
   OneOfProperty, OneOfListProperty,
   URLProperty, URLListProperty,
   handleEventAttribute, handleEventAttributes,
