@@ -2417,6 +2417,266 @@ console.error('rendering failure',Signal)
   registerBehaviour('tab',undefined)
 
 //------------------------------------------------------------------------------
+//--                               rsc-htmlview                               --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('htmlview',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      my.unobserved.Value = ''
+
+      RSC.assign(my.observed,
+        RSC.StringProperty(my,'Value',''),
+      )
+
+      toRender(() => html`
+        <style>
+          :host { display:inline-block; position:relative }
+        </style>
+        <div style="display:inline-block; position:relative; width:100%; height:100%"
+          dangerouslySetInnerHTML=${{__html:my.observed.Value}}
+        />
+      `)
+    },
+    ['Value']
+  )
+
+//------------------------------------------------------------------------------
+//--                               rsc-textview                               --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('textview',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      my.unobserved.Value = ''
+
+      RSC.assign(my.observed,
+        RSC.StringProperty(my,'Value',''),
+      )
+
+      toRender(() => html`
+        <style>
+          :host { display:inline-block; position:relative }
+        </style>
+        ${my.observed.Value}
+      `)
+    },
+    ['Value']
+  )
+
+//------------------------------------------------------------------------------
+//--                              rsc-imageview                               --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('imageview',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      const RSC_ImageScalings   = ['none','stretch','cover','contain']
+      const RSC_ImageAlignments = [
+        'left top','center top','right top','left center','center center',
+        'right center','left bottom','center bottom','right bottom'
+      ]
+
+      RSC.assign(my.unobserved,{
+        Value:         '',
+        ImageScaling:  'contain',
+        ImageAlignment:'center center',
+      })
+
+      RSC.assign(my.observed,
+        RSC.URLProperty  (my,'Value',''),
+        RSC.OneOfProperty(my,'ImageScaling',  RSC_ImageScalings,  'contain'),
+        RSC.OneOfProperty(my,'ImageAlignment',RSC_ImageAlignments,'center center'),
+      )
+
+      toRender(() => {
+        const { Value,ImageScaling,ImageAlignment } = my.observed
+
+        return html`
+          <style>
+            :host {
+              display:inline-block; position:relative;
+              font-size:0px; line-height:0px
+            }
+          </style>
+          <img src=${Value} style="
+            object-fit:${ImageScaling === 'stretch' ? 'fill ' : ImageScaling};
+            object-position:${ImageAlignment};
+          "/>
+        `
+      })
+    },
+    ['Value','ImageScaling','ImageAlignment']
+  )
+
+//------------------------------------------------------------------------------
+//--                               rsc-webview                                --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('webview',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      const DefaultSandboxPermissions = (
+        'allow-downloads allow-forms allow-modals allow-orientation-lock ' +
+        'allow-pointer-lock allow-popups allow-same-origin allow-scripts'
+      )
+
+      const permittedReferrerPolicies = [
+        'no-referrer','no-referrer-when-downgrade',
+        'origin','origin-when-cross-origin','same-origin',
+        'strict-origin','strict-origin-when-cross-origin',
+        'unsafe-url'
+      ]
+
+      RSC.assign(my.unobserved,{
+        Value:'',
+        PermissionsPolicy:'', ReferrerPolicy:'',
+        SandboxPermissions:DefaultSandboxPermissions, allowsFullscreen:false
+      })
+
+      RSC.assign(my.observed,
+        RSC.URLProperty    (my,'Value',''),
+        RSC.StringProperty (my,'PermissionsPolicy',''),
+        RSC.OneOfProperty  (my,'ReferrerPolicy',permittedReferrerPolicies,''),
+        RSC.StringProperty (my,'SandboxPermissions',DefaultSandboxPermissions),
+        RSC.BooleanProperty(my,'allowsFullscreen',false),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleLiteralAttribute(Name,newValue, my,'Value') ||
+        RSC.handleLiteralAttribute(Name,newValue, my,'allow',           'PermissionsPolicy') ||
+        RSC.handleLiteralAttribute(Name,newValue, my,'referrer',        'ReferrerPolicy') ||
+        RSC.handleLiteralAttribute(Name,newValue, my,'sandbox',         'SandboxPermissions') ||
+        RSC.handleBooleanAttribute(Name,newValue, my,'allow-fullscreen','allowsFullscreen')
+      ))
+
+      toRender(() => {
+        const {
+          Value,
+          PermissionsPolicy, ReferrerPolicy, SandboxPermissions, allowsFullscreen
+        } = my.observed
+
+        return html`
+          <style>
+            :host { display:inline-block; position:relative }
+            iframe {
+              display:block; position:relative;
+              width:100%; height:100%; overflow:scroll;
+            }
+          </style>
+          <iframe src=${Value} style="
+          " allow=${PermissionsPolicy} allowfullscreen=${allowsFullscreen}
+            sandbox=${SandboxPermissions} referrerpolicy=${ReferrerPolicy}
+          />
+        `
+      })
+    },
+    ['Value','PermissionsPolicy','ReferrerPolicy','SandboxPermissions','allowsFullscreen']
+  )
+
+//------------------------------------------------------------------------------
+//--                                 rsc-icon                                 --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('icon',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      RSC.assign(my.unobserved,{
+        Value:'', Color:'black',
+      })
+
+      RSC.assign(my.observed,
+        RSC.URLProperty  (my,'Value','',     'icon image URL'),
+        RSC.ColorProperty(my,'Color','black','icon tint color'),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleLiteralAttribute(Name,newValue, my,'Value') ||
+        RSC.handleLiteralAttribute(Name,newValue, my,'Color')
+      ))
+
+      toRender(() => {
+        const { Value, Color } = my.observed
+
+        return html`
+          <style>
+            :host {
+              display:inline-block; position:relative;
+              width:24px; height:24px;
+              font-size:0px; line-height:0px;
+            }
+            div {
+              display:block; position:absolute;
+              left:0px; top:0px; width:100%; height:100%;
+              -webkit-mask-image:url(${Value});    mask-image:url(${Value});
+              -webkit-mask-size:contain;           mask-size:contain;
+              -webkit-mask-position:center center; mask-position:center center;
+              background-color:${Color};
+            }
+          </style>
+          <div/>
+        `
+      })
+    },
+    ['Value','Color']
+  )
+
+//------------------------------------------------------------------------------
 //--                      Property Convenience Functions                      --
 //------------------------------------------------------------------------------
 
