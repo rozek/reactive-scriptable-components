@@ -311,7 +311,8 @@ namespace RSC {
 
   export function registerBehaviour (
     Name:RSC_Name, SourceOrExecutable:Text|Function|undefined,
-    observedAttributes:RSC_Name[] = []
+    observedAttributes:RSC_Name[] = [],
+    permittedContents:string = '', forbiddenContents:string = ''
   ):void {
     expectName('behaviour name',Name)
 console.log('registering behaviour',Name)
@@ -378,6 +379,9 @@ console.log('registering behaviour',Name)
       }
     }
 
+    permitVisualsWithinBehaviour(Name,permittedContents)
+    forbidVisualsWithinBehaviour(Name,forbiddenContents)
+
   /**** install a custom element for the given behaviour ****/
 
     const customizedVisual = class extends RSC_Visual {
@@ -415,14 +419,10 @@ console.log('registering behaviour',Name)
       'list of valid RSC attribute names'
     )
 
-    registerBehaviour(Name,Source,observedAttributes)
-
-    permitVisualsWithinBehaviour(
-      Name, ScriptElement.getAttribute('permitted-contents') || ''
-    )
-
-    forbidVisualsWithinBehaviour(
-      Name, ScriptElement.getAttribute('forbidden-contents') || ''
+    registerBehaviour(
+      Name, Source, observedAttributes,
+      ScriptElement.getAttribute('permitted-contents') || '',
+      ScriptElement.getAttribute('forbidden-contents') || ''
     )
   }
 
@@ -486,7 +486,6 @@ console.log('registering behaviour',Name)
   function permitVisualsWithinBehaviour (
     BehaviourName:RSC_Name, Selector:string
   ):void {
-    Selector = Selector.trim()
     if (Selector !== '') {
       const normalizedName = normalizedBehaviourName(BehaviourName)
       permittedVisualsSelectorWithinBehaviour[normalizedName] = Selector
@@ -498,7 +497,6 @@ console.log('registering behaviour',Name)
   function forbidVisualsWithinBehaviour (
     BehaviourName:RSC_Name, Selector:string
   ):void {
-    Selector = Selector.trim()
     if (Selector !== '') {
       const normalizedName = normalizedBehaviourName(BehaviourName)
       forbiddenVisualsSelectorWithinBehaviour[normalizedName] = Selector
@@ -1807,6 +1805,616 @@ console.error('rendering failure',Signal)
   }
 
   customElements.define('rsc-applet', RSC_Applet)
+
+//------------------------------------------------------------------------------
+//--                        rsc-title/label/text/hint                         --
+//------------------------------------------------------------------------------
+
+  document.head.insertAdjacentHTML('beforeend',`
+<style>
+  rsc-title { font-size:18px; font-weight:bold; margin-bottom:10px; display:block }
+  rsc-label { font-size:14px; font-weight:bold }
+  rsc-text  { font-size:14px; font-weight:normal }
+  rsc-hint  { font-size:11px; font-weight:normal }
+</style>
+  `)
+
+  registerBehaviour('Title', undefined, ['Value'])
+  registerBehaviour('Label', undefined, ['Value'])
+  registerBehaviour('Text',  undefined, ['Value'])
+  registerBehaviour('Hint',  undefined, ['Value'])
+
+//------------------------------------------------------------------------------
+//--                               rsc-centered                               --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('centered',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      toRender(() => html`
+        <style>
+          :host {
+            display:inline-block; position:relative;
+            width:100%; height:100%;
+          }
+        </style>
+        <div style="
+          display:block; position:absolute;
+          left:50%; top:50%; transform:translate(-50%,-50%);
+        ">
+          <slot/>
+        </div>
+      `)
+    }
+  )
+
+//------------------------------------------------------------------------------
+//--                              rsc-horizontal                              --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('horizontal',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      const permittedAlignments = ['left','center','right', 'start','end']
+
+      my.unobserved.Alignment = 'start'
+
+      RSC.assign(my.observed,
+        RSC.OneOfProperty(my,'Alignment',permittedAlignments),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleLiteralAttribute(Name,newValue, my,'align','Alignment')
+      ))
+
+      toRender(() => {
+        const Alignment = my.observed.Alignment
+
+        return html`
+          <style>
+            :host { display:inline-block; position:relative }
+          </style>
+          <div style="
+            display:flex; position:relative; flex-flow:row nowrap;
+            justify-content:${Alignment}; align-items:stretch;
+            left:0px; top:0px; width:100%; height:100%;
+          ">
+            <slot/>
+          </div>
+        `
+      })
+    },
+    ['align']
+  )
+
+//------------------------------------------------------------------------------
+//--                               rsc-vertical                               --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('vertical',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      const permittedAlignments = ['top','center','bottom', 'start','end']
+
+      my.unobserved.Alignment = 'start'
+
+      RSC.assign(my.observed,
+        RSC.OneOfProperty(my,'Alignment',permittedAlignments),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleLiteralAttribute(Name,newValue, my,'align','Alignment')
+      ))
+
+      toRender(() => {
+        let Alignment = my.observed.Alignment
+        switch (Alignment) {
+          case 'top':    Alignment = 'start'; break // TODO: not always correct
+          case 'bottom': Alignment = 'end';   break // TODO: not always correct
+        }
+
+        return html`
+          <style>
+            :host { display:inline-block; position:relative }
+          </style>
+          <div style="
+            display:flex; position:relative; flex-flow:column nowrap;
+            justify-content:${Alignment}; align-items:stretch;
+            left:0px; top:0px; width:100%; height:100%;
+          ">
+            <slot/>
+          </div>
+        `
+      })
+    },
+    ['align']
+  )
+
+//------------------------------------------------------------------------------
+//--                               rsc-tabular                                --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('tabular',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      const permittedAlignments = ['top','middle','bottom','baseline']
+
+      RSC.assign(my.unobserved,{
+        Columns:2, ColumnStyles:[], ColumnGap:0, RowGap:0,
+        verticalAlignment:'top',
+      })
+
+      RSC.assign(my.observed,
+        RSC.IntegerPropertyInRange(my,'Columns',     1,Infinity, 2),
+        RSC.StringListProperty    (my,'ColumnStyles',[]),
+        RSC.IntegerPropertyInRange(my,'ColumnGap',   0,Infinity, 0),
+        RSC.IntegerPropertyInRange(my,'RowGap',      0,Infinity, 0),
+        RSC.OneOfProperty         (my,'verticalAlignment',permittedAlignments,'top')
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleNumericAttribute    (Name,newValue, my,'Columns') ||
+        RSC.handleLiteralListAttribute(Name,newValue, my,'column-styles', 'ColumnStyles') ||
+        RSC.handleNumericAttribute    (Name,newValue, my,'column-gap',    'ColumnGap') ||
+        RSC.handleNumericAttribute    (Name,newValue, my,'row-gap',       'RowGap') ||
+        RSC.handleLiteralAttribute    (Name,newValue, my,'valign',        'verticalAlignment')
+      ))
+
+      toRender(() => {
+        const {
+          Columns:ColumnLimit, ColumnStyles, ColumnGap, RowGap, verticalAlignment
+        } = my.observed
+
+        const innerElements = Array.from(my.children)
+
+        const Rows:any[][] = []; let SlotCount = 0, ColumnCount
+        if (innerElements.length > 0) {
+          Rows.push([]); ColumnCount = 0                            // start new row
+
+          while (innerElements.length > 0) {
+            const nextElement = innerElements.shift() as Element
+              SlotCount += 1
+            nextElement.setAttribute('slot',''+SlotCount) // TODO: very, very poor
+
+            let ColumnStyle = ColumnStyles[ColumnCount] || ColumnStyles[ColumnStyles.length-1]
+
+            if (nextElement.tagName === 'RSC-COLSPAN') {
+              let Width = parseInt(nextElement.getAttribute('columns') || '',10)
+              if (isNaN(Width)) { Width = 1 } else { Width = Math.max(1,Width) }
+
+              Rows[Rows.length-1].push(
+                html`<td colspan="${Width}" style=${ColumnStyle}><slot name="${SlotCount}"/></td>`
+              )
+              ColumnCount += Width
+            } else {
+              Rows[Rows.length-1].push(
+                html`<td style=${ColumnStyle}><slot name="${SlotCount}"/></td>`
+              )
+              ColumnCount += 1
+            }
+
+            if ((ColumnCount >= ColumnLimit) && (innerElements.length > 0)) {
+              Rows.push([]); ColumnCount = 0                        // start new row
+            }
+          }
+        }
+
+        return html`
+          <style>
+            :host {
+              display:block; position:relative;
+            }
+
+            #table                       { width:100% }
+            #table > tr                  { vertical-align:${verticalAlignment} }
+            #table > tr > td             { padding:${Math.round(RowGap/2)}px ${Math.round(ColumnGap/2)}px }
+            #table > tr > td:first-child { padding-left:0px }
+            #table > tr > td:last-child  { padding-right:0px }
+
+            #table > tr:first-child > td { padding-top:0px }
+            #table > tr:last-child  > td { padding-bottom:0px }
+          </style>
+
+          <table>
+            ${Rows.map((Row) =>  html`<tr>${Row}</tr>`)}
+          </table>
+        `
+      })
+    },
+    ['Columns','ColumnStyles','ColumnGap','RowGap','valign']
+  )
+
+//------------------------------------------------------------------------------
+//--                               rsc-colspan                                --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('colspan',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Name:string,newValue:string) => void,
+      onAttachment:(Visual:RSC_Visual) => void,
+      onDetachment:(Visual:RSC_Visual) => void,
+      toRender:(Renderer:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      toRender(() => html`
+        <style>
+          :host {
+            display:inline-block; position:relative;
+            width:100%; height:100%;
+          }
+        </style>
+        <slot/>
+      `)
+    }
+  )
+
+//------------------------------------------------------------------------------
+//--                                 rsc-gap                                  --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('gap',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      my.unobserved.Width  = 10
+      my.unobserved.Height = 10
+
+      RSC.assign(my.observed,
+        RSC.IntegerPropertyInRange(my,'Width', 0,Infinity, 10),
+        RSC.IntegerPropertyInRange(my,'Height',0,Infinity, 10),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleNumericAttribute(Name,newValue, my,'Width') ||
+        RSC.handleNumericAttribute(Name,newValue, my,'Height')
+      ))
+
+      toRender(() => html`
+        <div style="width:${my.observed.Width}px; height:${my.observed.Height}px"/>
+      `)
+    },
+    ['width','height']
+  )
+
+//------------------------------------------------------------------------------
+//--                            rsc-equal-columns                             --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('equal-columns',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      const permittedAlignments = ['top','middle','bottom','baseline']
+
+      RSC.assign(my.unobserved,{
+        Columns:2, ColumnStyle:'', ColumnGap:0, RowGap:0,
+        verticalAlignment:'top',
+      })
+
+      RSC.assign(my.observed,
+        RSC.IntegerPropertyInRange(my,'Columns',    1,Infinity, 2),
+        RSC.StringProperty        (my,'ColumnStyle',''),
+        RSC.IntegerPropertyInRange(my,'ColumnGap',  0,Infinity, 0),
+        RSC.IntegerPropertyInRange(my,'RowGap',     0,Infinity, 0),
+        RSC.OneOfProperty         (my,'verticalAlignment',permittedAlignments,'top')
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleNumericAttribute(Name,newValue, my,'Columns') ||
+        RSC.handleLiteralAttribute(Name,newValue, my,'column-style','ColumnStyle') ||
+        RSC.handleNumericAttribute(Name,newValue, my,'column-gap',  'ColumnGap') ||
+        RSC.handleNumericAttribute(Name,newValue, my,'row-gap',     'RowGap') ||
+        RSC.handleLiteralAttribute(Name,newValue, my,'valign',      'verticalAlignment')
+      ))
+
+      toRender(() => {
+        const {
+          Columns:ColumnLimit, ColumnGap, RowGap, verticalAlignment
+        } = my.observed
+
+        let relativeWidth = Math.round(1/ColumnLimit * 100)
+
+        let ColumnStyle = my.observed.ColumnStyle.replace(/(\r?\n)+/g,'\n').trim()
+        ColumnStyle += (ColumnStyle !== '' ? ';' : '') + `width:${relativeWidth}%`
+
+        const innerElements = Array.from(my.children)
+
+        const Rows:any[][] = []; let SlotCount = 0, ColumnCount
+        if (innerElements.length > 0) {
+          Rows.push([]); ColumnCount = 0                            // start new row
+
+          while (innerElements.length > 0) {
+            const nextElement = innerElements.shift() as Element
+              SlotCount += 1
+            nextElement.setAttribute('slot',''+SlotCount) // TODO: very, very poor
+
+            if (nextElement.tagName === 'RSC-COLSPAN') {
+              let Width = parseInt(nextElement.getAttribute('columns') || '',10)
+              if (isNaN(Width)) { Width = 1 } else { Width = Math.max(1,Width) }
+
+              Rows[Rows.length-1].push(
+                html`<td colspan="${Width}" style=${ColumnStyle}><slot name="${SlotCount}"/></td>`
+              )
+              ColumnCount += Width
+            } else {
+              Rows[Rows.length-1].push(
+                html`<td style=${ColumnStyle}><slot name="${SlotCount}"/></td>`
+              )
+              ColumnCount += 1
+            }
+
+            if ((ColumnCount >= ColumnLimit) && (innerElements.length > 0)) {
+              Rows.push([]); ColumnCount = 0                        // start new row
+            }
+          }
+        }
+
+        return html`
+          <style>
+            :host {
+              display:block; position:relative;
+            }
+
+            #table                       { width:100% }
+            #table > tr                  { vertical-align:${verticalAlignment} }
+            #table > tr > td             { padding:${Math.round(RowGap/2)}px ${Math.round(ColumnGap/2)}px }
+            #table > tr > td:first-child { padding-left:0px }
+            #table > tr > td:last-child  { padding-right:0px }
+
+            #table > tr:first-child > td { padding-top:0px }
+            #table > tr:last-child  > td { padding-bottom:0px }
+          </style>
+
+          <table id="table">
+            ${Rows.map((Row) => html`<tr>${Row}</tr>`)}
+          </table>
+        `
+      })
+    },
+    ['Columns','ColumnStyles','ColumnGap','RowGap','valign']
+  )
+
+//------------------------------------------------------------------------------
+//--                                 rsc-deck                                 --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('deck',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      my.unobserved.activeIndex = 0
+
+      RSC.assign(my.observed,
+        RSC.IntegerPropertyInRange(my,'activeIndex', 0,Infinity),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleNumericAttribute(Name,newValue, my,'activeIndex')
+      ))
+
+      toRender(() => {
+        const innerElements:Element[] = Array.from(my.children)
+
+        const activeIndex = (
+          Math.max(0,Math.min(my.observed.activeIndex,innerElements.length-1))
+        )
+
+        innerElements.forEach((innerElement,Index) => {
+          innerElement.classList.toggle('active',Index === activeIndex)
+        }) // TODO: keep external elements unchanged
+
+        return html`
+          <style>
+            :host { display:inline-block; position:relative }
+
+            ::slotted(rsc-card) { display:none }
+            ::slotted(rsc-card.active) {
+              display:block; position:absolute;
+              left:0px; top:0px; right:0px; bottom:0px;
+            }
+          </style>
+          <slot/>
+        `
+      })
+    },
+    ['activeIndex'],
+    'rsc-card'
+  )
+
+//------------------------------------------------------------------------------
+//--                                 rsc-card                                 --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('card',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      toRender(() => html`
+        <style>
+          :host {
+            display:block; position:absolute;
+            left:0px; top:0px; right:0px; bottom:0px;
+          }
+        </style>
+        <slot/>
+      `)
+    }
+  )
+
+//------------------------------------------------------------------------------
+//--                              rsc-tab-strip                               --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('tab-strip',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      my.unobserved.activeIndex = 0
+
+      RSC.assign(my.observed,
+        RSC.IntegerPropertyInRange(my,'activeIndex', 0,Infinity),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleNumericAttribute(Name,newValue, my,'activeIndex')
+      ))
+
+      toRender(() => {
+        const innerElements:Element[] = Array.from(my.children)
+
+        const activeIndex = (
+          Math.max(0,Math.min(my.observed.activeIndex,innerElements.length-1))
+        )
+
+        innerElements.forEach((innerElement,Index) => {
+          innerElement.classList.toggle('active',Index === activeIndex)
+        }) // TODO: keep external elements unchanged
+
+        function onClick (Event:Event) {
+// @ts-ignore 2339 "closest" should exist
+          const clickedTab = Event.target.closest('rsc-tab')
+          if (! my.contains(clickedTab)) { return }
+
+          my.observed.activeIndex = innerElements.indexOf(clickedTab)
+        }
+
+        return html`
+          <style>
+            :host { display:inline-block; position:relative }
+
+            div {
+              display:inline-flex; flex-flow:row nowrap; align-items:stretch;
+              position:relative; width:100%; height:100%;
+            }
+
+            ::slotted(rsc-tab) {
+              display:inline-block; position:relative;
+              border:none; border-radius:0px;
+              border-bottom:solid 2px transparent;
+              margin:2px 10px 2px 10px; padding:0px;
+              cursor:pointer;
+            }
+
+            ::slotted(rsc-tab:first-child) { margin-left:0px }
+            ::slotted(rsc-tab:last-child)  { margin-right:0px }
+
+            ::slotted(rsc-tab.active) {
+              border-bottom:solid 2px black;
+            }
+          </style>
+          <div onClick=${onClick}><slot/></div>
+        `
+      })
+    },
+    ['Value','activeIndex'],
+    'rsc-tab'
+  )
+
+//------------------------------------------------------------------------------
+//--                                 rsc-tab                                  --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('tab',undefined)
 
 //------------------------------------------------------------------------------
 //--                      Property Convenience Functions                      --
