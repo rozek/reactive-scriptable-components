@@ -1793,7 +1793,7 @@ console.error('rendering failure',Signal)
         return html`
           <style>
             :host {
-              display:block; position:relative;
+              display:inline-block; position:relative;
               background:white; color:black;
               font-size:14px; font-weight:normal; line-height:1.4;
             }
