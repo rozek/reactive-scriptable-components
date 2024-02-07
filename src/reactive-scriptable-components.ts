@@ -2677,6 +2677,641 @@ console.error('rendering failure',Signal)
   )
 
 //------------------------------------------------------------------------------
+//--                            rsc-file-drop-area                            --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('file-drop-area',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      RSC.assign(my.unobserved,{
+        Value:[], multiple:false, FileInfoList:[],     // "Value" is always an array
+        acceptableFileTypes:'',
+      })
+
+      RSC.assign(my.observed,
+        RSC.StringListProperty(my,'Value',               [],    'list of chosen files'),
+        {
+          get FileInfoList () { return my.unobserved.FileInfoList.map((Info:Indexable) => ({...Info})) },
+          set FileInfoList (newValue) {
+            JIL.allowListSatisfying('FileInfoList value',newValue, (Value:any) => {
+              (Value == null) || (
+                (typeof Value === 'object') &&
+                JIL.ValueIsString(Value.name)  && JIL.ValueIsString(Value.type) &&
+                JIL.ValueIsOrdinal(Value.size) && JIL.ValueIsOrdinal(Value.lastModified)
+              )
+            })
+            my.unobserved.FileInfoList = (newValue || []).map((FileInfo:Indexable) => {
+              let { name,type,size,lastModified } = FileInfo
+              return { Name:name, Type:type, Size:size, lastModified }
+            })
+          }
+        },
+        RSC.BooleanProperty   (my,'multiple',            false, 'multiplicity setting'),
+        RSC.TextlineProperty  (my,'acceptableFileTypes', '',    'acceptable file types'),
+        RSC.BooleanProperty   (my,'enabled',             true,  'enable setting'),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleEventAttribute  (Name,newValue, my,'Value-Changed')    ||
+        RSC.handleEventAttribute  (Name,newValue, my,'Choice-Cancelled') ||
+        RSC.ignoreAttribute       (Name,newValue, my,'Value')            ||
+        RSC.handleLiteralAttribute(Name,newValue, my,'accept','acceptableFileTypes') ||
+        RSC.handleBooleanAttribute(Name,newValue, my,'multiple')         ||
+        RSC.ignoreAttribute       (Name,newValue, my,'FileInfoList')     ||
+        RSC.handleBooleanAttribute(Name,newValue, my,'enabled')
+      )) // other attributes will be handled automatically
+
+      toRender(() => {
+        let { multiple, acceptableFileTypes } = my.observed
+
+        function acceptableFilesIn (chosenFiles:Indexable[]) {
+          const acceptableSuffixes = acceptableFileTypes.split(',')
+            .filter((Suffix:string) => Suffix.indexOf('/') < 0)
+            .map((Suffix:string) => Suffix.trim())
+          return chosenFiles.filter((File) => (
+            acceptableSuffixes.some((Suffix:string) => File.name.endsWith(Suffix))
+          ))
+        }
+
+        function onChange (Event:Event) {
+          Event.stopImmediatePropagation() // use "value-changed" instead of "change"
+
+// @ts-ignore 2339 allow "files" access
+          const chosenFiles = acceptableFilesIn(Array.from(Event.target.files))
+    //    if (chosenFiles.length === 0) { return }      // no, deliver an empty list
+
+          my.observed.Value        = chosenFiles.map((FileInfo) => FileInfo.name)
+          my.observed.FileInfoList = chosenFiles.slice()
+
+          trigger('value-changed',[chosenFiles.map((FileInfo) => FileInfo.name)])
+        }
+
+        function onCancel (Event:Event) {
+          Event.stopImmediatePropagation()
+          trigger('choice-canceled')
+        }
+
+        function onDragOver (Event:Event) {
+          Event.preventDefault()
+
+// @ts-ignore 2339 allow "files" access
+          const acceptableFiles = acceptableFilesIn(Array.from(Event.target.files))
+// @ts-ignore 2339 allow "datatransfer" access
+          if (acceptableFiles.length === 0) { Event.dataTransfer.dropEffect = 'none' }
+        }
+
+        function onDrop (DropEvent:Event) {
+          DropEvent.preventDefault()
+          DropEvent.stopImmediatePropagation()
+
+          let FileInputControl = ShadowRoot.getElementById('FileInputControl')
+// @ts-ignore 2339 allow "datatransfer" access
+          FileInputControl.files = DropEvent.dataTransfer.files
+          FileInputControl.dispatchEvent(new Event('change'))
+        }
+
+        return html`
+          <style>
+            :host {
+              display:inline-block; position:relative;
+              width:260px; height:100px; min-width:260px; min-height:100px;
+              border:dashed 4px lightgray; border-radius:10px;
+              color:lightgray; text-align:center;
+            }
+            input {
+              display:inline-block; position:relative;
+              width:100%; height:100%;
+              -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+            }
+          </style>
+
+          <div style="
+            display:inline-block; position:absolute;
+            left:50%; top:50%;
+            transform:translate(-50%,-55%);
+            white-space:nowrap;
+          ">
+            <div style="font-size:22px">Drop File here</div>
+            <div style="font-size:14px">(or click/tap and select file manually)</div>
+          </div>
+          <input type="file" id="FileInputControl" style="
+            display:block; position:absolute;
+            left:0px; top:0px; width:100%; height:100%;
+            opacity:0;
+          "
+            multiple=${multiple} accept=${acceptableFileTypes}
+            onChange=${onChange} onCancel=${onCancel}
+            onDragOver=${onDragOver} onDrop=${onDrop}
+          />
+        `
+      })
+    },
+    ['Value','multiple','accept','FileInfoList','enabled']
+  )
+
+//------------------------------------------------------------------------------
+//--                              rsc-scrollpane                              --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('scrollpane',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      const permittedScrollDirections = ['none','horizontal','vertical','both']
+
+      my.unobserved.ScrollDirection = 'both'
+
+      RSC.assign(my.observed,
+        RSC.OneOfProperty(my,'ScrollDirection',permittedScrollDirections,'both'),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleSettingOrKeywordAttribute(Name,newValue, my,'ScrollDirection', permittedScrollDirections)
+      ))
+
+      toRender(() => {
+        let { ScrollDirection } = my.observed
+
+        const OverflowX = ((ScrollDirection === 'horizontal') || (ScrollDirection === 'both') ? 'scroll' : 'hidden')
+        const OverflowY = ((ScrollDirection === 'vertical')   || (ScrollDirection === 'both') ? 'scroll' : 'hidden')
+
+        const Overflow = (OverflowX === OverflowY ? OverflowX : OverflowX + ' ' + OverflowY)
+
+        return html`
+          <style>
+            :host {
+              display:inline-block; position:relative;
+              overflow:${Overflow}; overflow-x:${OverflowX}; overflow-y:${OverflowY};
+            }
+          </style>
+          <slot/>
+        `
+      })
+    },
+    ['ScrollDirection']
+  )
+
+//------------------------------------------------------------------------------
+//--                            rsc-flat-list-view                            --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('flat-list-view',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      const DefaultItemRenderer = 'return Item'
+      const DefaultItemStyling  = `
+        div {
+          display:block; position:relative; overflow:hidden;
+          height:22px; line-height:22px; padding:0px 0px 0px 4px;
+          border:none; border-bottom:solid 1px lightgray;
+          background:none;
+          white-space:nowrap; text-overflow:ellipsis;
+        }
+        div:last-child { border:none; border-bottom:solid 1px transparent }
+        div.selected   { background:dodgerblue; color:white }
+      `
+      const DefaultItemSelector = ''                // i.e., uses built-in selection
+
+      RSC.assign(my.unobserved,{
+        Value:[], Placeholder:'(empty list)',
+        selectedIndices:[], SelectionLimit:1,
+        ItemRenderer:DefaultItemRenderer, ItemStyling:DefaultItemStyling,
+        ItemSelector:DefaultItemSelector
+      })
+
+      RSC.assign(my.observed,
+        RSC.ListProperty              (my,'Value',           [],                  'item list'),
+        RSC.TextProperty              (my,'Placeholder',     '(empty list)',      'placeholder'),
+        RSC.IntegerListPropertyInRange(my,'selectedIndices', 0,Infinity, [],      'list of selected item indices'),
+        RSC.IntegerPropertyInRange    (my,'SelectionLimit',  0,Infinity, 1,       'max. number of selected items'),
+        RSC.TextProperty              (my,'ItemRenderer',    DefaultItemRenderer, 'item renderer code'),
+        RSC.TextProperty              (my,'ItemStyling',     DefaultItemStyling,  'item styling'),
+        RSC.TextProperty              (my,'ItemSelector',    DefaultItemSelector, 'item selector code'),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleEventAttribute  (Name,newValue, my,'item-clicked')    ||
+        RSC.handleEventAttribute  (Name,newValue, my,'item-selected')   ||
+        RSC.handleEventAttribute  (Name,newValue, my,'item-deselected') ||
+        RSC.handleNumericAttribute(Name,newValue, my,'selectedIndices') ||
+        RSC.handleNumericAttribute(Name,newValue, my,'SelectionLimit')
+      )) // other attributes will be handled automatically
+
+      toRender(() => {
+        let Value = my.observed.Value
+        const {
+          Placeholder, selectedIndices,SelectionLimit,
+          ItemRenderer,ItemStyling,ItemSelector
+        } = my.observed
+
+        if (selectedIndices.length > SelectionLimit) {
+          my.observed.selectedIndices = selectedIndices.slice(0,SelectionLimit)
+          return                      // "toRender" will be called again in a moment
+        }
+
+        function ItemIsSelected (Index:number):boolean {
+          return (selectedIndices.indexOf(Index) >= 0)
+        }
+
+        let compiledRenderer:Function
+        try {
+          compiledRenderer = new Function('my,Item,Index,ItemIsSelected',ItemRenderer)
+        } catch (Signal) {
+          RSC.throwError('"ItemRenderer" compilation error: ' + Signal)
+        }
+
+        let renderedItems = []
+        try {
+          if (! Array.isArray(Value)) { Value = [] }
+
+          renderedItems = Value.map((Item:any,Index:number) => {
+            let renderedItem = compiledRenderer(my,Item,Index, ItemIsSelected(Index))
+            if (! JIL.ValueIsText(renderedItem)) JIL.throwError(
+              'Item Rendering Failure: rendering of item #' + Index + ' did not ' +
+              'produce proper HTML code'
+            )
+            return renderedItem
+          })
+        } catch (Signal) {
+          RSC.throwError('"ItemRenderer" or "ItemIsSelected" execution error: ' + Signal)
+        }
+
+        let compiledSelector:Function
+        if (ItemSelector.trim() !== '') try {
+          compiledRenderer = new Function('my,Item,Index,ItemIsSelected',ItemSelector)
+        } catch (Signal) {
+          RSC.throwError('"ItemSelector" compilation error: ' + Signal)
+        }
+
+        function onClick (Event:Event) {
+          Event.stopImmediatePropagation()
+          Event.preventDefault()
+
+// @ts-ignore 2339 allow "getAttribute" access
+          const ItemIndex = parseInt(Event.currentTarget.getAttribute('id'),10)
+          if (isNaN(ItemIndex)) { return }                        // just in case...
+
+          if (compiledSelector == null) {
+            if (SelectionLimit === 0) { return }
+
+            let selectedItemIndex, deselectedItemIndex
+            const SelectionIndex = selectedIndices.indexOf(ItemIndex)
+            if (SelectionIndex < 0) {
+              if (selectedIndices.length === SelectionLimit) {
+                deselectedItemIndex = selectedIndices.shift()
+              }
+              selectedIndices.push(selectedItemIndex = ItemIndex)
+            } else {
+              deselectedItemIndex = selectedIndices.splice(SelectionIndex,1)[0]
+            }
+            my.observed.selectedIndices = selectedIndices
+
+            if (deselectedItemIndex != null) { trigger('item-deselected',[deselectedItemIndex, Value[deselectedItemIndex]]) }
+            if (selectedItemIndex   != null) { trigger('item-selected',  [selectedItemIndex,   Value[selectedItemIndex]]) }
+          } else {
+            try {
+              ItemSelector(my,ItemIndex, Value,selectedIndices,SelectionLimit)
+            } catch (Signal) {
+              RSC.throwError('"ItemSelector" execution error: ' + Signal)
+            }
+          }
+
+          trigger('item-clicked',[ItemIndex, Value[ItemIndex]])
+        }
+
+        return html`
+          <style>
+            :host {
+              display:inline-block; position:relative;
+              left:0px; top:0px; width:100%; height:100%;
+              overflow:auto scroll; overflow-x:auto; overflow-y:scroll;
+            }
+
+            :host > div {
+              display:block; position:relative;
+            }
+
+            ${ItemStyling}
+          </style>
+
+          ${renderedItems.length === 0
+          ? html`<rsc-centered>${Placeholder}</rsc-centered>`
+          : renderedItems.map((renderedItem:any,Index:number) => html`
+              <div id=${Index} class=${ItemIsSelected(Index) ? 'selected' : undefined}
+                dangerouslySetInnerHTML=${{__html:renderedItem}}
+                onClick=${onClick}
+              />
+            `)
+          }
+        `
+      })
+    },
+    ['Value','Placeholder','selectedIndices','SelectionLimit','ItemRenderer','ItemStyling','ItemSelector']
+  )
+
+//------------------------------------------------------------------------------
+//--                           rsc-nested-list-view                           --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('nested-list-view',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
+      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
+      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
+      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      const DefaultItemStyling  = `
+        div {
+          display:block; position:relative; overflow:hidden;
+          height:22px; line-height:22px; padding:0px 0px 0px 4px;
+          border:none; border-bottom:solid 1px lightgray;
+          background:none;
+          white-space:nowrap; text-overflow:ellipsis;
+        }
+        div:last-child { border:none; border-bottom:solid 1px transparent }
+        div.selected   { background:dodgerblue; color:white }
+        div > img      { width:10px; height:10px }
+      `
+
+      RSC.assign(my.unobserved,{
+        Value:[], Placeholder:'(empty list)',
+        selectedPaths:[], SelectionLimit:1, SelectionMode:'same-container',
+        expandedPaths:[], Indentation:10,
+        ItemLabel:'', ItemContentList:'',
+        ItemRenderer:'', ItemStyling:DefaultItemStyling,
+        ItemSelector:'', ItemExpander:'',
+      })
+
+      function ValueIsIndexPath (Value:any):boolean {
+        return JIL.ValueIsListSatisfying(Value,JIL.ValueIsOrdinal)
+      }
+
+      RSC.assign(my.observed,
+        RSC.ListProperty          (my,'Value',           [],                 'item list'),
+        RSC.TextProperty          (my,'Placeholder',     '(empty list)',     'placeholder'),
+        RSC.ListPropertySatisfying(my,'selectedPaths', ValueIsIndexPath, [], 'list of selected item paths'),
+        RSC.IntegerPropertyInRange(my,'SelectionLimit',  0,Infinity, 1,      'max. number of selected items'),
+        RSC.OneOfProperty         (my,'SelectionMode',   ['any-container','same-container'], 'same-container', 'selection mode'),
+        RSC.IntegerPropertyInRange(my,'Indentation',     0,Infinity, 10,     'sublist indentation'),
+        RSC.ListPropertySatisfying(my,'expandedPaths', ValueIsIndexPath, [], 'list of expanded item paths'),
+        RSC.TextProperty          (my,'ItemLabel',       '',                 'item label retrieval code'),
+        RSC.TextProperty          (my,'ItemContentList', '',                 'item content list retrieval code'),
+        RSC.TextProperty          (my,'ItemRenderer',    '',                 'item renderer code'),
+        RSC.TextProperty          (my,'ItemStyling',     DefaultItemStyling, 'item styling'),
+      )
+
+      onAttributeChange((Name, newValue) => (
+        RSC.handleEventAttribute  (Name,newValue, my,'item-clicked')    ||
+        RSC.handleEventAttribute  (Name,newValue, my,'item-selected')   ||
+        RSC.handleEventAttribute  (Name,newValue, my,'item-deselected') ||
+        RSC.handleEventAttribute  (Name,newValue, my,'item-expanded')   ||
+        RSC.handleEventAttribute  (Name,newValue, my,'item-collapsed')  ||
+        RSC.handleNumericAttribute(Name,newValue, my,'SelectionLimit')  ||
+        RSC.handleNumericAttribute(Name,newValue, my,'Indentation')
+      )) // other attributes will be handled automatically
+
+      toRender(() => {
+        let {
+          Value, Placeholder, selectedPaths,SelectionLimit,SelectionMode,
+          expandedPaths,Indentation, ItemLabel,ItemContentList, ItemRenderer,ItemStyling
+        } = my.observed
+
+      /**** check if a given item is selected or expanded ****/
+
+        function PathsAreEqual (PathA:number[],PathB:number[]):boolean {
+          return (
+            (PathA.length === PathB.length) &&
+            PathA.every((Item,Index) => Item === PathB[Index])
+          )
+        }
+
+        function IndexOfPathIn (Path:number[],PathList:number[][]):number {
+          for (let i = 0, l = PathList.length; i < l; i++) {
+            if (PathsAreEqual(Path,PathList[i])) { return i }
+          }
+          return -1
+        }
+
+        function ItemIsSelected (Path:number[]):boolean { return (IndexOfPathIn(Path,selectedPaths) >= 0) }
+        function ItemIsExpanded (Path:number[]):boolean { return (IndexOfPathIn(Path,expandedPaths) >= 0) }
+
+      /**** retrieve item label and content list ****/
+
+        let LabelOfItem = (Item:Indexable) => Item.Label
+        if (ItemLabel.trim() !== '') try {
+// @ts-ignore 2322 allow function assignment
+          LabelOfItem = new Function('Item',ItemLabel)
+        } catch (Signal) {
+          RSC.throwError('"ItemLabel" compilation error: ' + Signal)
+        }
+
+        let ContentListOfItem = (Item:Indexable) => Item.ContentList
+        if (ItemContentList.trim() !== '') try {
+// @ts-ignore 2322 allow function assignment
+          ContentListOfItem = new Function('Item',ItemContentList)
+        } catch (Signal) {
+          RSC.throwError('"ItemContentList" compilation error: ' + Signal)
+        }
+
+      /**** prepare item renderer ****/
+
+// @ts-ignore 7006 allow untyped parameters in this literal
+        let RendererOfItem = (my,Item,Path,ItemIsSelected,ItemHasContent,ItemIsExpanded) => {
+          if (ItemHasContent) {
+            if (ItemIsExpanded) {
+              return '<img class="ExpansionMarker" src="/svg/icons/caret-down.svg"/> ' + LabelOfItem(Item)
+            } else {
+              return '<img class="ExpansionMarker" src="/svg/icons/caret-right.svg"/> ' + LabelOfItem(Item)
+            }
+          } else {
+            return '<img src="/svg/icons/circle.svg"/> ' + LabelOfItem(Item)
+          }
+        }
+        if (ItemRenderer.trim() !== '') try {
+// @ts-ignore 2322 allow function assignment
+          RendererOfItem = new Function('my,Item,Path,ItemIsSelected,ItemHasContent,ItemIsExpanded',ItemRenderer)
+        } catch (Signal) {
+          RSC.throwError('"ItemRenderer" compilation error: ' + Signal)
+        }
+
+      /**** prepare click handling ****/
+
+        function ItemNotInContainer (ItemPath:number[],ContainerPath:number[]):boolean {
+          return (
+            (ItemPath.length !== ContainerPath.length+1) ||
+            ! PathsAreEqual(ItemPath.slice(0,ContainerPath.length),ContainerPath)
+          )
+        }
+
+        function onClick (Event:Event):void {
+          Event.stopImmediatePropagation()
+          Event.preventDefault()
+
+// @ts-ignore 2339 allow "getAttribute" access
+          const ItemPath = Event.currentTarget.getAttribute('id').split('-')
+            .map((PathItem:string) => parseInt(PathItem,10))
+
+// @ts-ignore 2339 allow "classList" access
+          if (Event.target.classList.contains('ExpansionMarker')) {
+            onExpansionClick(ItemPath)
+          } else {
+            onSelectionClick(ItemPath)
+          }
+        }
+
+        function onSelectionClick (Path:number[]):void {
+          let SelectionIndex = IndexOfPathIn(Path,selectedPaths)
+          if (SelectionIndex < 0) {
+            let deselectedPaths:number[][] = []
+            if (SelectionMode === 'same-container') {
+              let ContainerPath = Path.slice(0,Path.length-1)
+              for (let i = selectedPaths.length-1; i >= 0; i--) {
+                if (ItemNotInContainer(selectedPaths[i],ContainerPath)) {
+                  deselectedPaths = deselectedPaths.concat(selectedPaths.splice(i,1))
+                }
+              }
+            }
+            if (selectedPaths.length >= SelectionLimit) {
+              deselectedPaths = deselectedPaths.concat(
+                selectedPaths.splice(0,selectedPaths.length-SelectionLimit+1)
+              )
+            }
+
+            selectedPaths.push(Path)
+            my.observed.selectedPaths = selectedPaths
+
+            deselectedPaths.forEach(
+              (Path:number[]) => trigger('item-deselected',[Path])
+            )
+            trigger('item-selected',[Path])
+          } else {
+            selectedPaths.splice(SelectionIndex,1)
+            my.observed.selectedPaths = selectedPaths
+            trigger('item-deselected',[Path])
+          }
+        }
+
+        function onExpansionClick (Path:number[]):void {
+          let ExpansionIndex = IndexOfPathIn(Path,expandedPaths)
+          if (ExpansionIndex < 0) {
+            expandedPaths.push(Path)
+            my.observed.expandedPaths = expandedPaths
+            trigger('item-expanded',[Path])
+          } else {
+            expandedPaths.splice(ExpansionIndex,1)
+            my.observed.expandedPaths = expandedPaths
+            trigger('item-collapsed',[Path])
+          }
+        }
+
+      /**** render a given (sub)list of items ****/
+
+        function renderListInto (
+          ItemList:any[], curIndentation:number, BasePath:number[],
+          renderedItems:any[]
+        ):void {
+          for (let i = 0, l = ItemList.length; i < l; i++) {
+            let Item        = ItemList[i]
+            let ItemPath    = BasePath.concat(i)
+            let ContentList = ContentListOfItem(Item) || []
+            let isSelected  = ItemIsSelected(ItemPath)
+            let isExpanded  = ItemIsExpanded(ItemPath)
+
+            try {
+              let renderedItem = RendererOfItem(
+                my,Item,ItemPath,isSelected,(ContentList.length > 0),isExpanded
+              )
+
+              if (! JIL.ValueIsText(renderedItem)) JIL.throwError(
+                'Item Rendering Failure: rendering of item [' + ItemPath.join(',') + '] did not ' +
+                'produce proper HTML code'
+              )
+
+              renderedItems.push(html`
+                <div id=${ItemPath.join('-')} class=${isSelected ? 'selected' : undefined}
+                  style="padding-left:${10+curIndentation}px"
+                  dangerouslySetInnerHTML=${{__html:renderedItem}}
+                  onClick=${onClick}
+                />
+              `)
+
+              if (isExpanded) {
+                renderListInto(ContentList, curIndentation+Indentation, ItemPath, renderedItems)
+              }
+            } catch (Signal) {
+              RSC.throwError('Rendering of item [' + ItemPath.join(',') + '] failed: ' + Signal)
+            }
+          }
+        }
+
+      /**** now render the whole list ****/
+
+        let renderedItems:any[] = []
+        renderListInto(Value, 0, [], renderedItems)
+
+        return html`
+          <style>
+            :host {
+              display:inline-block; position:relative;
+              left:0px; top:0px; width:100%; height:100%;
+              overflow:auto scroll; overflow-x:auto; overflow-y:scroll;
+            }
+            :host > div      { display:block; position:relative }
+            .ExpansionMarker { display:inline-block; position:relative }
+
+            ${ItemStyling}
+          </style>
+
+          ${renderedItems.length === 0
+            ? html`<rsc-centered>${Placeholder}</rsc-centered>`
+            : renderedItems
+          }
+        `
+      })
+    },
+    ['Value','Placeholder','selectedPaths','SelectionLimit','SelectionMode','expandedPaths','Indentation','ItemLabel','ItemContentList','ItemRenderer','ItemStyling']
+  )
+
+//------------------------------------------------------------------------------
 //--                      Property Convenience Functions                      --
 //------------------------------------------------------------------------------
 
