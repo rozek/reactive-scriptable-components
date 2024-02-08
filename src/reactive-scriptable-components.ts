@@ -315,7 +315,6 @@ namespace RSC {
     permittedContents:string = '', forbiddenContents:string = ''
   ):void {
     expectName('behaviour name',Name)
-console.log('registering behaviour',Name)
 
     if ((SourceOrExecutable != null) && ! ValueIsFunction(SourceOrExecutable)) {
       expectText('behaviour script',SourceOrExecutable)
@@ -419,6 +418,7 @@ console.log('registering behaviour',Name)
       'list of valid RSC attribute names'
     )
 
+console.log('registering behaviour',Name)
     registerBehaviour(
       Name, Source, observedAttributes,
       ScriptElement.getAttribute('permitted-contents') || '',
@@ -1795,6 +1795,7 @@ console.error('rendering failure',Signal)
             :host {
               display:inline-block; position:relative;
               background:white; color:black;
+              font-family:'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
               font-size:14px; font-weight:normal; line-height:1.4;
             }
           </style>
@@ -3120,7 +3121,7 @@ console.error('rendering failure',Signal)
         Size:undefined, minLength:0, maxLength:undefined,
         Pattern:undefined, Placeholder:undefined, readonly:false,
         SpellChecking:'default', Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -3135,6 +3136,7 @@ console.error('rendering failure',Signal)
         RSC.OneOfProperty         (my,'SpellChecking',permittedSpellCheckValues,'default','spell-check setting'),
         RSC.StringListProperty    (my,'Suggestions',[],   'list of suggestions'),
         RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -3150,7 +3152,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
-          SpellChecking, Suggestions
+          SpellChecking, Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -3194,14 +3196,17 @@ console.error('rendering failure',Signal)
           <input type="text" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
             pattern=${Pattern} placeholder=${Placeholder}
-            spellcheck=${SpellChecking} readonly=${readonly}
+            spellcheck=${SpellChecking} readonly=${readonly} style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Size','minLength','maxLength','Pattern','Placeholder','readonly','SpellChecking','Suggestions','enabled']
+    [
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
+      'SpellChecking','Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -3226,7 +3231,7 @@ console.error('rendering failure',Signal)
         Value:'',
         Size:undefined, minLength:0, maxLength:undefined,
         Pattern:undefined, Placeholder:undefined, readonly:false,
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -3239,6 +3244,7 @@ console.error('rendering failure',Signal)
         RSC.TextlineProperty      (my,'Placeholder',null, 'input placeholder'),
         RSC.BooleanProperty       (my,'readonly',   false,'read-only setting'),
         RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -3251,7 +3257,9 @@ console.error('rendering failure',Signal)
       )) // other attributes will be handled automatically
 
       toRender(() => {
-        let { Value, Size, minLength,maxLength, Pattern, Placeholder, readonly } = my.observed
+        let {
+          Value, Size, minLength,maxLength, Pattern, Placeholder, readonly, innerStyle
+        } = my.observed
 
         if (document.activeElement === me) {
           Value = my.unobserved.renderedValue
@@ -3280,12 +3288,16 @@ console.error('rendering failure',Signal)
           <input type="password" disabled=${! my.observed.enabled}
             value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
             pattern=${Pattern} placeholder=${Placeholder} readonly=${readonly}
+            style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
         `
       })
     },
-    ['Value','Size','minLength','maxLength','Pattern','Placeholder','readonly','enabled']
+    [
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
+      'enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -3311,7 +3323,7 @@ console.error('rendering failure',Signal)
         Minimum:undefined, Maximum:undefined, Stepping:'any',
         Suggestions:[],
         Placeholder:undefined, readonly:false,
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. Minimum > Maximum)
 
@@ -3332,6 +3344,7 @@ console.error('rendering failure',Signal)
         RSC.BooleanProperty   (my,'readonly',   false,'read-only setting'),
         RSC.NumberListProperty(my,'Suggestions',[],   'list of suggestions'),
         RSC.BooleanProperty   (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty      (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -3360,7 +3373,8 @@ console.error('rendering failure',Signal)
 
       toRender(() => {
         let {
-          Value, Minimum,Maximum,Stepping, Pattern, Placeholder, readonly, Suggestions
+          Value, Minimum,Maximum,Stepping, Pattern, Placeholder, readonly,
+          Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -3403,13 +3417,17 @@ console.error('rendering failure',Signal)
             value=${isNaN(Value) ? '' : Value}
             min=${Minimum} max=${Maximum} step=${Stepping}
             pattern=${Pattern} placeholder=${Placeholder} readonly=${readonly}
+            style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Minimum','Maximum','Stepping','Placeholder','readonly','Suggestions','enabled']
+    [
+      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
+      'Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -3435,7 +3453,7 @@ console.error('rendering failure',Signal)
         Size:undefined, minLength:0, maxLength:undefined,
         Pattern:undefined, Placeholder:undefined, readonly:false,
         Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -3449,6 +3467,7 @@ console.error('rendering failure',Signal)
         RSC.BooleanProperty       (my,'readonly',   false,'read-only settingg'),
         RSC.StringListProperty    (my,'Suggestions',[],   'list of suggestions'),
         RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -3464,7 +3483,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
-          Suggestions
+          Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -3504,14 +3523,17 @@ console.error('rendering failure',Signal)
           <input type="tel" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
             pattern=${Pattern} placeholder=${Placeholder}
-            readonly=${readonly}
+            readonly=${readonly} style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Size','minLength','maxLength','Pattern','Placeholder','readonly','Suggestions','enabled']
+    [
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
+      'Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -3537,7 +3559,7 @@ console.error('rendering failure',Signal)
         Size:undefined, minLength:0, maxLength:undefined,
         Pattern:undefined, Placeholder:undefined, readonly:false,
         Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:[] // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -3564,6 +3586,7 @@ console.error('rendering failure',Signal)
           },
         },
         RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -3581,7 +3604,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Size, multiple, minLength,maxLength, Pattern, Placeholder, readonly,
-          Suggestions
+          Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -3621,14 +3644,17 @@ console.error('rendering failure',Signal)
           <input type="email" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value.join(',')} size=${Size} minlength=${minLength} maxlength=${maxLength}
             pattern=${Pattern} placeholder=${Placeholder}
-            readonly=${readonly}
+            readonly=${readonly} style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Size','multiple','minLength','maxLength','Pattern','Placeholder','readonly','Suggestions','enabled']
+    [
+      'Value','Size','multiple','minLength','maxLength','Pattern','Placeholder',
+      'readonly','Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -3654,7 +3680,7 @@ console.error('rendering failure',Signal)
         Size:undefined, minLength:0, maxLength:undefined,
         Pattern:undefined, Placeholder:undefined, readonly:false,
         Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -3668,6 +3694,7 @@ console.error('rendering failure',Signal)
         RSC.BooleanProperty       (my,'readonly',   false,'read-only setting'),
         RSC.StringListProperty    (my,'Suggestions',[],   'list of suggestions'),
         RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -3683,7 +3710,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
-          Suggestions
+          Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -3723,14 +3750,17 @@ console.error('rendering failure',Signal)
           <input type="url" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
             pattern=${Pattern} placeholder=${Placeholder}
-            readonly=${readonly}
+            readonly=${readonly} style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Size','minLength','maxLength','Pattern','Placeholder','readonly','Suggestions','enabled']
+    [
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
+      'Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -3763,7 +3793,7 @@ console.error('rendering failure',Signal)
         Minimum:undefined, Maximum:undefined, Stepping:60,
         Placeholder:undefined, readonly:false,
         Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -3806,6 +3836,7 @@ console.error('rendering failure',Signal)
           },
         },
         RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -3832,7 +3863,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions
+          Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -3872,13 +3903,17 @@ console.error('rendering failure',Signal)
           <input type="time" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
             pattern=${TimePattern} placeholder=${Placeholder} readonly=${readonly}
+            style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Minimum','Maximum','Stepping','Placeholder','readonly','Suggestions','enabled']
+    [
+      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
+      'Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -3911,7 +3946,7 @@ console.error('rendering failure',Signal)
         Minimum:undefined, Maximum:undefined, Stepping:60,
         Placeholder:undefined, readonly:false,
         Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -3954,6 +3989,7 @@ console.error('rendering failure',Signal)
           },
         },
         RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -3980,7 +4016,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions
+          Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -4020,13 +4056,17 @@ console.error('rendering failure',Signal)
           <input type="datetime-local" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
             pattern=${DateTimePattern} placeholder=${Placeholder} readonly=${readonly}
+            style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Minimum','Maximum','Stepping','Placeholder','readonly','Suggestions','enabled']
+    [
+      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
+      'Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -4059,7 +4099,7 @@ console.error('rendering failure',Signal)
         Minimum:undefined, Maximum:undefined, Stepping:1,
         Placeholder:undefined, readonly:false,
         Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -4102,6 +4142,7 @@ console.error('rendering failure',Signal)
           },
         },
         RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -4128,7 +4169,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions
+          Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -4168,13 +4209,17 @@ console.error('rendering failure',Signal)
           <input type="date" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
             pattern=${DatePattern} placeholder=${Placeholder} readonly=${readonly}
+            style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Minimum','Maximum','Stepping','Placeholder','readonly','Suggestions','enabled']
+    [
+      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
+      'Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -4207,7 +4252,7 @@ console.error('rendering failure',Signal)
         Minimum:undefined, Maximum:undefined, Stepping:1,
         Placeholder:undefined, readonly:false,
         Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -4250,6 +4295,7 @@ console.error('rendering failure',Signal)
           },
         },
         RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -4276,7 +4322,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions
+          Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -4316,13 +4362,17 @@ console.error('rendering failure',Signal)
           <input type="week" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
             pattern=${WeekPattern} placeholder=${Placeholder} readonly=${readonly}
+            style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Minimum','Maximum','Stepping','Placeholder','readonly','Suggestions','enabled']
+    [
+      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
+      'Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -4355,7 +4405,7 @@ console.error('rendering failure',Signal)
         Minimum:undefined, Maximum:undefined, Stepping:1,
         Placeholder:undefined, readonly:false,
         Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -4398,6 +4448,7 @@ console.error('rendering failure',Signal)
           },
         },
         RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -4424,7 +4475,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions
+          Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -4464,13 +4515,17 @@ console.error('rendering failure',Signal)
           <input type="month" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
             pattern=${MonthPattern} placeholder=${Placeholder} readonly=${readonly}
+            style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Minimum','Maximum','Stepping','Placeholder','readonly','Suggestions','enabled']
+    [
+      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
+      'Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -4498,7 +4553,7 @@ console.error('rendering failure',Signal)
         Size:undefined, minLength:0, maxLength:undefined,
         Pattern:undefined, Placeholder:undefined, readonly:false,
         SpellChecking:'default', Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -4513,6 +4568,7 @@ console.error('rendering failure',Signal)
         RSC.OneOfProperty         (my,'SpellChecking',permittedSpellCheckValues,'default','spell-check setting'),
         RSC.StringListProperty    (my,'Suggestions',[],   'list of suggestions'),
         RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -4528,7 +4584,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
-          SpellChecking, Suggestions
+          SpellChecking, Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -4572,14 +4628,17 @@ console.error('rendering failure',Signal)
           <input type="search" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
             pattern=${Pattern} placeholder=${Placeholder}
-            spellcheck=${SpellChecking} readonly=${readonly}
+            spellcheck=${SpellChecking} readonly=${readonly} style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Size','minLength','maxLength','Pattern','Placeholder','readonly','SpellChecking','Suggestions','enabled']
+    [
+      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
+      'SpellChecking','Suggestions','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
@@ -4603,7 +4662,7 @@ console.error('rendering failure',Signal)
       RSC.assign(my.unobserved,{
         Value:'',
         Suggestions:[],
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       })
 
@@ -4621,7 +4680,8 @@ console.error('rendering failure',Signal)
             my.unobserved.Suggestions = (newValue == null ? [] : newValue.slice())
           },
         },
-        RSC.BooleanProperty(my,'enabled', true, 'enable setting'),
+        RSC.BooleanProperty(my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty   (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -4631,7 +4691,7 @@ console.error('rendering failure',Signal)
       )) // other attributes will be handled automatically
 
       toRender(() => {
-        let { Value, Suggestions } = my.observed
+        let { Value, Suggestions, innerStyle } = my.observed
 
         if (document.activeElement === me) {
           Value = my.unobserved.renderedValue
@@ -4668,14 +4728,14 @@ console.error('rendering failure',Signal)
             }
           </style>
           <input type="color" list=${UUID} disabled=${! my.observed.enabled}
-            value=${Value}
+            value=${Value} style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
           ${DataList}
         `
       })
     },
-    ['Value','Suggestions','enabled']
+    ['Value','Suggestions','enabled','innerStyle']
   )
 
 //------------------------------------------------------------------------------
@@ -4736,7 +4796,7 @@ console.error('rendering failure',Signal)
       )) // other attributes will be handled automatically
 
       toRender(() => {
-        let { Value, Size } = my.unobserved            // "Value" is always an array
+        let { Value, Size } = my.unobserved        // "Value" is always an array
 
         if (document.activeElement === me) {
           Value = my.unobserved.renderedValue
@@ -4814,7 +4874,7 @@ console.error('rendering failure',Signal)
         minLength:0, maxLength:undefined,
         Pattern:undefined, Placeholder:undefined, readonly:false,
         SpellChecking:'default',
-        enabled:true,
+        enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
       }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
@@ -4830,6 +4890,7 @@ console.error('rendering failure',Signal)
         RSC.BooleanProperty       (my,'readonly',   false,'read-only setting'),
         RSC.OneOfProperty         (my,'SpellChecking',permittedSpellCheckValues,'default','spell-check setting'),
         RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
+        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
       )
 
       onAttributeChange((Name, newValue) => (
@@ -4846,7 +4907,7 @@ console.error('rendering failure',Signal)
       toRender(() => {
         let {
           Value, LineWrapping, Rows, resizable, minLength,maxLength,
-          Placeholder, readonly, SpellChecking
+          Placeholder, readonly, SpellChecking, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -4859,7 +4920,7 @@ console.error('rendering failure',Signal)
           SpellChecking === 'default' ? undefined : (SpellChecking === 'enabled')
         )
 
-        const Style = (resizable ? 'resize:both' : 'resize:none')
+        const Style = (resizable ? 'resize:both' : 'resize:none') + '; ' + innerStyle
 
         function onInput (Event:Event) {
 // @ts-ignore 2339 allow "checked" access
@@ -4883,13 +4944,16 @@ console.error('rendering failure',Signal)
           <textarea disabled=${! my.observed.enabled} style=${Style}
             readonly=${readonly} rows=${Rows} wrap=${LineWrapping ? 'hard' : 'soft'}
             minlength=${minLength} maxlength=${maxLength}
-            placeholder=${Placeholder} spellcheck=${SpellChecking}
+            placeholder=${Placeholder} spellcheck=${SpellChecking} style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           >${Value}</>
         `
       })
     },
-    ['Value','LineWrapping','Rows','resizable','minLength','maxLength','Placeholder','readonly','SpellChecking','enabled']
+    [
+      'Value','LineWrapping','Rows','resizable','minLength','maxLength',
+      'Placeholder','readonly','SpellChecking','enabled','innerStyle'
+    ]
   )
 
 //------------------------------------------------------------------------------
