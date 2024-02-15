@@ -1807,6 +1807,14 @@ console.error('rendering failure',Signal)
 
   customElements.define('rsc-applet', RSC_Applet)
 
+  type RSC_onAttributeChange = (Callback:(Name:string,newValue:string) => void) => void
+  type RSC_onAttachment = (Callback:(Visual:RSC_Visual) => void) => void
+  type RSC_onDetachment = RSC_onAttachment
+  type RSC_on      = (Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void
+  type RSC_once    = RSC_on
+  type RSC_off     = (Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void
+  type RSC_trigger = (EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean
+
 //------------------------------------------------------------------------------
 //--                        rsc-title/label/text/hint                         --
 //------------------------------------------------------------------------------
@@ -1832,14 +1840,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('centered',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -1850,6 +1854,7 @@ console.error('rendering failure',Signal)
             width:100%; height:100%;
           }
         </style>
+
         <div style="
           display:block; position:absolute;
           left:50%; top:50%; transform:translate(-50%,-50%);
@@ -1867,14 +1872,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('horizontal',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -1917,14 +1918,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('vertical',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -1971,14 +1968,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('tabular',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2144,14 +2137,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('equal-columns',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2252,14 +2241,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('deck',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2309,14 +2294,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('card',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2339,14 +2320,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('tab-strip',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2424,14 +2401,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('htmlview',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2460,14 +2433,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('textview',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2494,14 +2463,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('imageview',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2550,14 +2515,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('webview',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2626,14 +2587,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('icon',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2684,14 +2641,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-button',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2736,14 +2689,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-checkbox',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2811,14 +2760,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-radiobutton',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2875,14 +2820,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-gauge',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2934,14 +2875,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-progressbar',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2982,14 +2919,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-slider',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -3103,14 +3036,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-textline-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -3216,14 +3145,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-password-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -3307,14 +3232,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-number-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -3437,14 +3358,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-phonenumber-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -3543,14 +3460,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-emailaddress-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -3664,14 +3577,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-url-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -3770,14 +3679,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-time-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -3923,14 +3828,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-datetime-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -4076,14 +3977,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-date-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -4229,14 +4126,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-week-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -4382,14 +4275,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-month-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -4535,14 +4424,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-search-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -4648,14 +4533,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-color-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -4745,14 +4626,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-dropdown',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -4855,14 +4732,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('native-text-input',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -4963,14 +4836,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('file-drop-area',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -5107,14 +4976,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('scrollpane',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -5159,14 +5024,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('flat-list-view',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -5328,14 +5189,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('nested-list-view',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
