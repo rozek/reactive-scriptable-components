@@ -3088,8 +3088,8 @@ console.error('rendering failure',Signal)
       ShadowRoot:any
     ) {
       RSC.assign(my.unobserved,{
-        Value:NaN,
-        Minimum:undefined, Maximum:undefined, Stepping:'any',
+        Value:NaN, Decimals:undefined,
+        Minimum:undefined, Maximum:undefined, Stepping:undefined,
         Suggestions:[],
         Placeholder:undefined, readonly:false,
         enabled:true, innerStyle:'',
@@ -3097,9 +3097,10 @@ console.error('rendering failure',Signal)
       }) // these are configured(!) values - they may be nonsense (e.g. Minimum > Maximum)
 
       RSC.assign(my.observed,
-        RSC.NumberProperty(my,'Value',  null, 'input value'),
-        RSC.NumberProperty(my,'Minimum',null, 'minimal input value'),
-        RSC.NumberProperty(my,'Maximum',null, 'maximal input value'),
+        RSC.NumberProperty        (my,'Value',   null, 'input value'),
+        RSC.IntegerPropertyInRange(my,'Decimals',0,Infinity, null, 'visible decimals'),
+        RSC.NumberProperty        (my,'Minimum', null, 'minimal input value'),
+        RSC.NumberProperty        (my,'Maximum', null, 'maximal input value'),
         {
           get Stepping () { return my.unobserved.Stepping },
           set Stepping (newValue) {
@@ -3118,9 +3119,10 @@ console.error('rendering failure',Signal)
 
       onAttributeChange((Name, newValue) => (
         RSC.handleEventAttribute  (Name,newValue, my,'Value-Changed') ||
-        RSC.handleNumericAttribute(Name,newValue, my,'Value')   ||
-        RSC.handleNumericAttribute(Name,newValue, my,'Minimum') ||
-        RSC.handleNumericAttribute(Name,newValue, my,'Maximum') ||
+        RSC.handleNumericAttribute(Name,newValue, my,'Value')    ||
+        RSC.handleNumericAttribute(Name,newValue, my,'Decimals') ||
+        RSC.handleNumericAttribute(Name,newValue, my,'Minimum')  ||
+        RSC.handleNumericAttribute(Name,newValue, my,'Maximum')  ||
         (function () {
           if (Name === 'stepping') {
             if (newValue === 'any') {
@@ -3142,8 +3144,8 @@ console.error('rendering failure',Signal)
 
       toRender(() => {
         let {
-          Value, Minimum,Maximum,Stepping, Pattern, Placeholder, readonly,
-          Suggestions, innerStyle
+          Value, Decimals, Minimum,Maximum,Stepping, Pattern, Placeholder,
+          readonly, Suggestions, innerStyle
         } = my.observed
 
         if (document.activeElement === me) {
@@ -3182,8 +3184,9 @@ console.error('rendering failure',Signal)
               -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
             }
           </style>
-          <input type="text" list=${UUID} disabled=${! my.observed.enabled}
-            value=${isNaN(Value) ? '' : Value}
+
+          <input type="number" list=${UUID} disabled=${! my.observed.enabled}
+            value=${isNaN(Value) ? '' : Decimals == null ? Value : Value.toFixed(Decimals)}
             min=${Minimum} max=${Maximum} step=${Stepping}
             pattern=${Pattern} placeholder=${Placeholder} readonly=${readonly}
             style=${innerStyle}
@@ -3309,6 +3312,7 @@ console.error('rendering failure',Signal)
               -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
             }
           </style>
+
           <input type="email" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value.join(',')} size=${Size} minlength=${minLength} maxlength=${maxLength}
             pattern=${Pattern} placeholder=${Placeholder}
@@ -3411,6 +3415,7 @@ console.error('rendering failure',Signal)
               -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
             }
           </style>
+
           <input type="url" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
             pattern=${Pattern} placeholder=${Placeholder}
@@ -3706,6 +3711,7 @@ console.error('rendering failure',Signal)
               -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
             }
           </style>
+
           <input type="color" list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
@@ -3810,6 +3816,7 @@ console.error('rendering failure',Signal)
               -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
             }
           </style>
+
           <select disabled=${! my.observed.enabled} size=${Size}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           >
@@ -3912,6 +3919,7 @@ console.error('rendering failure',Signal)
               -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
             }
           </style>
+
           <textarea disabled=${! my.observed.enabled} style=${Style}
             readonly=${readonly} rows=${Rows} wrap=${LineWrapping ? 'hard' : 'soft'}
             minlength=${minLength} maxlength=${maxLength}
@@ -4544,6 +4552,47 @@ console.error('rendering failure',Signal)
       })
     },
     ['Value','Placeholder','selectedPaths','SelectionLimit','SelectionMode','expandedPaths','Indentation','ItemLabel','ItemContentList','ItemRenderer','ItemStyling']
+  )
+
+//------------------------------------------------------------------------------
+//--                               rsc-powered                                --
+//------------------------------------------------------------------------------
+
+  registerBehaviour('powered',
+    function (
+      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
+      reactively:(reactiveFunction:Function) => void,
+      ShadowRoot:any
+    ) {
+      toRender(() => {
+        return html`
+          <style>
+            :host { display:block; position:relative }
+            div {
+              width:100%; overflow:visible;
+              font-size:12px;
+              text-align:right;
+            }
+            a {
+              margin:0px; padding:0px;
+              color:black;
+              text-decoration:underline dashed 1px black;
+            }
+          </style>
+
+          <div>
+            <span>powered by </span>
+            <a href="https://github.com/rozek/reactive-scriptable-components"
+              target="RSC">RSC</a>
+          </div>
+        `
+      })
+    },
+    ['ScrollDirection']
   )
 
 //------------------------------------------------------------------------------
