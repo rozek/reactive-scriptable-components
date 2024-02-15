@@ -1898,6 +1898,7 @@ console.error('rendering failure',Signal)
           <style>
             :host { display:inline-block; position:relative }
           </style>
+
           <div style="
             display:flex; position:relative; flex-flow:row nowrap;
             justify-content:${Alignment}; align-items:stretch;
@@ -1948,6 +1949,7 @@ console.error('rendering failure',Signal)
           <style>
             :host { display:inline-block; position:relative }
           </style>
+
           <div style="
             display:flex; position:relative; flex-flow:column nowrap;
             justify-content:${Alignment}; align-items:stretch;
@@ -2317,6 +2319,7 @@ console.error('rendering failure',Signal)
         <style>
           :host { display:inline-block; position:relative }
         </style>
+
         <div style="display:inline-block; position:relative; width:100%; height:100%"
           dangerouslySetInnerHTML=${{__html:my.observed.Value}}
         />
@@ -2397,6 +2400,7 @@ console.error('rendering failure',Signal)
               font-size:0px; line-height:0px
             }
           </style>
+
           <img src=${Value} style="
             object-fit:${ImageScaling === 'stretch' ? 'fill ' : ImageScaling};
             object-position:${ImageAlignment};
@@ -2469,6 +2473,7 @@ console.error('rendering failure',Signal)
               width:100%; height:100%; overflow:scroll;
             }
           </style>
+
           <iframe src=${Value} style="
           " allow=${PermissionsPolicy} allowfullscreen=${allowsFullscreen}
             sandbox=${SandboxPermissions} referrerpolicy=${ReferrerPolicy}
@@ -2643,6 +2648,7 @@ console.error('rendering failure',Signal)
           <style>
             :host { display:inline-block; position:relative }
           </style>
+
           <input type="checkbox" disabled=${! my.observed.enabled}
             checked=${isChecked} indeterminate=${isIndeterminate}
             onInput=${onInput}
@@ -2703,6 +2709,7 @@ console.error('rendering failure',Signal)
           <style>
             :host { display:inline-block; position:relative }
           </style>
+
           <input type="radio" disabled=${! my.observed.enabled}
             checked=${isChecked}
             onInput=${onInput}
@@ -2758,6 +2765,7 @@ console.error('rendering failure',Signal)
             :host { display:inline-block; position:relative }
             meter { width:100% }
           </style>
+
           <meter value=${isNaN(Value) ? '' : Value}
             min=${Minimum} low=${lowerBound} opt=${Optimum}
             high=${upperBound} max=${Maximum}
@@ -2805,6 +2813,7 @@ console.error('rendering failure',Signal)
             :host { display:inline-block; position:relative }
             progress { width:100% }
           </style>
+
           <progress value=${isNaN(Value) ? '' : Value} max=${Maximum} />
         `
       })
@@ -2917,6 +2926,7 @@ console.error('rendering failure',Signal)
               -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
             }
           </style>
+
           <input type="range" list=${UUID} disabled=${! my.observed.enabled}
             value=${isNaN(Value) ? '' : Value}
             min=${Minimum} max=${Maximum} step=${Stepping}
@@ -2933,8 +2943,13 @@ console.error('rendering failure',Signal)
 //--                        rsc-native-textline-input                         --
 //------------------------------------------------------------------------------
 
-  registerBehaviour('native-textline-input',
-    function (
+  function registerPlainStringInputBehaviour (
+    Name:RSC_Name, Type:string, observedAttributes:RSC_Name[]
+  ):void {
+    const withSpellChecking = (observedAttributes.indexOf('SpellChecking') >= 0)
+    const withSuggestions   = (observedAttributes.indexOf('Suggestions')   >= 0)
+
+    registerBehaviour(Name, function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
       onAttributeChange:RSC_onAttributeChange,
       onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
@@ -2949,10 +2964,12 @@ console.error('rendering failure',Signal)
         Value:'',
         Size:undefined, minLength:0, maxLength:undefined,
         Pattern:undefined, Placeholder:undefined, readonly:false,
-        SpellChecking:'default', Suggestions:[],
         enabled:true, innerStyle:'',
         UUID:undefined, renderedValue:'' // is used internally - do not touch!
-      }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
+      }, // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
+        (withSpellChecking ? { SpellChecking:'default' } : {}),
+        (withSuggestions   ? { Suggestions:[] } : {})
+      )
 
       RSC.assign(my.observed,
         RSC.TextlineProperty      (my,'Value',      '', 'input value'),
@@ -2962,20 +2979,27 @@ console.error('rendering failure',Signal)
         RSC.TextlineProperty      (my,'Pattern',    null, 'input pattern'),
         RSC.TextlineProperty      (my,'Placeholder',null, 'input placeholder'),
         RSC.BooleanProperty       (my,'readonly',   false,'read-only setting'),
-        RSC.OneOfProperty         (my,'SpellChecking',permittedSpellCheckValues,'default','spell-check setting'),
-        RSC.StringListProperty    (my,'Suggestions',[],   'list of suggestions'),
         RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
         RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
       )
+      if (withSpellChecking) RSC.assign(my.observed,
+        RSC.OneOfProperty(my,'SpellChecking',permittedSpellCheckValues,'default','spell-check setting'),
+      )
+      if (withSuggestions) RSC.assign(my.observed,
+        RSC.StringListProperty(my,'Suggestions',[],'list of suggestions'),
+      )
 
       onAttributeChange((Name, newValue) => (
-        RSC.handleEventAttribute       (Name,newValue, my,'Value-Changed') ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'Size')          ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'minLength')     ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'maxLength')     ||
-        RSC.handleBooleanAttribute     (Name,newValue, my,'readonly')      ||
-        RSC.handleLiteralLinesAttribute(Name,newValue, my,'Suggestions')   ||
-        RSC.handleBooleanAttribute     (Name,newValue, my,'enabled')
+        RSC.handleEventAttribute  (Name,newValue, my,'Value-Changed') ||
+        RSC.handleNumericAttribute(Name,newValue, my,'Size')          ||
+        RSC.handleNumericAttribute(Name,newValue, my,'minLength')     ||
+        RSC.handleNumericAttribute(Name,newValue, my,'maxLength')     ||
+        RSC.handleBooleanAttribute(Name,newValue, my,'readonly')      ||
+        (withSuggestions
+          ? RSC.handleLiteralLinesAttribute(Name,newValue, my,'Suggestions')
+          : false
+        ) ||
+        RSC.handleBooleanAttribute(Name,newValue, my,'enabled')
       )) // other attributes will be handled automatically
 
       toRender(() => {
@@ -2995,7 +3019,7 @@ console.error('rendering failure',Signal)
         )
 
         let DataList, UUID
-        if (Suggestions.length > 0) {
+        if (withSuggestions && (Suggestions.length > 0)) {
           UUID = my.unobserved.UUID
           if (UUID == null) { UUID = RSC.newUUID() }
 
@@ -3022,108 +3046,32 @@ console.error('rendering failure',Signal)
               -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
             }
           </style>
-          <input type="text" list=${UUID} disabled=${! my.observed.enabled}
+          <input type=${Type} list=${UUID} disabled=${! my.observed.enabled}
             value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
             pattern=${Pattern} placeholder=${Placeholder}
-            spellcheck=${SpellChecking} readonly=${readonly} style=${innerStyle}
+            ${withSpellChecking ? `spellcheck=${SpellChecking}` : ''}
+            readonly=${readonly} style=${innerStyle}
             onInput=${onInput} onBlur=${my.render.bind(me)}
           />
-          ${DataList}
+          ${withSuggestions ? DataList : ''}
         `
       })
-    },
-    [
-      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
-      'SpellChecking','Suggestions','enabled','innerStyle'
-    ]
-  )
+    }, observedAttributes)
+  }
+
+  registerPlainStringInputBehaviour('native-textline-input', 'text', [
+    'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
+    'SpellChecking','Suggestions','enabled','innerStyle'
+  ])
 
 //------------------------------------------------------------------------------
 //--                        rsc-native-password-input                         --
 //------------------------------------------------------------------------------
 
-  registerBehaviour('native-password-input',
-    function (
-      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:RSC_onAttributeChange,
-      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
-      toRender:(Callback:() => any) => void, html:Function,
-      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
-      reactively:(reactiveFunction:Function) => void,
-      ShadowRoot:any
-    ) {
-      RSC.assign(my.unobserved,{
-        Value:'',
-        Size:undefined, minLength:0, maxLength:undefined,
-        Pattern:undefined, Placeholder:undefined, readonly:false,
-        enabled:true, innerStyle:'',
-        UUID:undefined, renderedValue:'' // is used internally - do not touch!
-      }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
-
-      RSC.assign(my.observed,
-        RSC.TextlineProperty      (my,'Value',      '', 'input value'),
-        RSC.IntegerPropertyInRange(my,'Size',     1,Infinity, null, 'number of visible characters'),
-        RSC.IntegerPropertyInRange(my,'minLength',0,Infinity, null, 'minimal input length'),
-        RSC.IntegerPropertyInRange(my,'maxLength',0,Infinity, null, 'maximal input length'),
-        RSC.TextlineProperty      (my,'Pattern',    null, 'input pattern'),
-        RSC.TextlineProperty      (my,'Placeholder',null, 'input placeholder'),
-        RSC.BooleanProperty       (my,'readonly',   false,'read-only setting'),
-        RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
-        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
-      )
-
-      onAttributeChange((Name, newValue) => (
-        RSC.handleEventAttribute  (Name,newValue, my,'Value-Changed')  ||
-        RSC.handleNumericAttribute(Name,newValue, my,'Size')           ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'minLength') ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'maxLength') ||
-        RSC.handleBooleanAttribute(Name,newValue, my,'readonly')       ||
-        RSC.handleBooleanAttribute(Name,newValue, my,'enabled')
-      )) // other attributes will be handled automatically
-
-      toRender(() => {
-        let {
-          Value, Size, minLength,maxLength, Pattern, Placeholder, readonly, innerStyle
-        } = my.observed
-
-        if (document.activeElement === me) {
-          Value = my.unobserved.renderedValue
-        } else {
-          my.unobserved.renderedValue = Value
-        }
-
-        function onInput (Event:Event) {
-// @ts-ignore 2339 allow "value" access
-          my.unobserved.renderedValue = Event.target.value
-          my.observed.Value = my.unobserved.renderedValue
-
-          Event.stopImmediatePropagation() // use "value-changed" instead of "input"
-          trigger('value-changed',[my.unobserved.renderedValue])
-        }
-
-        return html`
-          <style>
-            :host { display:inline-block; position:relative }
-            input {
-              display:inline-block; position:relative;
-              width:100%; height:100%;
-              -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
-            }
-          </style>
-          <input type="password" disabled=${! my.observed.enabled}
-            value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
-            pattern=${Pattern} placeholder=${Placeholder} readonly=${readonly}
-            style=${innerStyle}
-            onInput=${onInput} onBlur=${my.render.bind(me)}
-          />
-        `
-      })
-    },
-    [
-      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
-      'enabled','innerStyle'
-    ]
-  )
+  registerPlainStringInputBehaviour('native-password-input', 'password', [
+    'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
+    'enabled','innerStyle'
+  ])
 
 //------------------------------------------------------------------------------
 //--                         rsc-native-number-input                          --
@@ -3255,103 +3203,10 @@ console.error('rendering failure',Signal)
 //--                       rsc-native-phonenumber-input                       --
 //------------------------------------------------------------------------------
 
-  registerBehaviour('native-phonenumber-input',
-    function (
-      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:RSC_onAttributeChange,
-      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
-      toRender:(Callback:() => any) => void, html:Function,
-      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
-      reactively:(reactiveFunction:Function) => void,
-      ShadowRoot:any
-    ) {
-      RSC.assign(my.unobserved,{
-        Value:'',
-        Size:undefined, minLength:0, maxLength:undefined,
-        Pattern:undefined, Placeholder:undefined, readonly:false,
-        Suggestions:[],
-        enabled:true, innerStyle:'',
-        UUID:undefined, renderedValue:'' // is used internally - do not touch!
-      }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
-
-      RSC.assign(my.observed,
-        RSC.TextlineProperty      (my,'Value',      '', 'input value'),
-        RSC.IntegerPropertyInRange(my,'Size',     1,Infinity, null, 'number of visible characters'),
-        RSC.IntegerPropertyInRange(my,'minLength',0,Infinity, null, 'minimal input length'),
-        RSC.IntegerPropertyInRange(my,'maxLength',0,Infinity, null, 'maximal input length'),
-        RSC.TextlineProperty      (my,'Pattern',    null, 'input pattern'),
-        RSC.TextlineProperty      (my,'Placeholder',null, 'input placeholder'),
-        RSC.BooleanProperty       (my,'readonly',   false,'read-only settingg'),
-        RSC.StringListProperty    (my,'Suggestions',[],   'list of suggestions'),
-        RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
-        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
-      )
-
-      onAttributeChange((Name, newValue) => (
-        RSC.handleEventAttribute       (Name,newValue, my,'Value-Changed') ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'Size')          ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'minLength')     ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'maxLength')     ||
-        RSC.handleBooleanAttribute     (Name,newValue, my,'readonly')      ||
-        RSC.handleLiteralLinesAttribute(Name,newValue, my,'Suggestions')   ||
-        RSC.handleBooleanAttribute     (Name,newValue, my,'enabled')
-      )) // other attributes will be handled automatically
-
-      toRender(() => {
-        let {
-          Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
-          Suggestions, innerStyle
-        } = my.observed
-
-        if (document.activeElement === me) {
-          Value = my.unobserved.renderedValue
-        } else {
-          my.unobserved.renderedValue = Value
-        }
-
-        let DataList, UUID
-        if (Suggestions.length > 0) {
-          UUID = my.unobserved.UUID
-          if (UUID == null) { UUID = RSC.newUUID() }
-
-          DataList = html`<datalist id=${UUID}>
-            ${Suggestions.map((Value:string) => html`<option value=${Value}></option>`)}
-          </datalist>`
-        }
-
-        function onInput (Event:Event) {
-// @ts-ignore 2339 allow "value" access
-          my.unobserved.renderedValue = Event.target.value
-          my.observed.Value = my.unobserved.renderedValue
-
-          Event.stopImmediatePropagation() // use "value-changed" instead of "input"
-          trigger('value-changed',[my.unobserved.renderedValue])
-        }
-
-        return html`
-          <style>
-            :host { display:inline-block; position:relative }
-            input {
-              display:inline-block; position:relative;
-              width:100%; height:100%;
-              -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
-            }
-          </style>
-          <input type="tel" list=${UUID} disabled=${! my.observed.enabled}
-            value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
-            pattern=${Pattern} placeholder=${Placeholder}
-            readonly=${readonly} style=${innerStyle}
-            onInput=${onInput} onBlur=${my.render.bind(me)}
-          />
-          ${DataList}
-        `
-      })
-    },
-    [
-      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
-      'Suggestions','enabled','innerStyle'
-    ]
-  )
+  registerPlainStringInputBehaviour('native-phonenumber-input', 'tel', [
+    'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
+    'Suggestions','enabled','innerStyle'
+  ])
 
 //------------------------------------------------------------------------------
 //--                      rsc-native-emailaddress-input                       --
@@ -3576,855 +3431,198 @@ console.error('rendering failure',Signal)
 //--                          rsc-native-time-input                           --
 //------------------------------------------------------------------------------
 
-  registerBehaviour('native-time-input',
-    function (
-      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:RSC_onAttributeChange,
-      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
-      toRender:(Callback:() => any) => void, html:Function,
-      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
-      reactively:(reactiveFunction:Function) => void,
-      ShadowRoot:any
-    ) {
-      const TimePattern = '\\d{2}:\\d{2}'
-      const TimeRegExp  = /\d{2}:\d{2}/
-
-      function TimeMatcher (Value:string):boolean {
-        return JIL.ValueIsStringMatching(Value,TimeRegExp)
-      }
-
-      RSC.assign(my.unobserved,{
-        Value:'',
-        Minimum:undefined, Maximum:undefined, Stepping:60,
-        Placeholder:undefined, readonly:false,
-        Suggestions:[],
-        enabled:true, innerStyle:'',
-        UUID:undefined, renderedValue:'' // is used internally - do not touch!
-      }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
-
-      RSC.assign(my.observed,
-        {
-          get Value () { return my.unobserved.Value },
-          set Value (newValue) {
-            JIL.allowStringMatching('input value',newValue,TimeRegExp)
-            my.unobserved.Value = newValue
-          },
-
-          get Minimum () { return my.unobserved.Minimum },
-          set Minimum (newValue) {
-            JIL.allowStringMatching('minimal input value',newValue,TimeRegExp)
-            my.unobserved.Minimum = newValue
-          },
-
-          get Maximum () { return my.unobserved.Maximum },
-          set Maximum (newValue) {
-            JIL.allowStringMatching('maximal input value',newValue,TimeRegExp)
-            my.unobserved.Maximum = newValue
-          },
-        },
-        {
-          get Stepping () { return my.unobserved.Stepping },
-          set Stepping (newValue) {
-            if (newValue !== 'any') {
-              JIL.allowNumber('input step value',newValue)
-            }
-            my.unobserved.Stepping = newValue || 60
-          },
-        },
-        RSC.TextlineProperty(my,'Placeholder',null, 'input placeholder'),
-        RSC.BooleanProperty (my,'readonly',   false,'read-only setting'),
-        {
-          get Suggestions () { return my.unobserved.Suggestions.slice() },
-          set Suggestions (newValue) {
-            JIL.allowListSatisfying('list of suggestions',newValue, TimeMatcher)
-            my.unobserved.Suggestions = (newValue == null ? [] : newValue.slice())
-          },
-        },
-        RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
-        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
-      )
-
-      onAttributeChange((Name, newValue) => (
-        RSC.handleEventAttribute(Name,newValue, my,'Value-Changed') ||
-        (function () {
-          if (Name === 'stepping') {
-            if (newValue === 'any') {
-              my.observed.Value = newValue
-            } else {
-              let parsedValue = parseInt(newValue,10)
-              if (isNaN(parsedValue)) RSC.throwError(
-                'InvalidAttribute: invalid "stepping" attribute given'
-              )
-              my.observed.Value = parsedValue
-            }
-            return true
-          } else { return false }
-        })() ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'readonly')    ||
-        RSC.handleLiteralListAttribute(Name,newValue, my,'Suggestions') ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'enabled')
-      )) // other attributes will be handled automatically
-
-      toRender(() => {
-        let {
-          Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions, innerStyle
-        } = my.observed
-
-        if (document.activeElement === me) {
-          Value = my.unobserved.renderedValue
-        } else {
-          my.unobserved.renderedValue = Value
+  function registerCalendarInputBehaviour (
+    Name:RSC_Name, Type:string, CalendarPattern:string, CalendarRegExp:RegExp
+  ):void {
+    registerBehaviour('native-time-input',
+      function (
+        my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
+        onAttributeChange:RSC_onAttributeChange,
+        onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
+        toRender:(Callback:() => any) => void, html:Function,
+        on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
+        reactively:(reactiveFunction:Function) => void,
+        ShadowRoot:any
+      ) {
+        function CalendarMatcher (Value:string):boolean {
+          return JIL.ValueIsStringMatching(Value,CalendarRegExp)
         }
 
-        let DataList, UUID
-        if (Suggestions.length > 0) {
-          UUID = my.unobserved.UUID
-          if (UUID == null) { UUID = RSC.newUUID() }
+        RSC.assign(my.unobserved,{
+          Value:'',
+          Minimum:undefined, Maximum:undefined, Stepping:60,
+          Placeholder:undefined, readonly:false,
+          Suggestions:[],
+          enabled:true, innerStyle:'',
+          UUID:undefined, renderedValue:'' // is used internally - do not touch!
+        }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
 
-          DataList = html`<datalist id=${UUID}>
-            ${Suggestions.map((Value:string) => html`<option value=${Value}></option>`)}
-          </datalist>`
-        }
+        RSC.assign(my.observed,
+          {
+            get Value () { return my.unobserved.Value },
+            set Value (newValue) {
+              JIL.allowStringMatching('input value',newValue,CalendarRegExp)
+              my.unobserved.Value = newValue
+            },
 
-        function onInput (Event:Event) {
-// @ts-ignore 2339 allow "value" access
-          my.unobserved.renderedValue = Event.target.value
-          my.observed.Value = my.unobserved.renderedValue
+            get Minimum () { return my.unobserved.Minimum },
+            set Minimum (newValue) {
+              JIL.allowStringMatching('minimal input value',newValue,CalendarRegExp)
+              my.unobserved.Minimum = newValue
+            },
 
-          Event.stopImmediatePropagation() // use "value-changed" instead of "input"
-          trigger('value-changed',[my.unobserved.renderedValue])
-        }
+            get Maximum () { return my.unobserved.Maximum },
+            set Maximum (newValue) {
+              JIL.allowStringMatching('maximal input value',newValue,CalendarRegExp)
+              my.unobserved.Maximum = newValue
+            },
+          },
+          {
+            get Stepping () { return my.unobserved.Stepping },
+            set Stepping (newValue) {
+              if (newValue !== 'any') {
+                JIL.allowNumber('input step value',newValue)
+              }
+              my.unobserved.Stepping = newValue || 60
+            },
+          },
+          RSC.TextlineProperty(my,'Placeholder',null, 'input placeholder'),
+          RSC.BooleanProperty (my,'readonly',   false,'read-only setting'),
+          {
+            get Suggestions () { return my.unobserved.Suggestions.slice() },
+            set Suggestions (newValue) {
+              JIL.allowListSatisfying('list of suggestions',newValue, CalendarMatcher)
+              my.unobserved.Suggestions = (newValue == null ? [] : newValue.slice())
+            },
+          },
+          RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
+          RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
+        )
 
-        return html`
-          <style>
-            :host { display:inline-block; position:relative }
-            input {
-              display:inline-block; position:relative;
-              width:100%; height:100%;
-              -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
-            }
-          </style>
-          <input type="time" list=${UUID} disabled=${! my.observed.enabled}
-            value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
-            pattern=${TimePattern} placeholder=${Placeholder} readonly=${readonly}
-            style=${innerStyle}
-            onInput=${onInput} onBlur=${my.render.bind(me)}
-          />
-          ${DataList}
-        `
-      })
-    },
-    [
-      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
-      'Suggestions','enabled','innerStyle'
-    ]
+        onAttributeChange((Name, newValue) => (
+          RSC.handleEventAttribute(Name,newValue, my,'Value-Changed') ||
+          (function () {
+            if (Name === 'stepping') {
+              if (newValue === 'any') {
+                my.observed.Value = newValue
+              } else {
+                let parsedValue = parseInt(newValue,10)
+                if (isNaN(parsedValue)) RSC.throwError(
+                  'InvalidAttribute: invalid "stepping" attribute given'
+                )
+                my.observed.Value = parsedValue
+              }
+              return true
+            } else { return false }
+          })() ||
+          RSC.handleBooleanAttribute    (Name,newValue, my,'readonly')    ||
+          RSC.handleLiteralListAttribute(Name,newValue, my,'Suggestions') ||
+          RSC.handleBooleanAttribute    (Name,newValue, my,'enabled')
+        )) // other attributes will be handled automatically
+
+        toRender(() => {
+          let {
+            Value, Minimum,Maximum, Stepping, Placeholder, readonly,
+            Suggestions, innerStyle
+          } = my.observed
+
+          if (document.activeElement === me) {
+            Value = my.unobserved.renderedValue
+          } else {
+            my.unobserved.renderedValue = Value
+          }
+
+          let DataList, UUID
+          if (Suggestions.length > 0) {
+            UUID = my.unobserved.UUID
+            if (UUID == null) { UUID = RSC.newUUID() }
+
+            DataList = html`<datalist id=${UUID}>
+              ${Suggestions.map((Value:string) => html`<option value=${Value}></option>`)}
+            </datalist>`
+          }
+
+          function onInput (Event:Event) {
+  // @ts-ignore 2339 allow "value" access
+            my.unobserved.renderedValue = Event.target.value
+            my.observed.Value = my.unobserved.renderedValue
+
+            Event.stopImmediatePropagation() // use "value-changed" instead of "input"
+            trigger('value-changed',[my.unobserved.renderedValue])
+          }
+
+          return html`
+            <style>
+              :host { display:inline-block; position:relative }
+              input {
+                display:inline-block; position:relative;
+                width:100%; height:100%;
+                -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
+              }
+            </style>
+
+            <input type="time" list=${UUID} disabled=${! my.observed.enabled}
+              value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
+              pattern=${CalendarPattern} placeholder=${Placeholder} readonly=${readonly}
+              style=${innerStyle}
+              onInput=${onInput} onBlur=${my.render.bind(me)}
+            />
+            ${DataList}
+          `
+        })
+      },
+      [
+        'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
+        'Suggestions','enabled','innerStyle'
+      ]
+    )
+  }
+
+  registerCalendarInputBehaviour('native-time-input', 'time',
+    '\\d{2}:\\d{2}', /\d{2}:\d{2}/
   )
+
 
 //------------------------------------------------------------------------------
 //--                        rsc-native-datetime-input                         --
 //------------------------------------------------------------------------------
 
-  registerBehaviour('native-datetime-input',
-    function (
-      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:RSC_onAttributeChange,
-      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
-      toRender:(Callback:() => any) => void, html:Function,
-      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
-      reactively:(reactiveFunction:Function) => void,
-      ShadowRoot:any
-    ) {
-      const DateTimePattern = '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}'
-      const DateTimeRegExp  = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/
-
-      function DateTimeMatcher (Value:string):boolean {
-        return JIL.ValueIsStringMatching(Value,DateTimeRegExp)
-      }
-
-      RSC.assign(my.unobserved,{
-        Value:'',
-        Minimum:undefined, Maximum:undefined, Stepping:60,
-        Placeholder:undefined, readonly:false,
-        Suggestions:[],
-        enabled:true, innerStyle:'',
-        UUID:undefined, renderedValue:'' // is used internally - do not touch!
-      }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
-
-      RSC.assign(my.observed,
-        {
-          get Value () { return my.unobserved.Value },
-          set Value (newValue) {
-            JIL.allowStringMatching('input value',newValue,DateTimeRegExp)
-            my.unobserved.Value = newValue
-          },
-
-          get Minimum () { return my.unobserved.Minimum },
-          set Minimum (newValue) {
-            JIL.allowStringMatching('minimal input value',newValue,DateTimeRegExp)
-            my.unobserved.Minimum = newValue
-          },
-
-          get Maximum () { return my.unobserved.Maximum },
-          set Maximum (newValue) {
-            JIL.allowStringMatching('maximal input value',newValue,DateTimeRegExp)
-            my.unobserved.Maximum = newValue
-          },
-        },
-        {
-          get Stepping () { return my.unobserved.Stepping },
-          set Stepping (newValue) {
-            if (newValue !== 'any') {
-              JIL.allowNumber('input step value',newValue)
-            }
-            my.unobserved.Stepping = newValue || 60
-          },
-        },
-        RSC.TextlineProperty(my,'Placeholder',null, 'input placeholder'),
-        RSC.BooleanProperty (my,'readonly',   false,'read-only setting'),
-        {
-          get Suggestions () { return my.unobserved.Suggestions.slice() },
-          set Suggestions (newValue) {
-            JIL.allowListSatisfying('list of suggestions',newValue, DateTimeMatcher)
-            my.unobserved.Suggestions = (newValue == null ? [] : newValue.slice())
-          },
-        },
-        RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
-        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
-      )
-
-      onAttributeChange((Name, newValue) => (
-        RSC.handleEventAttribute(Name,newValue, my,'Value-Changed') ||
-        (function () {
-          if (Name === 'stepping') {
-            if (newValue === 'any') {
-              my.observed.Value = newValue
-            } else {
-              let parsedValue = parseInt(newValue,10)
-              if (isNaN(parsedValue)) RSC.throwError(
-                'InvalidAttribute: invalid "stepping" attribute given'
-              )
-              my.observed.Value = parsedValue
-            }
-            return true
-          } else { return false }
-        })() ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'readonly')    ||
-        RSC.handleLiteralListAttribute(Name,newValue, my,'Suggestions') ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'enabled')
-      )) // other attributes will be handled automatically
-
-      toRender(() => {
-        let {
-          Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions, innerStyle
-        } = my.observed
-
-        if (document.activeElement === me) {
-          Value = my.unobserved.renderedValue
-        } else {
-          my.unobserved.renderedValue = Value
-        }
-
-        let DataList, UUID
-        if (Suggestions.length > 0) {
-          UUID = my.unobserved.UUID
-          if (UUID == null) { UUID = RSC.newUUID() }
-
-          DataList = html`<datalist id=${UUID}>
-            ${Suggestions.map((Value:string) => html`<option value=${Value}></option>`)}
-          </datalist>`
-        }
-
-        function onInput (Event:Event) {
-// @ts-ignore 2339 allow "value" access
-          my.unobserved.renderedValue = Event.target.value
-          my.observed.Value = my.unobserved.renderedValue
-
-          Event.stopImmediatePropagation() // use "value-changed" instead of "input"
-          trigger('value-changed',[my.unobserved.renderedValue])
-        }
-
-        return html`
-          <style>
-            :host { display:inline-block; position:relative }
-            input {
-              display:inline-block; position:relative;
-              width:100%; height:100%;
-              -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
-            }
-          </style>
-          <input type="datetime-local" list=${UUID} disabled=${! my.observed.enabled}
-            value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
-            pattern=${DateTimePattern} placeholder=${Placeholder} readonly=${readonly}
-            style=${innerStyle}
-            onInput=${onInput} onBlur=${my.render.bind(me)}
-          />
-          ${DataList}
-        `
-      })
-    },
-    [
-      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
-      'Suggestions','enabled','innerStyle'
-    ]
+  registerCalendarInputBehaviour('native-datetime-input', 'datetime-local',
+    '\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}', /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/
   )
 
 //------------------------------------------------------------------------------
 //--                          rsc-native-date-input                           --
 //------------------------------------------------------------------------------
 
-  registerBehaviour('native-date-input',
-    function (
-      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:RSC_onAttributeChange,
-      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
-      toRender:(Callback:() => any) => void, html:Function,
-      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
-      reactively:(reactiveFunction:Function) => void,
-      ShadowRoot:any
-    ) {
-      const DatePattern = '\\d{4}-\\d{2}-\\d{2}'
-      const DateRegExp  = /\d{4}-\d{2}-\d{2}/
-
-      function DateMatcher (Value:string):boolean {
-        return JIL.ValueIsStringMatching(Value,DateRegExp)
-      }
-
-      RSC.assign(my.unobserved,{
-        Value:'',
-        Minimum:undefined, Maximum:undefined, Stepping:1,
-        Placeholder:undefined, readonly:false,
-        Suggestions:[],
-        enabled:true, innerStyle:'',
-        UUID:undefined, renderedValue:'' // is used internally - do not touch!
-      }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
-
-      RSC.assign(my.observed,
-        {
-          get Value () { return my.unobserved.Value },
-          set Value (newValue) {
-            JIL.allowStringMatching('input value',newValue,DateRegExp)
-            my.unobserved.Value = newValue
-          },
-
-          get Minimum () { return my.unobserved.Minimum },
-          set Minimum (newValue) {
-            JIL.allowStringMatching('minimal input value',newValue,DateRegExp)
-            my.unobserved.Minimum = newValue
-          },
-
-          get Maximum () { return my.unobserved.Maximum },
-          set Maximum (newValue) {
-            JIL.allowStringMatching('maximal input value',newValue,DateRegExp)
-            my.unobserved.Maximum = newValue
-          },
-        },
-        {
-          get Stepping () { return my.unobserved.Stepping },
-          set Stepping (newValue) {
-            if (newValue !== 'any') {
-              JIL.allowNumber('input step value',newValue)
-            }
-            my.unobserved.Stepping = newValue || 1
-          },
-        },
-        RSC.TextlineProperty(my,'Placeholder',null, 'input placeholder'),
-        RSC.BooleanProperty (my,'readonly',   false,'read-only setting'),
-        {
-          get Suggestions () { return my.unobserved.Suggestions.slice() },
-          set Suggestions (newValue) {
-            JIL.allowListSatisfying('list of suggestions',newValue, DateMatcher)
-            my.unobserved.Suggestions = (newValue == null ? [] : newValue.slice())
-          },
-        },
-        RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
-        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
-      )
-
-      onAttributeChange((Name, newValue) => (
-        RSC.handleEventAttribute(Name,newValue, my,'Value-Changed') ||
-        (function () {
-          if (Name === 'stepping') {
-            if (newValue === 'any') {
-              my.observed.Value = newValue
-            } else {
-              let parsedValue = parseInt(newValue,10)
-              if (isNaN(parsedValue)) RSC.throwError(
-                'InvalidAttribute: invalid "stepping" attribute given'
-              )
-              my.observed.Value = parsedValue
-            }
-            return true
-          } else { return false }
-        })() ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'readonly')    ||
-        RSC.handleLiteralListAttribute(Name,newValue, my,'Suggestions') ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'enabled')
-      )) // other attributes will be handled automatically
-
-      toRender(() => {
-        let {
-          Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions, innerStyle
-        } = my.observed
-
-        if (document.activeElement === me) {
-          Value = my.unobserved.renderedValue
-        } else {
-          my.unobserved.renderedValue = Value
-        }
-
-        let DataList, UUID
-        if (Suggestions.length > 0) {
-          UUID = my.unobserved.UUID
-          if (UUID == null) { UUID = RSC.newUUID() }
-
-          DataList = html`<datalist id=${UUID}>
-            ${Suggestions.map((Value:string) => html`<option value=${Value}></option>`)}
-          </datalist>`
-        }
-
-        function onInput (Event:Event) {
-// @ts-ignore 2339 allow "value" access
-          my.unobserved.renderedValue = Event.target.value
-          my.observed.Value = my.unobserved.renderedValue
-
-          Event.stopImmediatePropagation() // use "value-changed" instead of "input"
-          trigger('value-changed',[my.unobserved.renderedValue])
-        }
-
-        return html`
-          <style>
-            :host { display:inline-block; position:relative }
-            input {
-              display:inline-block; position:relative;
-              width:100%; height:100%;
-              -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
-            }
-          </style>
-          <input type="date" list=${UUID} disabled=${! my.observed.enabled}
-            value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
-            pattern=${DatePattern} placeholder=${Placeholder} readonly=${readonly}
-            style=${innerStyle}
-            onInput=${onInput} onBlur=${my.render.bind(me)}
-          />
-          ${DataList}
-        `
-      })
-    },
-    [
-      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
-      'Suggestions','enabled','innerStyle'
-    ]
+  registerCalendarInputBehaviour('native-date-input', 'date',
+    '\\d{4}-\\d{2}-\\d{2}', /\d{4}-\d{2}-\d{2}/
   )
 
 //------------------------------------------------------------------------------
 //--                          rsc-native-week-input                           --
 //------------------------------------------------------------------------------
 
-  registerBehaviour('native-week-input',
-    function (
-      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:RSC_onAttributeChange,
-      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
-      toRender:(Callback:() => any) => void, html:Function,
-      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
-      reactively:(reactiveFunction:Function) => void,
-      ShadowRoot:any
-    ) {
-      const WeekPattern = '\\d{4}-W\\d{2}'
-      const WeekRegExp  = /\d{4}-W\d{2}/
-
-      function WeekMatcher (Value:string):boolean {
-        return JIL.ValueIsStringMatching(Value,WeekRegExp)
-      }
-
-      RSC.assign(my.unobserved,{
-        Value:'',
-        Minimum:undefined, Maximum:undefined, Stepping:1,
-        Placeholder:undefined, readonly:false,
-        Suggestions:[],
-        enabled:true, innerStyle:'',
-        UUID:undefined, renderedValue:'' // is used internally - do not touch!
-      }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
-
-      RSC.assign(my.observed,
-        {
-          get Value () { return my.unobserved.Value },
-          set Value (newValue) {
-            JIL.allowStringMatching('input value',newValue,WeekRegExp)
-            my.unobserved.Value = newValue
-          },
-
-          get Minimum () { return my.unobserved.Minimum },
-          set Minimum (newValue) {
-            JIL.allowStringMatching('minimal input value',newValue,WeekRegExp)
-            my.unobserved.Minimum = newValue
-          },
-
-          get Maximum () { return my.unobserved.Maximum },
-          set Maximum (newValue) {
-            JIL.allowStringMatching('maximal input value',newValue,WeekRegExp)
-            my.unobserved.Maximum = newValue
-          },
-        },
-        {
-          get Stepping () { return my.unobserved.Stepping },
-          set Stepping (newValue) {
-            if (newValue !== 'any') {
-              JIL.allowNumber('input step value',newValue)
-            }
-            my.unobserved.Stepping = newValue || 1
-          },
-        },
-        RSC.TextlineProperty(my,'Placeholder',null, 'input placeholder'),
-        RSC.BooleanProperty (my,'readonly',   false,'read-only setting'),
-        {
-          get Suggestions () { return my.unobserved.Suggestions.slice() },
-          set Suggestions (newValue) {
-            JIL.allowListSatisfying('list of suggestions',newValue, WeekMatcher)
-            my.unobserved.Suggestions = (newValue == null ? [] : newValue.slice())
-          },
-        },
-        RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
-        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
-      )
-
-      onAttributeChange((Name, newValue) => (
-        RSC.handleEventAttribute(Name,newValue, my,'Value-Changed') ||
-        (function () {
-          if (Name === 'stepping') {
-            if (newValue === 'any') {
-              my.observed.Value = newValue
-            } else {
-              let parsedValue = parseInt(newValue,10)
-              if (isNaN(parsedValue)) RSC.throwError(
-                'InvalidAttribute: invalid "stepping" attribute given'
-              )
-              my.observed.Value = parsedValue
-            }
-            return true
-          } else { return false }
-        })() ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'readonly')    ||
-        RSC.handleLiteralListAttribute(Name,newValue, my,'Suggestions') ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'enabled')
-      )) // other attributes will be handled automatically
-
-      toRender(() => {
-        let {
-          Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions, innerStyle
-        } = my.observed
-
-        if (document.activeElement === me) {
-          Value = my.unobserved.renderedValue
-        } else {
-          my.unobserved.renderedValue = Value
-        }
-
-        let DataList, UUID
-        if (Suggestions.length > 0) {
-          UUID = my.unobserved.UUID
-          if (UUID == null) { UUID = RSC.newUUID() }
-
-          DataList = html`<datalist id=${UUID}>
-            ${Suggestions.map((Value:string) => html`<option value=${Value}></option>`)}
-          </datalist>`
-        }
-
-        function onInput (Event:Event) {
-// @ts-ignore 2339 allow "value" access
-          my.unobserved.renderedValue = Event.target.value
-          my.observed.Value = my.unobserved.renderedValue
-
-          Event.stopImmediatePropagation() // use "value-changed" instead of "input"
-          trigger('value-changed',[my.unobserved.renderedValue])
-        }
-
-        return html`
-          <style>
-            :host { display:inline-block; position:relative }
-            input {
-              display:inline-block; position:relative;
-              width:100%; height:100%;
-              -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
-            }
-          </style>
-          <input type="week" list=${UUID} disabled=${! my.observed.enabled}
-            value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
-            pattern=${WeekPattern} placeholder=${Placeholder} readonly=${readonly}
-            style=${innerStyle}
-            onInput=${onInput} onBlur=${my.render.bind(me)}
-          />
-          ${DataList}
-        `
-      })
-    },
-    [
-      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
-      'Suggestions','enabled','innerStyle'
-    ]
+  registerCalendarInputBehaviour('native-week-input', 'week',
+    '\\d{4}-W\\d{2}', /\d{4}-W\d{2}/
   )
 
 //------------------------------------------------------------------------------
 //--                          rsc-native-month-input                          --
 //------------------------------------------------------------------------------
 
-  registerBehaviour('native-month-input',
-    function (
-      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:RSC_onAttributeChange,
-      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
-      toRender:(Callback:() => any) => void, html:Function,
-      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
-      reactively:(reactiveFunction:Function) => void,
-      ShadowRoot:any
-    ) {
-      const MonthPattern = '\\d{4}-\\d{2}'
-      const MonthRegExp  = /\d{4}-\d{2}/
-
-      function MonthMatcher (Value:string):boolean {
-        return JIL.ValueIsStringMatching(Value,MonthRegExp)
-      }
-
-      RSC.assign(my.unobserved,{
-        Value:'',
-        Minimum:undefined, Maximum:undefined, Stepping:1,
-        Placeholder:undefined, readonly:false,
-        Suggestions:[],
-        enabled:true, innerStyle:'',
-        UUID:undefined, renderedValue:'' // is used internally - do not touch!
-      }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
-
-      RSC.assign(my.observed,
-        {
-          get Value () { return my.unobserved.Value },
-          set Value (newValue) {
-            JIL.allowStringMatching('input value',newValue,MonthRegExp)
-            my.unobserved.Value = newValue
-          },
-
-          get Minimum () { return my.unobserved.Minimum },
-          set Minimum (newValue) {
-            JIL.allowStringMatching('minimal input value',newValue,MonthRegExp)
-            my.unobserved.Minimum = newValue
-          },
-
-          get Maximum () { return my.unobserved.Maximum },
-          set Maximum (newValue) {
-            JIL.allowStringMatching('maximal input value',newValue,MonthRegExp)
-            my.unobserved.Maximum = newValue
-          },
-        },
-        {
-          get Stepping () { return my.unobserved.Stepping },
-          set Stepping (newValue) {
-            if (newValue !== 'any') {
-              JIL.allowNumber('input step value',newValue)
-            }
-            my.unobserved.Stepping = newValue || 1
-          },
-        },
-        RSC.TextlineProperty(my,'Placeholder',null, 'input placeholder'),
-        RSC.BooleanProperty (my,'readonly',   false,'read-only setting'),
-        {
-          get Suggestions () { return my.unobserved.Suggestions.slice() },
-          set Suggestions (newValue) {
-            JIL.allowListSatisfying('list of suggestions',newValue, MonthMatcher)
-            my.unobserved.Suggestions = (newValue == null ? [] : newValue.slice())
-          },
-        },
-        RSC.BooleanProperty (my,'enabled',    true, 'enable setting'),
-        RSC.TextProperty    (my,'innerStyle', '',   'inner CSS style setting'),
-      )
-
-      onAttributeChange((Name, newValue) => (
-        RSC.handleEventAttribute(Name,newValue, my,'Value-Changed') ||
-        (function () {
-          if (Name === 'stepping') {
-            if (newValue === 'any') {
-              my.observed.Value = newValue
-            } else {
-              let parsedValue = parseInt(newValue,10)
-              if (isNaN(parsedValue)) RSC.throwError(
-                'InvalidAttribute: invalid "stepping" attribute given'
-              )
-              my.observed.Value = parsedValue
-            }
-            return true
-          } else { return false }
-        })() ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'readonly')    ||
-        RSC.handleLiteralListAttribute(Name,newValue, my,'Suggestions') ||
-        RSC.handleBooleanAttribute    (Name,newValue, my,'enabled')
-      )) // other attributes will be handled automatically
-
-      toRender(() => {
-        let {
-          Value, Minimum,Maximum, Stepping, Placeholder, readonly,
-          Suggestions, innerStyle
-        } = my.observed
-
-        if (document.activeElement === me) {
-          Value = my.unobserved.renderedValue
-        } else {
-          my.unobserved.renderedValue = Value
-        }
-
-        let DataList, UUID
-        if (Suggestions.length > 0) {
-          UUID = my.unobserved.UUID
-          if (UUID == null) { UUID = RSC.newUUID() }
-
-          DataList = html`<datalist id=${UUID}>
-            ${Suggestions.map((Value:string) => html`<option value=${Value}></option>`)}
-          </datalist>`
-        }
-
-        function onInput (Event:Event) {
-// @ts-ignore 2339 allow "value" access
-          my.unobserved.renderedValue = Event.target.value
-          my.observed.Value = my.unobserved.renderedValue
-
-          Event.stopImmediatePropagation() // use "value-changed" instead of "input"
-          trigger('value-changed',[my.unobserved.renderedValue])
-        }
-
-        return html`
-          <style>
-            :host { display:inline-block; position:relative }
-            input {
-              display:inline-block; position:relative;
-              width:100%; height:100%;
-              -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
-            }
-          </style>
-          <input type="month" list=${UUID} disabled=${! my.observed.enabled}
-            value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
-            pattern=${MonthPattern} placeholder=${Placeholder} readonly=${readonly}
-            style=${innerStyle}
-            onInput=${onInput} onBlur=${my.render.bind(me)}
-          />
-          ${DataList}
-        `
-      })
-    },
-    [
-      'Value','Minimum','Maximum','Stepping','Placeholder','readonly',
-      'Suggestions','enabled','innerStyle'
-    ]
+  registerCalendarInputBehaviour('native-month-input', 'month',
+    '\\d{4}-\\d{2}', /\d{4}-\d{2}/
   )
 
 //------------------------------------------------------------------------------
 //--                         rsc-native-search-input                          --
 //------------------------------------------------------------------------------
 
-  registerBehaviour('native-search-input',
-    function (
-      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:RSC_onAttributeChange,
-      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
-      toRender:(Callback:() => any) => void, html:Function,
-      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
-      reactively:(reactiveFunction:Function) => void,
-      ShadowRoot:any
-    ) {
-      const permittedSpellCheckValues = ['default','enabled','disabled']
-
-      RSC.assign(my.unobserved,{
-        Value:'',
-        Size:undefined, minLength:0, maxLength:undefined,
-        Pattern:undefined, Placeholder:undefined, readonly:false,
-        SpellChecking:'default', Suggestions:[],
-        enabled:true, innerStyle:'',
-        UUID:undefined, renderedValue:'' // is used internally - do not touch!
-      }) // these are configured(!) values - they may be nonsense (e.g. minLength > maxLength)
-
-      RSC.assign(my.observed,
-        RSC.TextlineProperty      (my,'Value',      '', 'input value'),
-        RSC.IntegerPropertyInRange(my,'Size',     1,Infinity, null, 'number of visible characters'),
-        RSC.IntegerPropertyInRange(my,'minLength',0,Infinity, null, 'minimal input length'),
-        RSC.IntegerPropertyInRange(my,'maxLength',0,Infinity, null, 'maximal input length'),
-        RSC.TextlineProperty      (my,'Pattern',    null, 'input pattern'),
-        RSC.TextlineProperty      (my,'Placeholder',null, 'input placeholder'),
-        RSC.BooleanProperty       (my,'readonly',   false,'read-only setting'),
-        RSC.OneOfProperty         (my,'SpellChecking',permittedSpellCheckValues,'default','spell-check setting'),
-        RSC.StringListProperty    (my,'Suggestions',[],   'list of suggestions'),
-        RSC.BooleanProperty       (my,'enabled',    true, 'enable setting'),
-        RSC.TextProperty          (my,'innerStyle', '',   'inner CSS style setting'),
-      )
-
-      onAttributeChange((Name, newValue) => (
-        RSC.handleEventAttribute       (Name,newValue, my,'Value-Changed') ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'Size')          ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'minLength')     ||
-        RSC.handleNumericAttribute     (Name,newValue, my,'maxLength')     ||
-        RSC.handleBooleanAttribute     (Name,newValue, my,'readonly')      ||
-        RSC.handleLiteralLinesAttribute(Name,newValue, my,'Suggestions')   ||
-        RSC.handleBooleanAttribute     (Name,newValue, my,'enabled')
-      )) // other attributes will be handled automatically
-
-      toRender(() => {
-        let {
-          Value, Size, minLength,maxLength, Pattern, Placeholder, readonly,
-          SpellChecking, Suggestions, innerStyle
-        } = my.observed
-
-        if (document.activeElement === me) {
-          Value = my.unobserved.renderedValue
-        } else {
-          my.unobserved.renderedValue = Value
-        }
-
-        SpellChecking = (
-          SpellChecking === 'default' ? undefined : (SpellChecking === 'enabled')
-        )
-
-        let DataList, UUID
-        if (Suggestions.length > 0) {
-          UUID = my.unobserved.UUID
-          if (UUID == null) { UUID = RSC.newUUID() }
-
-          DataList = html`<datalist id=${UUID}>
-            ${Suggestions.map((Value:string) => html`<option value=${Value}></option>`)}
-          </datalist>`
-        }
-
-        function onInput (Event:Event) {
-// @ts-ignore 2339 allow "value" access
-          my.unobserved.renderedValue = Event.target.value
-          my.observed.Value = my.unobserved.renderedValue
-
-          Event.stopImmediatePropagation() // use "value-changed" instead of "input"
-          trigger('value-changed',[my.unobserved.renderedValue])
-        }
-
-        return html`
-          <style>
-            :host { display:inline-block; position:relative }
-            input {
-              display:inline-block; position:relative;
-              width:100%; height:100%;
-              -moz-box-sizing:border-box; -webkit-box-sizing:border-box; box-sizing:border-box;
-            }
-          </style>
-          <input type="search" list=${UUID} disabled=${! my.observed.enabled}
-            value=${Value} size=${Size} minlength=${minLength} maxlength=${maxLength}
-            pattern=${Pattern} placeholder=${Placeholder}
-            spellcheck=${SpellChecking} readonly=${readonly} style=${innerStyle}
-            onInput=${onInput} onBlur=${my.render.bind(me)}
-          />
-          ${DataList}
-        `
-      })
-    },
-    [
-      'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
-      'SpellChecking','Suggestions','enabled','innerStyle'
-    ]
-  )
+  registerPlainStringInputBehaviour('native-search-input', 'search', [
+    'Value','Size','minLength','maxLength','Pattern','Placeholder','readonly',
+    'SpellChecking','Suggestions','enabled','innerStyle'
+  ])
 
 //------------------------------------------------------------------------------
 //--                          rsc-native-color-input                          --
