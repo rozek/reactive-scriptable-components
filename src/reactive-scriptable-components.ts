@@ -1984,6 +1984,7 @@ console.error('rendering failure',Signal)
 
       RSC.assign(my.observed,
         RSC.IntegerPropertyInRange(my,'Columns',     1,Infinity, 2),
+        RSC.BooleanProperty       (my,'evenlySpread',false),
         RSC.StringListProperty    (my,'ColumnStyles',[]),
         RSC.IntegerPropertyInRange(my,'ColumnGap',   0,Infinity, 0),
         RSC.IntegerPropertyInRange(my,'RowGap',      0,Infinity, 0),
@@ -1992,6 +1993,7 @@ console.error('rendering failure',Signal)
 
       onAttributeChange((Name, newValue) => (
         RSC.handleNumericAttribute    (Name,newValue, my,'Columns') ||
+        RSC.handleBooleanAttribute    (Name,newValue, my,'envenly-spread','evenlySpread') ||
         RSC.handleLiteralListAttribute(Name,newValue, my,'column-styles', 'ColumnStyles') ||
         RSC.handleNumericAttribute    (Name,newValue, my,'column-gap',    'ColumnGap') ||
         RSC.handleNumericAttribute    (Name,newValue, my,'row-gap',       'RowGap') ||
@@ -2000,7 +2002,8 @@ console.error('rendering failure',Signal)
 
       toRender(() => {
         const {
-          Columns:ColumnLimit, ColumnStyles, ColumnGap, RowGap, verticalAlignment
+          Columns:ColumnLimit, evenlySpread, ColumnStyles, ColumnGap, RowGap,
+          verticalAlignment
         } = my.observed
 
         const innerElements = Array.from(my.children)
@@ -2017,16 +2020,24 @@ console.error('rendering failure',Signal)
             let ColumnStyle = ColumnStyles[ColumnCount] || ColumnStyles[ColumnStyles.length-1]
 
             if (nextElement.tagName === 'RSC-COLSPAN') {
-              let Width = parseInt(nextElement.getAttribute('columns') || '',10)
-              if (isNaN(Width)) { Width = 1 } else { Width = Math.max(1,Width) }
+              let Span = parseInt(nextElement.getAttribute('columns') || '',10)
+              if (isNaN(Span)) { Span = 1 } else { Span = Math.max(1,Span) }
+
+              const Width = (
+                evenlySpread ? `width:${Math.round(Span*100/ColumnLimit)}%;` : ''
+              )
 
               Rows[Rows.length-1].push(
-                html`<td colspan="${Width}" style=${ColumnStyle}><slot name="${SlotCount}"/></td>`
+                html`<td colspan="${Span}" style="${Width}${ColumnStyle}"><slot name="${SlotCount}"/></td>`
               )
-              ColumnCount += Width
+              ColumnCount += Span
             } else {
+              const Width = (
+                evenlySpread ? `width:${Math.round(100/ColumnLimit)}%;` : ''
+              )
+
               Rows[Rows.length-1].push(
-                html`<td style=${ColumnStyle}><slot name="${SlotCount}"/></td>`
+                html`<td style="${Width}${ColumnStyle}"><slot name="${SlotCount}"/></td>`
               )
               ColumnCount += 1
             }
@@ -2069,14 +2080,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('colspan',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Name:string,newValue:string) => void,
-      onAttachment:(Visual:RSC_Visual) => void,
-      onDetachment:(Visual:RSC_Visual) => void,
-      toRender:(Renderer:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
+      toRender:(Callback:() => any) => void, html:Function,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2099,14 +2106,10 @@ console.error('rendering failure',Signal)
   registerBehaviour('gap',
     function (
       my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:(Callback:(Name:string,newValue:string) => void) => void,
-      onAttachment:(Callback:(Visual:RSC_Visual) => void) => void,
-      onDetachment:(Callback:(Visual:RSC_Visual) => void) => void,
+      onAttributeChange:RSC_onAttributeChange,
+      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
       toRender:(Callback:() => any) => void, html:Function,
-      on:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      once:(Events:string, SelectorOrHandler:string|String|null|Function, DataOrHandler?:any, Handler?:Function) => void,
-      off:(Events?:string, SelectorOrHandler?:string|String|null|Function, Handler?:Function) => void,
-      trigger:(EventToTrigger:string|Event, Arguments?:any[], bubbles?:boolean) => boolean,
+      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
       reactively:(reactiveFunction:Function) => void,
       ShadowRoot:any
     ) {
@@ -2128,110 +2131,6 @@ console.error('rendering failure',Signal)
       `)
     },
     ['width','height']
-  )
-
-//------------------------------------------------------------------------------
-//--                            rsc-equal-columns                             --
-//------------------------------------------------------------------------------
-
-  registerBehaviour('equal-columns',
-    function (
-      my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
-      onAttributeChange:RSC_onAttributeChange,
-      onAttachment:RSC_onAttachment, onDetachment:RSC_onDetachment,
-      toRender:(Callback:() => any) => void, html:Function,
-      on:RSC_on, once:RSC_once, off:RSC_off, trigger:RSC_trigger,
-      reactively:(reactiveFunction:Function) => void,
-      ShadowRoot:any
-    ) {
-      const permittedAlignments = ['top','middle','bottom','baseline']
-
-      RSC.assign(my.unobserved,{
-        Columns:2, ColumnStyle:'', ColumnGap:0, RowGap:0,
-        verticalAlignment:'top',
-      })
-
-      RSC.assign(my.observed,
-        RSC.IntegerPropertyInRange(my,'Columns',    1,Infinity, 2),
-        RSC.StringProperty        (my,'ColumnStyle',''),
-        RSC.IntegerPropertyInRange(my,'ColumnGap',  0,Infinity, 0),
-        RSC.IntegerPropertyInRange(my,'RowGap',     0,Infinity, 0),
-        RSC.OneOfProperty         (my,'verticalAlignment',permittedAlignments,'top')
-      )
-
-      onAttributeChange((Name, newValue) => (
-        RSC.handleNumericAttribute(Name,newValue, my,'Columns') ||
-        RSC.handleLiteralAttribute(Name,newValue, my,'column-style','ColumnStyle') ||
-        RSC.handleNumericAttribute(Name,newValue, my,'column-gap',  'ColumnGap') ||
-        RSC.handleNumericAttribute(Name,newValue, my,'row-gap',     'RowGap') ||
-        RSC.handleLiteralAttribute(Name,newValue, my,'valign',      'verticalAlignment')
-      ))
-
-      toRender(() => {
-        const {
-          Columns:ColumnLimit, ColumnGap, RowGap, verticalAlignment
-        } = my.observed
-
-        let relativeWidth = Math.round(1/ColumnLimit * 100)
-
-        let ColumnStyle = my.observed.ColumnStyle.replace(/(\r?\n)+/g,'\n').trim()
-        ColumnStyle += (ColumnStyle !== '' ? ';' : '') + `width:${relativeWidth}%`
-
-        const innerElements = Array.from(my.children)
-
-        const Rows:any[][] = []; let SlotCount = 0, ColumnCount
-        if (innerElements.length > 0) {
-          Rows.push([]); ColumnCount = 0                            // start new row
-
-          while (innerElements.length > 0) {
-            const nextElement = innerElements.shift() as Element
-              SlotCount += 1
-            nextElement.setAttribute('slot',''+SlotCount) // TODO: very, very poor
-
-            if (nextElement.tagName === 'RSC-COLSPAN') {
-              let Width = parseInt(nextElement.getAttribute('columns') || '',10)
-              if (isNaN(Width)) { Width = 1 } else { Width = Math.max(1,Width) }
-
-              Rows[Rows.length-1].push(
-                html`<td colspan="${Width}" style=${ColumnStyle}><slot name="${SlotCount}"/></td>`
-              )
-              ColumnCount += Width
-            } else {
-              Rows[Rows.length-1].push(
-                html`<td style=${ColumnStyle}><slot name="${SlotCount}"/></td>`
-              )
-              ColumnCount += 1
-            }
-
-            if ((ColumnCount >= ColumnLimit) && (innerElements.length > 0)) {
-              Rows.push([]); ColumnCount = 0                        // start new row
-            }
-          }
-        }
-
-        return html`
-          <style>
-            :host {
-              display:block; position:relative;
-            }
-
-            #table                       { width:100% }
-            #table > tr                  { vertical-align:${verticalAlignment} }
-            #table > tr > td             { padding:${Math.round(RowGap/2)}px ${Math.round(ColumnGap/2)}px }
-            #table > tr > td:first-child { padding-left:0px }
-            #table > tr > td:last-child  { padding-right:0px }
-
-            #table > tr:first-child > td { padding-top:0px }
-            #table > tr:last-child  > td { padding-bottom:0px }
-          </style>
-
-          <table id="table">
-            ${Rows.map((Row) => html`<tr>${Row}</tr>`)}
-          </table>
-        `
-      })
-    },
-    ['Columns','ColumnStyles','ColumnGap','RowGap','valign']
   )
 
 //------------------------------------------------------------------------------
@@ -2672,6 +2571,7 @@ console.error('rendering failure',Signal)
           <style>
             :host { display:inline-block; position:relative }
           </style>
+
           <button disabled=${! my.observed.enabled} onclick=${onClick}>
             ${my.observed.Value}
             <slot/>
