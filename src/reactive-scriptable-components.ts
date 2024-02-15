@@ -3434,7 +3434,7 @@ console.error('rendering failure',Signal)
   function registerCalendarInputBehaviour (
     Name:RSC_Name, Type:string, CalendarPattern:string, CalendarRegExp:RegExp
   ):void {
-    registerBehaviour('native-time-input',
+    registerBehaviour(Name,
       function (
         my:RSC_Visual,me:RSC_Visual, RSC:Indexable,JIL:Indexable,
         onAttributeChange:RSC_onAttributeChange,
@@ -3561,7 +3561,7 @@ console.error('rendering failure',Signal)
               }
             </style>
 
-            <input type="time" list=${UUID} disabled=${! my.observed.enabled}
+            <input type=${Type} list=${UUID} disabled=${! my.observed.enabled}
               value=${Value} min=${Minimum} max=${Maximum} step=${Stepping}
               pattern=${CalendarPattern} placeholder=${Placeholder} readonly=${readonly}
               style=${innerStyle}
