@@ -2575,6 +2575,10 @@ console.error('rendering failure',Signal)
         return html`
           <style>
             :host { display:inline-block; position:relative }
+            button {
+              display:inline-block; position:relative;
+              width:100%; height:100%;
+            }
           </style>
 
           <button disabled=${! my.observed.enabled} onclick=${onClick}>
