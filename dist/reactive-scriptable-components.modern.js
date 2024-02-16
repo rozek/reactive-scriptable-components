@@ -231,6 +231,10 @@ function e(){return e=Object.assign?Object.assign.bind():function(e){for(var t=1
         `),t,t,n)})},["Value","Color"]),M("native-button",function(e,t,n,r,i,l,o,a,u,s,c,d,p,b,g){n.assign(e.unobserved,{Value:"",enabled:!0}),n.assign(e.observed,n.BooleanProperty(e,"enabled",!0,"enable setting")),i((t,r)=>n.handleEventAttribute(t,r,e,"Click")||n.handleBooleanAttribute(t,r,e,"enabled")),a(()=>u(ui||(ui=Ji`
           <style>
             :host { display:inline-block; position:relative }
+            button {
+              display:inline-block; position:relative;
+              width:100%; height:100%;
+            }
           </style>
 
           <button disabled=${0} onclick=${0}>
